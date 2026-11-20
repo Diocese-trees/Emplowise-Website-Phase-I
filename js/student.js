@@ -46,11 +46,17 @@
     }
 
     function firstError(body) {
-        if (!body || !body.errors) return '';
-        const keys = Object.keys(body.errors);
-        if (!keys.length) return '';
-        const value = body.errors[keys[0]];
-        return Array.isArray(value) ? value[0] : String(value);
+        if (!body) return '';
+        if (body.errors) {
+            const keys = Object.keys(body.errors);
+            if (keys.length) {
+                const value = body.errors[keys[0]];
+                return Array.isArray(value) ? value[0] : String(value);
+            }
+        }
+        // Static previews answer 503 with a human message; surface it verbatim.
+        if (typeof body.message === 'string' && body.message.trim()) return body.message.trim();
+        return '';
     }
 
     function setRing(circle, score) {
