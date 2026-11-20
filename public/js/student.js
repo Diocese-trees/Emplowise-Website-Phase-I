@@ -1,0 +1,848 @@
+/* Emplowise Student Hub: five free tools powered by local engines and optional Alibaba Cloud AI. */
+(function () {
+    'use strict';
+
+    const config = document.getElementById('student-config');
+    if (!config) return;
+
+    const endpoints = {
+        questions: config.getAttribute('data-interview-questions'),
+        feedback: config.getAttribute('data-interview-feedback'),
+        ats: config.getAttribute('data-ats'),
+        profile: config.getAttribute('data-profile')
+    };
+
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrf = csrfMeta ? csrfMeta.getAttribute('content') : '';
+    const toast = (window.Emplowise && window.Emplowise.toast) ? window.Emplowise.toast : function () {};
+    const copy = (window.Emplowise && window.Emplowise.copy) ? window.Emplowise.copy : function () { return Promise.resolve(false); };
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const RING = 2 * Math.PI * 64;
+
+    function el(id) { return document.getElementById(id); }
+
+    function setStatus(node, message, type) {
+        if (!node) return;
+        node.classList.remove('is-error', 'is-ok');
+        if (type) node.classList.add(type);
+        node.textContent = message || '';
+    }
+
+    function postJson(url, payload) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrf
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload)
+        }).then(function (response) {
+            return response.json().catch(function () { return {}; }).then(function (body) {
+                return { ok: response.ok, status: response.status, body: body };
+            });
+        });
+    }
+
+    function firstError(body) {
+        if (!body || !body.errors) return '';
+        const keys = Object.keys(body.errors);
+        if (!keys.length) return '';
+        const value = body.errors[keys[0]];
+        return Array.isArray(value) ? value[0] : String(value);
+    }
+
+    function setRing(circle, score) {
+        if (!circle) return;
+        circle.style.strokeDasharray = String(RING);
+        circle.style.strokeDashoffset = String(RING * (1 - Math.max(0, Math.min(100, score)) / 100));
+    }
+
+    function sourceLabel(source) {
+        return source && source.indexOf('model:') === 0 ? 'Alibaba Cloud AI' : 'Local engine';
+    }
+
+    function fillList(node, items) {
+        if (!node) return;
+        node.innerHTML = '';
+        (items || []).forEach(function (text) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            node.appendChild(li);
+        });
+    }
+
+    // -----------------------------------------------------------------
+    // Tabs
+    // -----------------------------------------------------------------
+    const tabs = Array.prototype.slice.call(document.querySelectorAll('[data-hub-tab]'));
+    const panels = Array.prototype.slice.call(document.querySelectorAll('[data-hub-panel]'));
+
+    function activateTab(id) {
+        if (!id) return;
+        const target = panels.filter(function (panel) { return panel.getAttribute('data-hub-panel') === id; })[0];
+        if (!target) return;
+        tabs.forEach(function (tab) {
+            const active = tab.getAttribute('data-hub-tab') === id;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (panel) {
+            panel.classList.toggle('is-active', panel === target);
+        });
+    }
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            const id = tab.getAttribute('data-hub-tab');
+            activateTab(id);
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, '', '#' + id);
+            }
+        });
+    });
+
+    if (tabs.length) {
+        const hash = (window.location.hash || '').replace('#', '');
+        if (hash && panels.some(function (panel) { return panel.getAttribute('data-hub-panel') === hash; })) {
+            activateTab(hash);
+            const shell = document.querySelector('.hub-shell');
+            if (shell) {
+                window.setTimeout(function () {
+                    shell.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+                }, 80);
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // 01 Interview simulator
+    // -----------------------------------------------------------------
+    const interviewStart = el('interview-start');
+    if (interviewStart) {
+        const roleSelect = el('interview-role');
+        const levelSelect = el('interview-level');
+        const stage = el('interview-stage');
+        const progress = el('interview-progress');
+        const questionEl = el('interview-question');
+        const answerEl = el('interview-answer');
+        const counter = el('interview-counter');
+        const submitBtn = el('interview-submit');
+        const status = el('interview-status');
+        const sourceEl = el('interview-source');
+        const feedback = el('interview-feedback');
+        const scoreEl = el('interview-score');
+        const ringEl = el('interview-ring');
+        const verdictEl = el('interview-verdict');
+        const strengthsEl = el('interview-strengths');
+        const fixesEl = el('interview-fixes');
+        const modelEl = el('interview-model');
+        const nextBtn = el('interview-next');
+
+        const state = { questions: [], index: 0, busy: false, role: '', level: '' };
+
+        function buildProgress() {
+            if (!progress) return;
+            progress.innerHTML = '';
+            state.questions.forEach(function () {
+                progress.appendChild(document.createElement('span'));
+            });
+        }
+
+        function paintProgress() {
+            if (!progress) return;
+            Array.prototype.slice.call(progress.children).forEach(function (span, index) {
+                span.className = index < state.index ? 'is-done' : (index === state.index ? 'is-current' : '');
+            });
+        }
+
+        function renderQuestion() {
+            if (!state.questions.length) return;
+            const question = state.questions[state.index];
+            if (questionEl) questionEl.textContent = question;
+            if (answerEl) answerEl.value = '';
+            if (counter) counter.textContent = '0 characters';
+            if (feedback) feedback.hidden = true;
+            if (submitBtn) submitBtn.disabled = false;
+            if (stage) stage.hidden = false;
+            paintProgress();
+            if (answerEl) answerEl.focus();
+        }
+
+        function renderFeedback(data) {
+            if (feedback) feedback.hidden = false;
+            if (scoreEl) scoreEl.textContent = String(data.score);
+            setRing(ringEl, data.score);
+            if (verdictEl) verdictEl.textContent = data.verdict || '';
+            fillList(strengthsEl, data.strengths);
+            fillList(fixesEl, data.fixes);
+            if (modelEl) {
+                const span = modelEl.querySelector('span');
+                if (span) span.textContent = data.model_answer || '';
+            }
+            if (nextBtn) {
+                const last = state.index >= state.questions.length - 1;
+                nextBtn.textContent = last ? 'Start a new set' : 'Next question';
+            }
+            if (sourceEl) sourceEl.textContent = sourceLabel(data.source);
+            if (feedback) {
+                feedback.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest' });
+            }
+        }
+
+        function startSet() {
+            if (state.busy) return;
+            state.busy = true;
+            state.role = roleSelect ? roleSelect.value : '';
+            state.level = levelSelect ? levelSelect.value : '';
+            setStatus(status, 'Preparing questions…');
+            interviewStart.disabled = true;
+
+            postJson(endpoints.questions, { role: state.role, level: state.level })
+                .then(function (result) {
+                    if (!result.ok) {
+                        setStatus(status, firstError(result.body) || 'Could not prepare questions. Try again.', 'is-error');
+                        return;
+                    }
+                    state.questions = result.body.questions || [];
+                    state.index = 0;
+                    if (!state.questions.length) {
+                        setStatus(status, 'No questions came back. Try a different role.', 'is-error');
+                        return;
+                    }
+                    buildProgress();
+                    renderQuestion();
+                    setStatus(status, '');
+                    if (sourceEl) sourceEl.textContent = sourceLabel(result.body.source);
+                })
+                .catch(function () {
+                    setStatus(status, 'Network error while preparing questions.', 'is-error');
+                })
+                .finally(function () {
+                    state.busy = false;
+                    interviewStart.disabled = false;
+                });
+        }
+
+        interviewStart.addEventListener('click', startSet);
+
+        if (answerEl && counter) {
+            answerEl.addEventListener('input', function () {
+                counter.textContent = answerEl.value.length + ' characters';
+            });
+        }
+
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function () {
+                if (state.busy || !state.questions.length) return;
+                const answer = (answerEl.value || '').trim();
+                if (answer.length < 10) {
+                    setStatus(status, 'Write at least one full sentence before scoring.', 'is-error');
+                    answerEl.focus();
+                    return;
+                }
+                if (answer.length > 5000) {
+                    setStatus(status, 'Keep the answer under 5000 characters.', 'is-error');
+                    return;
+                }
+
+                state.busy = true;
+                submitBtn.disabled = true;
+                setStatus(status, 'Scoring your answer…');
+
+                postJson(endpoints.feedback, {
+                    role: state.role,
+                    level: state.level,
+                    question: state.questions[state.index],
+                    answer: answer
+                })
+                    .then(function (result) {
+                        if (!result.ok) {
+                            setStatus(status, firstError(result.body) || 'Could not score that answer.', 'is-error');
+                            return;
+                        }
+                        setStatus(status, '');
+                        renderFeedback(result.body);
+                    })
+                    .catch(function () {
+                        setStatus(status, 'Network error while scoring.', 'is-error');
+                    })
+                    .finally(function () {
+                        state.busy = false;
+                        submitBtn.disabled = false;
+                    });
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+                if (state.index >= state.questions.length - 1) {
+                    startSet();
+                    return;
+                }
+                state.index += 1;
+                renderQuestion();
+            });
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // 02 ATS scoring
+    // -----------------------------------------------------------------
+    const atsForm = el('ats-form');
+    if (atsForm) {
+        const resumeEl = el('ats-resume');
+        const jdEl = el('ats-jd');
+        const status = el('ats-status');
+        const submitBtn = el('ats-submit');
+        const resultPanel = el('ats-result');
+
+        function renderChecklist(node, checks) {
+            if (!node) return;
+            node.innerHTML = '';
+            (checks || []).forEach(function (check) {
+                const li = document.createElement('li');
+                li.className = check.ok ? '' : 'is-fail';
+                li.textContent = check.ok ? check.label : check.label + ' — ' + check.hint;
+                node.appendChild(li);
+            });
+        }
+
+        function renderChips(node, values, missing) {
+            if (!node) return;
+            node.innerHTML = '';
+            if (!values || !values.length) {
+                const empty = document.createElement('span');
+                empty.className = 'small muted';
+                empty.textContent = missing ? 'No missing keywords detected.' : 'No matched keywords detected.';
+                node.appendChild(empty);
+                return;
+            }
+            values.forEach(function (value) {
+                const chip = document.createElement('span');
+                chip.className = 'chip' + (missing ? ' chip--miss' : ' chip--teal');
+                chip.textContent = value;
+                node.appendChild(chip);
+            });
+        }
+
+        function renderAts(data) {
+            if (el('ats-score')) el('ats-score').textContent = String(data.score);
+            setRing(el('ats-ring'), data.score);
+            if (el('ats-verdict')) el('ats-verdict').textContent = data.verdict || '';
+
+            const bars = el('ats-bars');
+            if (bars) {
+                bars.innerHTML = '';
+                (data.breakdown || []).forEach(function (row) {
+                    const pct = Math.round((row.score / row.max) * 100);
+                    const wrap = document.createElement('div');
+                    wrap.className = 'bar-row';
+
+                    const head = document.createElement('div');
+                    head.className = 'bar-head';
+                    const label = document.createElement('span');
+                    label.textContent = row.label;
+                    const score = document.createElement('span');
+                    score.textContent = row.score + ' / ' + row.max;
+                    head.appendChild(label);
+                    head.appendChild(score);
+
+                    const bar = document.createElement('div');
+                    bar.className = 'bar' + (pct < 50 ? ' is-low' : (pct < 75 ? ' is-mid' : ''));
+                    const fill = document.createElement('span');
+                    fill.style.width = pct + '%';
+                    bar.appendChild(fill);
+
+                    const detail = document.createElement('p');
+                    detail.className = 'small muted';
+                    detail.style.margin = '0.35rem 0 0';
+                    detail.textContent = row.detail;
+                    wrap.appendChild(head);
+                    wrap.appendChild(bar);
+                    wrap.appendChild(detail);
+                    bars.appendChild(wrap);
+                });
+            }
+
+            renderChips(el('ats-matched'), data.matched, false);
+            renderChips(el('ats-missing'), data.missing, true);
+            renderChecklist(el('ats-structure'), data.structure);
+            renderChecklist(el('ats-format'), data.format);
+            fillList(el('ats-fixes'), data.fixes);
+
+            const editsBlock = el('ats-edits-block');
+            if (editsBlock) {
+                if (data.ai_edits && data.ai_edits.length) {
+                    editsBlock.hidden = false;
+                    fillList(el('ats-edits'), data.ai_edits);
+                } else {
+                    editsBlock.hidden = true;
+                }
+            }
+
+            if (resultPanel) {
+                resultPanel.hidden = false;
+                resultPanel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+            }
+        }
+
+        atsForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const resume = (resumeEl.value || '').trim();
+            const jd = (jdEl.value || '').trim();
+
+            if (resume.length < 60) {
+                setStatus(status, 'Paste a fuller resume. At least 60 characters.', 'is-error');
+                resumeEl.focus();
+                return;
+            }
+            if (jd.length < 60) {
+                setStatus(status, 'Paste the full job description. At least 60 characters.', 'is-error');
+                jdEl.focus();
+                return;
+            }
+
+            submitBtn.disabled = true;
+            setStatus(status, 'Scoring the match…');
+
+            postJson(endpoints.ats, { resume: resume, job_description: jd })
+                .then(function (result) {
+                    if (!result.ok) {
+                        setStatus(status, firstError(result.body) || 'Could not score this resume.', 'is-error');
+                        return;
+                    }
+                    setStatus(status, '');
+                    renderAts(result.body);
+                })
+                .catch(function () {
+                    setStatus(status, 'Network error while scoring.', 'is-error');
+                })
+                .finally(function () {
+                    submitBtn.disabled = false;
+                });
+        });
+    }
+
+    // -----------------------------------------------------------------
+    // 03 Resume builder
+    // -----------------------------------------------------------------
+    const resumeForm = el('resume-form');
+    if (resumeForm) {
+        const expList = el('exp-list');
+        const eduList = el('edu-list');
+
+        function expTemplate() {
+            const item = document.createElement('div');
+            item.className = 'repeat-item';
+            item.innerHTML =
+                '<button type="button" class="remove-btn" aria-label="Remove this role">&times;</button>' +
+                '<div class="repeat-grid">' +
+                    '<input type="text" class="exp-role" placeholder="Role, e.g. Data Analyst Intern" maxlength="100">' +
+                    '<input type="text" class="exp-company" placeholder="Company" maxlength="100">' +
+                '</div>' +
+                '<input type="text" class="exp-dates" placeholder="Jun 2025 to Aug 2025" maxlength="60">' +
+                '<textarea class="exp-bullets" placeholder="One bullet per line. Start with an action verb." maxlength="1200"></textarea>';
+            return item;
+        }
+
+        function eduTemplate() {
+            const item = document.createElement('div');
+            item.className = 'repeat-item';
+            item.innerHTML =
+                '<button type="button" class="remove-btn" aria-label="Remove this education entry">&times;</button>' +
+                '<div class="repeat-grid">' +
+                    '<input type="text" class="edu-degree" placeholder="Degree, e.g. BS Computer Science" maxlength="100">' +
+                    '<input type="text" class="edu-school" placeholder="Institution" maxlength="100">' +
+                '</div>' +
+                '<input type="text" class="edu-dates" placeholder="2022 to 2026" maxlength="60">' +
+                '<input type="text" class="edu-detail" placeholder="Relevant coursework or honours (optional)" maxlength="160">';
+            return item;
+        }
+
+        function addExp() {
+            if (!expList) return;
+            expList.appendChild(expTemplate());
+            renderResume();
+        }
+
+        function addEdu() {
+            if (!eduList) return;
+            eduList.appendChild(eduTemplate());
+            renderResume();
+        }
+
+        const addExpBtn = el('add-exp');
+        const addEduBtn = el('add-edu');
+        if (addExpBtn) addExpBtn.addEventListener('click', addExp);
+        if (addEduBtn) addEduBtn.addEventListener('click', addEdu);
+
+        [expList, eduList].forEach(function (list) {
+            if (!list) return;
+            list.addEventListener('click', function (event) {
+                const remove = event.target.closest('.remove-btn');
+                if (!remove) return;
+                const item = remove.closest('.repeat-item');
+                if (item) item.remove();
+                renderResume();
+            });
+        });
+
+        function value(name) {
+            const input = resumeForm.querySelector('[data-rp="' + name + '"]');
+            return input ? input.value.trim() : '';
+        }
+
+        function contactLine() {
+            return [value('email'), value('phone'), value('location'), value('linkedin')]
+                .filter(function (part) { return part !== ''; })
+                .join(' · ');
+        }
+
+        function expData() {
+            if (!expList) return [];
+            return Array.prototype.slice.call(expList.querySelectorAll('.repeat-item')).map(function (item) {
+                return {
+                    role: (item.querySelector('.exp-role').value || '').trim(),
+                    company: (item.querySelector('.exp-company').value || '').trim(),
+                    dates: (item.querySelector('.exp-dates').value || '').trim(),
+                    bullets: (item.querySelector('.exp-bullets').value || '').trim()
+                };
+            });
+        }
+
+        function eduData() {
+            if (!eduList) return [];
+            return Array.prototype.slice.call(eduList.querySelectorAll('.repeat-item')).map(function (item) {
+                return {
+                    degree: (item.querySelector('.edu-degree').value || '').trim(),
+                    school: (item.querySelector('.edu-school').value || '').trim(),
+                    dates: (item.querySelector('.edu-dates').value || '').trim(),
+                    detail: (item.querySelector('.edu-detail').value || '').trim()
+                };
+            });
+        }
+
+        function renderResume() {
+            const name = value('name') || 'Your Name';
+            const title = value('title') || 'Target title';
+            const contact = contactLine();
+
+            if (el('rp-name')) el('rp-name').textContent = name;
+            if (el('rp-title')) el('rp-title').textContent = title;
+            if (el('rp-contact')) el('rp-contact').textContent = contact || 'email · phone · location · LinkedIn';
+
+            const summary = value('summary');
+            if (el('rp-summary')) {
+                el('rp-summary').textContent = summary || 'Add a three line summary.';
+                el('rp-summary').classList.toggle('rp-empty', !summary);
+            }
+
+            const expBox = el('rp-experience');
+            if (expBox) {
+                expBox.innerHTML = '';
+                const roles = expData().filter(function (row) {
+                    return row.role || row.company || row.bullets;
+                });
+                if (!roles.length) {
+                    expBox.innerHTML = '<p class="rp-empty">Add at least one role.</p>';
+                } else {
+                    roles.forEach(function (row) {
+                        const entry = document.createElement('div');
+                        entry.className = 'rp-entry';
+
+                        const head = document.createElement('div');
+                        head.className = 'rp-entry-head';
+                        const left = document.createElement('span');
+                        left.textContent = [row.role, row.company].filter(Boolean).join(' — ');
+                        const right = document.createElement('span');
+                        right.textContent = row.dates;
+                        head.appendChild(left);
+                        head.appendChild(right);
+                        entry.appendChild(head);
+
+                        if (row.bullets) {
+                            const p = document.createElement('p');
+                            p.textContent = row.bullets.split(/\r?\n/).map(function (line) {
+                                return line.trim();
+                            }).filter(Boolean).map(function (line) {
+                                return line.charAt(0) === '-' ? line : '- ' + line;
+                            }).join('\n');
+                            entry.appendChild(p);
+                        }
+
+                        expBox.appendChild(entry);
+                    });
+                }
+            }
+
+            const eduBox = el('rp-education');
+            if (eduBox) {
+                eduBox.innerHTML = '';
+                const schools = eduData().filter(function (row) {
+                    return row.degree || row.school || row.detail;
+                });
+                if (!schools.length) {
+                    eduBox.innerHTML = '<p class="rp-empty">Add your degree or qualification.</p>';
+                } else {
+                    schools.forEach(function (row) {
+                        const entry = document.createElement('div');
+                        entry.className = 'rp-entry';
+
+                        const head = document.createElement('div');
+                        head.className = 'rp-entry-head';
+                        const left = document.createElement('span');
+                        left.textContent = [row.degree, row.school].filter(Boolean).join(' — ');
+                        const right = document.createElement('span');
+                        right.textContent = row.dates;
+                        head.appendChild(left);
+                        head.appendChild(right);
+                        entry.appendChild(head);
+
+                        if (row.detail) {
+                            const p = document.createElement('p');
+                            p.textContent = row.detail;
+                            entry.appendChild(p);
+                        }
+
+                        eduBox.appendChild(entry);
+                    });
+                }
+            }
+
+            const skills = value('skills');
+            if (el('rp-skills')) {
+                el('rp-skills').textContent = skills || 'Add skills.';
+                el('rp-skills').classList.toggle('rp-empty', !skills);
+            }
+        }
+
+        function plainText() {
+            const lines = [];
+            const name = value('name') || 'Your Name';
+            const title = value('title');
+            lines.push(name);
+            if (title) lines.push(title);
+            const contact = contactLine();
+            if (contact) lines.push(contact);
+            lines.push('');
+
+            if (value('summary')) {
+                lines.push('SUMMARY');
+                lines.push(value('summary'));
+                lines.push('');
+            }
+
+            const roles = expData().filter(function (row) { return row.role || row.company || row.bullets; });
+            if (roles.length) {
+                lines.push('EXPERIENCE');
+                roles.forEach(function (row) {
+                    lines.push([row.role, row.company].filter(Boolean).join(' — ') + (row.dates ? ' (' + row.dates + ')' : ''));
+                    if (row.bullets) {
+                        row.bullets.split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).forEach(function (line) {
+                            lines.push(line.charAt(0) === '-' ? line : '- ' + line);
+                        });
+                    }
+                    lines.push('');
+                });
+            }
+
+            const schools = eduData().filter(function (row) { return row.degree || row.school || row.detail; });
+            if (schools.length) {
+                lines.push('EDUCATION');
+                schools.forEach(function (row) {
+                    lines.push([row.degree, row.school].filter(Boolean).join(' — ') + (row.dates ? ' (' + row.dates + ')' : ''));
+                    if (row.detail) lines.push(row.detail);
+                });
+                lines.push('');
+            }
+
+            if (value('skills')) {
+                lines.push('SKILLS');
+                lines.push(value('skills'));
+            }
+
+            return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+        }
+
+        resumeForm.addEventListener('input', renderResume);
+
+        const printBtn = el('resume-print');
+        if (printBtn) {
+            printBtn.addEventListener('click', function () {
+                window.print();
+            });
+        }
+
+        const downloadBtn = el('resume-download');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function () {
+                const blob = new Blob([plainText()], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const base = (value('name') || 'resume').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'resume';
+                link.href = url;
+                link.download = base + '-resume.txt';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                toast('Resume text downloaded.');
+            });
+        }
+
+        const copyBtn = el('resume-copy');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function () {
+                copy(plainText()).then(function (ok) {
+                    toast(ok ? 'Resume text copied.' : 'Could not copy. Try the download instead.');
+                });
+            });
+        }
+
+        addExp();
+        addEdu();
+        renderResume();
+    }
+
+    // -----------------------------------------------------------------
+    // 04 Profile optimizer
+    // -----------------------------------------------------------------
+    const profileForm = el('profile-form');
+    if (profileForm) {
+        const status = el('profile-status');
+        const resultPanel = el('profile-result');
+
+        function renderProfile(data) {
+            const headlines = el('profile-headlines');
+            if (headlines) {
+                headlines.innerHTML = '';
+                (data.headlines || []).forEach(function (text) {
+                    const row = document.createElement('div');
+                    row.className = 'headline-option';
+                    const span = document.createElement('span');
+                    span.textContent = text;
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'copy-btn';
+                    button.setAttribute('data-copy', text);
+                    button.textContent = 'Copy';
+                    row.appendChild(span);
+                    row.appendChild(button);
+                    headlines.appendChild(row);
+                });
+            }
+
+            if (el('profile-summary-out')) el('profile-summary-out').textContent = data.summary || '';
+            if (el('profile-bullets-out')) {
+                el('profile-bullets-out').textContent = (data.bullets || []).map(function (line) {
+                    return line.charAt(0) === '-' ? line : '- ' + line;
+                }).join('\n');
+            }
+            fillList(el('profile-fixes'), data.fixes);
+
+            setStatus(status, 'Rewritten with ' + sourceLabel(data.source).toLowerCase() + '.', 'is-ok');
+            if (resultPanel) {
+                resultPanel.hidden = false;
+                resultPanel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+            }
+        }
+
+        profileForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const headline = el('profile-headline').value.trim();
+            const summary = el('profile-summary').value.trim();
+            const bullets = el('profile-bullets').value.trim();
+
+            if (!headline && !summary && !bullets) {
+                setStatus(status, 'Add a headline, a summary, or at least one bullet.', 'is-error');
+                el('profile-headline').focus();
+                return;
+            }
+
+            const submitBtn = el('profile-submit');
+            submitBtn.disabled = true;
+            setStatus(status, 'Rewriting…');
+
+            postJson(endpoints.profile, { headline: headline, summary: summary, bullets: bullets })
+                .then(function (result) {
+                    if (!result.ok) {
+                        setStatus(status, firstError(result.body) || 'Could not rewrite this profile.', 'is-error');
+                        return;
+                    }
+                    renderProfile(result.body);
+                })
+                .catch(function () {
+                    setStatus(status, 'Network error while rewriting.', 'is-error');
+                })
+                .finally(function () {
+                    submitBtn.disabled = false;
+                });
+        });
+    }
+
+    // -----------------------------------------------------------------
+    // 05 Prompt library
+    // -----------------------------------------------------------------
+    const promptGrid = el('prompt-grid');
+    if (promptGrid) {
+        const search = el('prompt-search');
+        const filters = el('prompt-filters');
+        const empty = el('prompt-empty');
+        const cards = Array.prototype.slice.call(promptGrid.querySelectorAll('[data-prompt]'));
+        let activeCategory = 'all';
+
+        function applyPrompts() {
+            const term = (search ? search.value : '').trim().toLowerCase();
+            let visible = 0;
+
+            cards.forEach(function (card) {
+                const category = card.getAttribute('data-category') || '';
+                const text = card.textContent.toLowerCase();
+                const inCategory = activeCategory === 'all' || category === activeCategory;
+                const matches = term === '' || text.indexOf(term) !== -1;
+                const show = inCategory && matches;
+                card.hidden = !show;
+                if (show) visible += 1;
+            });
+
+            if (empty) empty.classList.toggle('is-visible', visible === 0);
+        }
+
+        if (search) search.addEventListener('input', applyPrompts);
+
+        if (filters) {
+            filters.addEventListener('click', function (event) {
+                const button = event.target.closest('[data-prompt-filter]');
+                if (!button) return;
+                activeCategory = button.getAttribute('data-prompt-filter');
+                filters.querySelectorAll('.filter-btn').forEach(function (btn) {
+                    btn.classList.toggle('is-active', btn === button);
+                });
+                applyPrompts();
+            });
+        }
+
+        promptGrid.addEventListener('click', function (event) {
+            const copyBtn = event.target.closest('[data-copy-prompt]');
+            if (copyBtn) {
+                const card = copyBtn.closest('[data-prompt]');
+                const textEl = card ? card.querySelector('.prompt-text') : null;
+                const text = textEl ? textEl.textContent.trim() : '';
+                copy(text).then(function (ok) {
+                    toast(ok ? 'Prompt copied. Fill the brackets and run it.' : 'Could not copy. Select the prompt manually.');
+                });
+                return;
+            }
+
+            const expand = event.target.closest('.prompt-expand');
+            if (expand) {
+                const card = expand.closest('[data-prompt]');
+                if (!card) return;
+                const open = card.classList.toggle('is-open');
+                expand.textContent = open ? 'Collapse' : 'Expand';
+            }
+        });
+    }
+})();

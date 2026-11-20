@@ -1,0 +1,52 @@
+# Nginx + PHP-FPM vhost for a VPS deployment.
+#
+#   sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/emplowise
+#   sudo ln -s /etc/nginx/sites-available/emplowise /etc/nginx/sites-enabled/
+#   sudo ln -sf /etc/nginx/sites-available/emplowise /etc/nginx/sites-enabled/default
+#   sudo certbot --nginx -d emplowise.example.com
+#
+# Replace server_name, the root path, and the PHP-FPM socket before use.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name emplowise.example.com;
+
+    root /var/www/emplowise/public;
+    index index.php;
+
+    charset utf-8;
+    client_max_body_size 8M;
+
+    # Never serve dotfiles.
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    # Long cache for fingerprinted static assets.
+    location ~* \.(?:css|js|png|jpg|jpeg|gif|svg|webp|ico|woff2?)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+        try_files $uri =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_hide_header X-Powered-By;
+    }
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+}
