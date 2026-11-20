@@ -1,7 +1,7 @@
 /* Static preview banner. External file so CSP can stay style-src 'self'. */
 .demo-bar{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#081B3E;color:#cfe3ea;
   font:600 12.5px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:11px 18px;text-align:center;
-  border-top:2px solid #0d9488;letter-spacing:0.01em}
-.demo-bar a{color:#5eead4;font-weight:700;text-decoration:underline}
+  border-top:2px solid #0d9488;letter-spacing:0.01em;pointer-events:none}
+.demo-bar a{color:#5eead4;font-weight:700;text-decoration:underline;pointer-events:auto;position:relative;z-index:10}
 body.has-demo-bar{padding-bottom:58px}
 .chat-launcher,.to-top{bottom:64px !important}
