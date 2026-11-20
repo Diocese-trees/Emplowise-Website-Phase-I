@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="aU2lAzuxJWGrKCpqlAqcJq5ZqOTgs17TlUTo5Ft3">
+    <meta name="theme-color" content="#081B3E">
+    <title>Free HR Audit | Emplowise</title>
+    <meta name="description" content="Book a free HR audit. Share your headcount, payroll, performance, and policy pain points, pick a preferred window, and get a prioritised gap list.">
+
+    <link rel="icon" type="image/png" href="/Emplowise-Website-Phase-I/favicon.png?v=1795179822">
+    <link rel="preload" href="/Emplowise-Website-Phase-I/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/Emplowise-Website-Phase-I/fonts/jakarta-fdb05bf0-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/fonts.css?v=1795195416">
+
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/tokens.css?v=1795180764">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/base.css?v=1795182171">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/layout.css?v=1795182828">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/components.css?v=1795181369">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/pages.css?v=1795181964">
+        <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/chat.css?v=1795182784">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/inline.css?v=1795195506">
+    <link rel="stylesheet" href="/Emplowise-Website-Phase-I/css/static-banner.css">
+    <script src="/Emplowise-Website-Phase-I/static-adapter.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="page-bg" aria-hidden="true">
+    <span class="aurora-1"></span>
+    <span class="aurora-2"></span>
+    <span class="aurora-3"></span>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
+
+<header class="site-header" id="site-header">
+    <div class="shell header-inner">
+        <a href="/Emplowise-Website-Phase-I/" class="brand" aria-label="Emplowise home">
+            <img src="/Emplowise-Website-Phase-I/img/logo-primary.png?v=1795179822" alt="Emplowise" width="1056" height="270">
+        </a>
+
+        <nav class="main-nav" id="main-nav" aria-label="Primary">
+                            <a href="/Emplowise-Website-Phase-I/"
+                   class="nav-link "
+                   >
+                    Home
+                </a>
+                            <a href="/Emplowise-Website-Phase-I/what-we-are"
+                   class="nav-link "
+                   >
+                    What We Are
+                </a>
+                            <a href="/Emplowise-Website-Phase-I/what-we-do"
+                   class="nav-link "
+                   >
+                    What We Do
+                </a>
+                            <a href="/Emplowise-Website-Phase-I/pricing"
+                   class="nav-link "
+                   >
+                    Pricing
+                </a>
+                            <a href="/Emplowise-Website-Phase-I/student-hub"
+                   class="nav-link "
+                   >
+                    Student Hub
+                </a>
+                            <a href="/Emplowise-Website-Phase-I/faq"
+                   class="nav-link "
+                   >
+                    FAQ
+                </a>
+                        <a href="/Emplowise-Website-Phase-I/free-hr-audit" class="nav-link nav-link--cta">Free HR Audit</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="/Emplowise-Website-Phase-I/free-hr-audit" class="btn btn--primary btn--sm">Free HR Audit</a>
+            <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+                <span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main id="main">
+        <section class="page-head">
+        <div class="shell shell--narrow">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/Emplowise-Website-Phase-I/">Home</a>
+                <span aria-hidden="true">/</span>
+                <span>Free HR Audit</span>
+            </nav>
+            <p class="kicker">Free diagnostic · about four minutes</p>
+            <h1>Tell us where HR hurts. We will map the gaps.</h1>
+            <p class="lede">
+                A structured review of payroll inputs, performance practice, and policy coverage. You leave with
+                a prioritised gap list. Implementation is quoted separately, only if you want it.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="shell audit-layout">
+            <div>
+                <form class="wizard" id="audit-form" data-endpoint="/api/audit" novalidate>
+                    <div class="wizard-head">
+                        <span class="wizard-step-label" id="wizard-label">Step 1 of 4 · Contact</span>
+                        <span class="wizard-dots" id="wizard-dots" aria-hidden="true"><i class="is-current"></i><i></i><i></i><i></i></span>
+                        <span class="wizard-step-label" id="wizard-count">01 / 04</span>
+                    </div>
+                    <div class="wizard-progress" aria-hidden="true"><span id="wizard-progress"></span></div>
+
+                    
+                    <div class="wizard-step is-active" data-step="1">
+                        <h2>Who are we speaking with?</h2>
+                        <p class="step-note">Work details only. No payment information is collected at any point.</p>
+
+                        <div class="form-grid">
+                            <div class="field" data-field="contact_name">
+                                <label for="audit-name">Contact name</label>
+                                <input id="audit-name" name="contact_name" type="text" autocomplete="name" maxlength="120" placeholder="Your full name" required>
+                                <span class="field-error"></span>
+                            </div>
+                            <div class="field" data-field="company_name">
+                                <label for="audit-company">Company</label>
+                                <input id="audit-company" name="company_name" type="text" autocomplete="organization" maxlength="160" placeholder="Company or venture name" required>
+                                <span class="field-error"></span>
+                            </div>
+                            <div class="field" data-field="email">
+                                <label for="audit-email">Work email</label>
+                                <input id="audit-email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@company.com" required>
+                                <span class="field-error"></span>
+                            </div>
+                            <div class="field" data-field="phone">
+                                <label for="audit-phone">Phone</label>
+                                <input id="audit-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="+92 300 1234567" required>
+                                <span class="field-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="wizard-step" data-step="2">
+                        <h2>What does the team look like?</h2>
+                        <p class="step-note">Select every pain point that is true today. There is no wrong answer, only a diagnosis.</p>
+
+                        <div class="form-grid">
+                            <div class="field field--full" data-field="headcount_band">
+                                <label for="audit-headcount">Current headcount</label>
+                                <select id="audit-headcount" name="headcount_band" required>
+                                    <option value="">Select a band</option>
+                                                                            <option value="1-10">1 to 10 people</option>
+                                                                            <option value="11-20">11 to 20 people</option>
+                                                                            <option value="21-50">21 to 50 people</option>
+                                                                            <option value="51-100">51 to 100 people</option>
+                                                                            <option value="100+">More than 100 people</option>
+                                                                    </select>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <div class="field field--full" data-field="pain_points">
+                                <span class="field-label">Where does it hurt most?</span>
+                                <div class="check-grid">
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="payroll">
+                                            <span>Payroll and salary inputs</span>
+                                        </label>
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="performance">
+                                            <span>Performance reviews and manager support</span>
+                                        </label>
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="policy">
+                                            <span>Policies, SOPs, and handbooks</span>
+                                        </label>
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="compliance">
+                                            <span>Compliance and documentation</span>
+                                        </label>
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="recruitment">
+                                            <span>Hiring and onboarding</span>
+                                        </label>
+                                                                            <label class="check">
+                                            <input type="checkbox" name="pain_points[]" value="reporting">
+                                            <span>Reporting and leadership visibility</span>
+                                        </label>
+                                                                    </div>
+                                <span class="hint">Pick at least one. Up to six.</span>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <div class="field field--full" data-field="notes">
+                                <label for="audit-notes">Anything else we should know? <span class="muted">(optional)</span></label>
+                                <textarea id="audit-notes" name="notes" maxlength="1500" placeholder="Current tools, recent incidents, a policy that is out of date, a review cycle that stalled."></textarea>
+                                <span class="field-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="wizard-step" data-step="3">
+                        <h2>When should we run it?</h2>
+                        <p class="step-note">Pick a preferred date within the next 60 days and a time window. We confirm the exact slot after reviewing the intake.</p>
+
+                        <div class="form-grid">
+                            <div class="field" data-field="preferred_date">
+                                <label for="audit-date">Preferred date</label>
+                                <input id="audit-date" name="preferred_date" type="date"
+                                       min="2026-11-20"
+                                       max="2027-01-19"
+                                       required>
+                                <span class="hint">Today through 19 Jan 2027.</span>
+                                <span class="field-error"></span>
+                            </div>
+                            <div class="field" data-field="preferred_slot">
+                                <label for="audit-slot">Preferred window</label>
+                                <select id="audit-slot" name="preferred_slot" required>
+                                    <option value="">Select a window</option>
+                                                                            <option value="Morning (9:00 to 12:00)">Morning (9:00 to 12:00)</option>
+                                                                            <option value="Afternoon (12:00 to 16:00)">Afternoon (12:00 to 16:00)</option>
+                                                                            <option value="Evening (16:00 to 19:00)">Evening (16:00 to 19:00)</option>
+                                                                    </select>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <div class="field field--full" data-field="consent">
+                                <label class="check">
+                                    <input type="checkbox" name="consent" value="1" required>
+                                    <span>I agree to be contacted about this audit. Submissions are stored in the Emplowise database and used only to prepare the review.</span>
+                                </label>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <div class="sr-only" aria-hidden="true">
+                                <label for="audit-website">Website</label>
+                                <input id="audit-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="wizard-step" data-step="4">
+                        <h2>Review and submit.</h2>
+                        <p class="step-note">Check the details, then submit. You will get a reference number on the next screen.</p>
+
+                        <dl class="review-list" id="review-list"></dl>
+
+                        <div class="field" data-field="submit">
+                            <p class="field-error" id="submit-error"></p>
+                        </div>
+                    </div>
+
+                    <div class="wizard-actions">
+                        <button type="button" class="btn btn--ghost" id="wizard-back" hidden>Back</button>
+                        <button type="button" class="btn btn--primary" id="wizard-next">Continue</button>
+                        <button type="submit" class="btn btn--teal" id="wizard-submit" hidden>Submit audit request</button>
+                    </div>
+
+                    <p class="form-status s32" id="audit-status" role="status"></p>
+                </form>
+
+                <div class="success-panel" id="audit-success" role="status">
+                    <span class="success-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    </span>
+                    <p class="kicker s11">Request received</p>
+                    <h2 class="s33">Your audit is in the queue.</h2>
+                    <p class="small s34">
+                        Keep the reference below. We review your intake, prepare a gap map, and confirm the window.
+                    </p>
+                    <p class="success-ref" id="success-ref">EMP-000000-XXXX</p>
+                    <div class="review-list">
+                        <div><dt>Preferred date</dt><dd id="success-date">Pending</dd></div>
+                        <div><dt>Preferred window</dt><dd id="success-slot">Pending</dd></div>
+                    </div>
+                    <ul class="success-steps">
+                        <li>We read the intake and flag missing records, payroll gaps, and policy exposure.</li>
+                        <li>We confirm the audit window you selected, or propose the nearest available slot.</li>
+                        <li>The audit conversation ends with a prioritised gap list and a short action plan.</li>
+                    </ul>
+                    <a href="/Emplowise-Website-Phase-I/" class="btn btn--primary btn--sm s1">Back to the site</a>
+                </div>
+            </div>
+
+            <aside class="audit-aside">
+                <div class="aside-card">
+                    <h3>What the audit covers</h3>
+                    <ul class="aside-list">
+                        <li>Payroll inputs, attendance, leave, and employee records.</li>
+                        <li>Review cadence, manager capability, and unresolved people issues.</li>
+                        <li>Policy coverage, SOPs, and documentation gaps.</li>
+                        <li>A prioritised gap list and a short action plan.</li>
+                    </ul>
+                </div>
+
+                <div class="aside-card">
+                    <h3>What to prepare</h3>
+                    <ul class="aside-list">
+                        <li>Current headcount and how the team is structured.</li>
+                        <li>How payroll is run today, and by whom.</li>
+                        <li>Where performance reviews live, if anywhere.</li>
+                        <li>Which policies exist and when they were last reviewed.</li>
+                    </ul>
+                </div>
+
+                <div class="aside-card">
+                    <h3>What it is not</h3>
+                    <p class="small s34">
+                        The audit is free and diagnostic. It is not legal advice, not a compliance guarantee, and
+                        not a commitment to a package. Implementation is quoted separately.
+                    </p>
+                </div>
+
+                <div class="aside-card">
+                    <h3>Package context</h3>
+                    <ul class="aside-list">
+                                                    <li>Starter · Up to 20 employees · PKR 40,000</li>
+                                                    <li>Business · Up to 50 employees · PKR 75,000</li>
+                                                    <li>Enterprise · 50+ employees · Custom</li>
+                                            </ul>
+                    <p class="small muted s35">
+                        Inclusions are Pending Input and confirmed in the audit conversation.
+                    </p>
+                </div>
+            </aside>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="shell">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="/Emplowise-Website-Phase-I/img/logo-reverse.png?v=1795179822" alt="Emplowise" width="1056" height="270">
+                <p class="footer-note">Remote HR solutions for growing businesses. Built on clarity, structure, and plain language.</p>
+            </div>
+
+            <div>
+                <p class="footer-title">Company</p>
+                <div class="footer-links">
+                    <a href="/Emplowise-Website-Phase-I/what-we-are">What We Are</a>
+                    <a href="/Emplowise-Website-Phase-I/what-we-do">What We Do</a>
+                    <a href="/Emplowise-Website-Phase-I/pricing">Pricing</a>
+                    <a href="/Emplowise-Website-Phase-I/faq">FAQ</a>
+                </div>
+            </div>
+
+            <div>
+                <p class="footer-title">Student Hub</p>
+                <div class="footer-links">
+                    <a href="/Emplowise-Website-Phase-I/student-hub#interview">Interview Prep</a>
+                    <a href="/Emplowise-Website-Phase-I/student-hub#ats">ATS Score</a>
+                    <a href="/Emplowise-Website-Phase-I/student-hub#resume">Resume Builder</a>
+                    <a href="/Emplowise-Website-Phase-I/student-hub#profile">Profile Optimizer</a>
+                    <a href="/Emplowise-Website-Phase-I/student-hub#prompts">Prompt Library</a>
+                </div>
+            </div>
+
+            <div>
+                <p class="footer-title">Start here</p>
+                <div class="footer-links">
+                    <a href="/Emplowise-Website-Phase-I/free-hr-audit">Free HR Audit</a>
+                    <span>Market: Pakistan</span>
+                    <span>International expansion planned long term</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 Emplowise HR Services. All rights reserved.</span>
+            <span>Unconfirmed commercial details are marked Pending Input. Nothing on this site is a legal or compliance guarantee.</span>
+        </div>
+    </div>
+</footer>
+
+<div class="chat-root" id="chat-root" data-endpoint="/api/chat">
+    <section class="chat-panel" id="chat-panel" aria-label="Emplowise assistant" hidden>
+        <header class="chat-head">
+            <div class="chat-head-id">
+                <div class="chat-avatar" aria-hidden="true">E</div>
+                <div>
+                    <p class="chat-title">Emplowise assistant</p>
+                    <p class="chat-sub">Grounded answers only</p>
+                </div>
+            </div>
+            <button type="button" class="chat-close" id="chat-close" aria-label="Close chat">&times;</button>
+        </header>
+
+        <div class="chat-log" id="chat-log" role="log" aria-live="polite">
+            <div class="msg">hey. I am the Emplowise assistant. Ask about packages, what we run, or the free audit. Prices stay exact, guesses do not happen.</div>
+        </div>
+
+        <div class="chat-quick" id="chat-quick">
+            <button type="button" class="quick-chip" data-q="What do the packages cost?">Pricing</button>
+            <button type="button" class="quick-chip" data-q="What HR services do you run?">Services</button>
+            <button type="button" class="quick-chip" data-q="How does the free HR audit work?">Free audit</button>
+            <button type="button" class="quick-chip" data-q="What is in the student hub?">Student hub</button>
+        </div>
+
+        <form class="chat-form" id="chat-form" autocomplete="off">
+            <label class="sr-only" for="chat-input">Your message</label>
+            <input id="chat-input" name="message" type="text" maxlength="800" placeholder="Ask about payroll, pricing, policy..." required>
+            <button class="chat-send" type="submit" id="chat-send">Send</button>
+        </form>
+        <p class="chat-note">Verified data only. Scope details open in the free audit.</p>
+    </section>
+
+    <button type="button" class="chat-launcher" id="chat-launcher" aria-expanded="false" aria-controls="chat-panel">
+        <span class="dot" aria-hidden="true"></span>
+        Ask Emplowise
+    </button>
+</div>
+
+<button class="to-top" id="to-top" type="button" aria-label="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/Emplowise-Website-Phase-I/js/app.js?v=1795182476" defer></script>
+<script src="/Emplowise-Website-Phase-I/js/chat.js?v=1795194903" defer></script>
+</body>
+</html>

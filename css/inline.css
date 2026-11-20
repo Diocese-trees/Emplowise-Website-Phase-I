@@ -1,0 +1,43 @@
+/* Extracted from former inline style attributes so CSP can stay at style-src 'self'. */
+.s1{margin-top:1.5rem !important}
+.s2{margin-top:1.75rem !important;margin-bottom:0 !important}
+.s3{margin-top:2.5rem !important}
+.s4{margin-bottom:0.75rem !important}
+.s5{margin-bottom:0.5rem !important}
+.s6{font-size:1.2rem !important;margin:0 !important}
+.s7{color:var(--slate-600) !important;margin-bottom:1rem !important}
+.s8{margin-top:1rem !important}
+.s9{margin-top:clamp(2rem,4vw,3rem) !important}
+.s10{font-size:1.3rem !important;margin-bottom:0.8rem !important}
+.s11{margin-bottom:0.8rem !important}
+.s12{font-size:1.05rem !important;margin-bottom:0.6rem !important}
+.s13{color:var(--slate-600) !important;margin-bottom:0.9rem !important}
+.s14{margin-top:2rem !important}
+.s15{margin-top:0.75rem !important}
+.s16{margin:0 !important}
+.s17{margin-top:1.75rem !important}
+.s18{font-size:1.2rem !important;margin-bottom:0.4rem !important}
+.s19{display:flex !important;align-items:center !important;gap:1rem !important;margin-top:1rem !important;flex-wrap:wrap !important}
+.s20{stroke:url(#scoreGradB) !important}
+.s21{color:var(--slate-500) !important;letter-spacing:0.1em !important;text-transform:uppercase !important;font-size:0.68rem !important}
+.s22{margin-top:0.5rem !important}
+.s23{margin-top:1.25rem !important}
+.s24{margin-bottom:0.6rem !important}
+.s25{font-size:0.95rem !important;margin:0 !important}
+.s26{min-height:80px !important}
+.s27{display:flex !important;align-items:center !important;gap:1rem !important;flex-wrap:wrap !important}
+.s28{display:flex !important;justify-content:space-between !important;gap:0.5rem !important;align-items:center !important;margin-bottom:0.5rem !important}
+.s29{margin-top:1.5rem !important;color:var(--slate-600) !important}
+.s30{margin-bottom:1rem !important}
+.s31{font-size:1.25rem !important;margin:0 !important}
+.s32{margin-top:0.9rem !important}
+.s33{margin-bottom:0.4rem !important}
+.s34{color:var(--slate-600) !important;margin:0 !important}
+.s35{margin-top:0.8rem !important}
+.s36{margin-top:0.4rem !important}
+.s37{color:var(--slate-600) !important;margin-top:1rem !important}
+.s38{margin-top:1.2rem !important}
+.s39{font-family:var(--font-mono) !important;font-size:0.66rem !important;letter-spacing:0.14em !important;text-transform:uppercase !important;color:var(--teal-deep) !important;margin-bottom:0.8rem !important}
+.s40{font-family:var(--font-mono) !important;font-size:0.66rem !important;letter-spacing:0.14em !important;text-transform:uppercase !important;color:var(--slate-500) !important;margin:1.8rem 0 0.6rem !important}
+.s41{color:#c4d1e2 !important}
+.s42{color:#8fa3bb !important;margin-top:1rem !important}
