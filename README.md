@@ -3,7 +3,9 @@
 **Remote HR services website, grounded AI assistant and a free student career toolkit.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-[![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://troy-pixel-quebec-granted.trycloudflare.com)
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — static snapshot of all seven pages. The Laravel app adds the audit intake, AI-backed replies and CSP/HSTS headers.
+
+[![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![Tests](https://img.shields.io/badge/tests-16%20passing-16a34a?style=flat-square)](#testing)
 [![PHP](https://img.shields.io/badge/PHP-8.3-777bb4?style=flat-square)](composer.json)
 
