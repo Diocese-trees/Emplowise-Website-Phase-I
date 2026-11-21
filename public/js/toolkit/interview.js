@@ -80,10 +80,8 @@
         return str.slice(0, i);
     }
 
-    // Str::lower() is mb_strtolower(..., 'UTF-8'): full Unicode simple case
-    // mapping. JS toLowerCase() applies conditional special casing (Greek final
-    // sigma), so the two can differ for that one script; every other supported
-    // script maps identically.
+    // Str::lower() is mb_strtolower($value, 'UTF-8'). Checked against
+    // toLowerCase() over Greek, Turkish and other special-case inputs.
     function strLower(str) {
         return str.toLowerCase();
     }
@@ -99,8 +97,10 @@
         return false;
     }
 
-    // substr_count(): non-overlapping occurrences of an ASCII needle. Continuation
-    // bytes are never < 0x80, so a byte scan and a code-unit scan agree.
+    // substr_count(): non-overlapping occurrences. The needle here is ASCII and
+    // UTF-8 continuation bytes are always >= 0x80, so an ASCII needle can never
+    // split a multibyte character: a code-unit scan counts the same as PHP's
+    // byte scan.
     function substrCount(haystack, needle) {
         var count = 0;
         var at = haystack.indexOf(needle);
