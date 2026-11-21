@@ -340,6 +340,29 @@ RESUME;
         $this->assertSame('local', $response->json('source'));
     }
 
+    public function test_ats_matches_synonyms_and_checks_the_target_title(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $resume = "Senior Data Analyst\nKarachi | analyst@example.com | +92 300 1234567\n\nSummary\nAnalyst who communicates clearly and builds dashboards with JS.\n\nExperience\nSenior Data Analyst — Northline\n- Built dashboards in JS for three teams.\n- Communicated findings to two managers every week.\n\nEducation\nBS Computer Science\n\nSkills\nJS, SQL, communication";
+
+        $jd = "Senior Data Analyst\nWe need strong communication and JavaScript skills for reporting work.";
+
+        $response = $this->postJson('/api/student/ats', [
+            'resume' => $resume,
+            'job_description' => $jd,
+        ])->assertOk();
+
+        $this->assertSame('Senior Data Analyst', $response->json('title'));
+        $this->assertTrue($response->json('title_match'));
+        $this->assertContains('communication', $response->json('matched'));
+        $this->assertContains('javascript', $response->json('matched'));
+
+        $titleCheck = collect($response->json('structure'))->firstWhere('label', 'Target title present');
+        $this->assertTrue($titleCheck['ok']);
+        $this->assertSame(0, $titleCheck['weight']);
+    }
+
     public function test_profile_optimizer_rejects_empty_input_and_rewrites_weak_copy(): void
     {
         config(['ai.alibaba.api_key' => null]);
