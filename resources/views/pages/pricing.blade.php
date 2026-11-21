@@ -14,8 +14,8 @@
             <p class="kicker">Monthly retainers</p>
             <h1>Three packages. Prices published. Inclusions scoped honestly.</h1>
             <p class="lede">
-                These are the confirmed 2026 monthly retainers. Package by package deliverables are Pending
-                Input, so we do not pretend a tier contains services the source material never fixed.
+                These are the confirmed 2026 monthly retainers. Package by package deliverables are confirmed
+                in writing after your Free HR Audit, so we do not pretend a tier contains services the source material never fixed.
             </p>
         </div>
     </section>
@@ -36,7 +36,7 @@
                             <li>{{ $package['summary'] }}</li>
                             <li>{{ $package['best_for'] }}</li>
                             <li>Services drawn from the confirmed catalogue.</li>
-                            <li>Deliverables per tier: Pending Input.</li>
+                            <li>Deliverables per tier: confirmed in writing after your Free HR Audit.</li>
                         </ul>
                         <p class="price-note">{{ $package['inclusions'] }}</p>
                         <a href="{{ route('free-hr-audit') }}" class="btn {{ $package['featured'] ? 'btn--light' : 'btn--ghost' }} btn--sm s8">
@@ -75,8 +75,8 @@
                 <p class="kicker">Side by side</p>
                 <h2>The comparison, without invented rows.</h2>
                 <p class="lede">
-                    Headcount capacity and price are confirmed. Inclusion rows are marked Pending Input on
-                    purpose.
+                    Headcount capacity and price are confirmed. Inclusion rows are confirmed in writing after your
+                    Free HR Audit.
                 </p>
             </div>
 
@@ -98,15 +98,15 @@
                                 <td>{{ $package['capacity'] }}</td>
                                 <td>{{ $package['price_pkr'] === null ? $package['price_display'].' (scoped monthly)' : $package['price_display'].' / month' }}</td>
                                 <td>{{ $package['best_for'] }}</td>
-                                <td class="is-pending">Pending Input. Confirmed in the audit conversation.</td>
+                                <td class="is-pending">Confirmed in writing after your Free HR Audit.</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <p class="service-table-note">
-                Recruitment fee inclusion, payroll tax scope, and legal advice qualifications are all Pending
-                Input.
+                Recruitment fee inclusion, payroll tax scope, and legal advice qualifications are confirmed in
+                writing after your Free HR Audit.
             </p>
         </div>
     </section>

@@ -34,7 +34,7 @@ return [
             'A dedicated HR representative',
             'Direct access to the client CEO or founder',
         ],
-        'contact_note' => 'The Free HR Audit form is the only verified contact channel in this build. Direct phone and inbox details are Pending Input.',
+        'contact_note' => 'The Free HR Audit form is the only verified contact channel in this build. Direct phone and inbox details are confirmed in writing after your Free HR Audit.',
     ],
 
     'mission' => [
@@ -99,7 +99,7 @@ return [
                 'Employee onboarding',
                 'HR documentation and employee records',
             ],
-            'status' => 'Services confirmed. Automation layer proposed.',
+            'status' => 'Delivered remotely by your HR team.',
         ],
         [
             'slug' => 'performance',
@@ -118,7 +118,7 @@ return [
                 'Organizational assessments',
                 'Monthly HR reporting',
             ],
-            'status' => 'Services confirmed. Automation layer proposed.',
+            'status' => 'Delivered remotely by your HR team.',
         ],
         [
             'slug' => 'policy',
@@ -137,25 +137,25 @@ return [
                 'Ongoing HR consultation',
                 'Complete recruitment',
             ],
-            'status' => 'Services confirmed. Automation layer proposed.',
+            'status' => 'Delivered remotely by your HR team.',
         ],
     ],
 
     'services' => [
-        ['name' => 'Complete recruitment', 'pillar' => 'Managed HR Operations', 'note' => 'End to end hiring execution. Recruitment fee terms are Pending Input.'],
+        ['name' => 'Complete recruitment', 'pillar' => 'Managed HR Operations', 'note' => 'End to end hiring execution. Recruitment fee terms are confirmed in writing after your Free HR Audit.'],
         ['name' => 'Employee onboarding', 'pillar' => 'Managed HR Operations', 'note' => 'Structured onboarding workflow for new team members.'],
         ['name' => 'HR documentation and employee records', 'pillar' => 'Managed HR Operations', 'note' => 'Centralised personnel records and HR files.'],
         ['name' => 'Leave and attendance management', 'pillar' => 'Managed HR Operations', 'note' => 'Ongoing tracking of employee leave and attendance.'],
         ['name' => 'HR policies and SOPs', 'pillar' => 'Managed HR Operations', 'note' => 'Operational policies aligned to day to day management.'],
-        ['name' => 'Payroll', 'pillar' => 'Managed HR Operations', 'note' => 'Payroll management. Exact tax and disbursement scope is Pending Input.'],
-        ['name' => 'Legal and compliance support', 'pillar' => 'Managed HR Operations', 'note' => 'Compliance coordination. Legal advice qualifications are Pending Input.'],
+        ['name' => 'Payroll', 'pillar' => 'Managed HR Operations', 'note' => 'Payroll management. Exact tax and disbursement scope is confirmed in writing after your Free HR Audit.'],
+        ['name' => 'Legal and compliance support', 'pillar' => 'Managed HR Operations', 'note' => 'Compliance coordination. Legal advice qualifications are confirmed in writing after your Free HR Audit.'],
         ['name' => 'Performance support', 'pillar' => 'Organizational Intelligence', 'note' => 'Structured support for manager and employee performance.'],
         ['name' => 'Employee relations and conflict support', 'pillar' => 'Organizational Intelligence', 'note' => 'Guidance for interdepartmental friction and workplace conflict.'],
-        ['name' => 'Organizational assessments', 'pillar' => 'Organizational Intelligence', 'note' => 'Review of HR gaps ahead of quarterly planning. Cadence is Pending Input.'],
+        ['name' => 'Organizational assessments', 'pillar' => 'Organizational Intelligence', 'note' => 'Review of HR gaps ahead of quarterly planning. Cadence is confirmed in writing after your Free HR Audit.'],
         ['name' => 'Monthly HR reporting', 'pillar' => 'Executive HR Partnership', 'note' => 'Monthly people visibility delivered to client leadership.'],
         ['name' => 'Ongoing HR consultation', 'pillar' => 'Executive HR Partnership', 'note' => 'Continuous HR guidance backed by specialist consultants.'],
         ['name' => 'Specialist HR consultant support', 'pillar' => 'Executive HR Partnership', 'note' => 'Specialist input on defined people problems within agreed scope.'],
-        ['name' => 'Dedicated HR representative', 'pillar' => 'Executive HR Partnership', 'note' => 'Direct access to the client CEO or founder. Full time versus shared allocation is Pending Input.'],
+        ['name' => 'Dedicated HR representative', 'pillar' => 'Executive HR Partnership', 'note' => 'Direct access to the client CEO or founder. Full time versus shared allocation is confirmed in writing after your Free HR Audit.'],
     ],
 
     'methodology' => [
@@ -193,7 +193,7 @@ return [
         'Leadership sees headcount, attendance, and open people risks in one report.',
     ],
 
-    'outcomes_note' => 'Baseline metrics and client results are Pending Input. This build does not publish invented percentages, savings, or client names.',
+    'outcomes_note' => 'Baseline metrics and client results are confirmed in writing after your Free HR Audit. This build does not publish invented percentages, savings, or client names.',
 
     'packages' => [
         [
@@ -206,7 +206,7 @@ return [
             'summary' => 'For a small team that needs the basics done properly.',
             'best_for' => 'Startups up to 20 staff without a dedicated HR hire.',
             'featured' => false,
-            'inclusions' => 'Package level service inclusions are Pending Input. Confirmed scope is agreed in the audit conversation.',
+            'inclusions' => 'Service inclusions are confirmed in writing after your Free HR Audit.',
         ],
         [
             'slug' => 'business',
@@ -218,7 +218,7 @@ return [
             'summary' => 'For a growing company with real process volume.',
             'best_for' => 'SMEs up to 50 staff running payroll and performance cycles.',
             'featured' => true,
-            'inclusions' => 'Package level service inclusions are Pending Input. Confirmed scope is agreed in the audit conversation.',
+            'inclusions' => 'Service inclusions are confirmed in writing after your Free HR Audit.',
         ],
         [
             'slug' => 'enterprise',
@@ -230,15 +230,15 @@ return [
             'summary' => 'For larger headcount, multiple departments, and specialist needs.',
             'best_for' => 'Organisations above 50 staff with layered management.',
             'featured' => false,
-            'inclusions' => 'Scope, inclusions, and representative allocation are Pending Input. Enterprise pricing is quoted after the audit.',
+            'inclusions' => 'Scope, inclusions, and representative allocation are confirmed in writing after your Free HR Audit. Enterprise pricing is quoted after that audit.',
         ],
     ],
 
     'pricing_notes' => [
         'Prices are monthly retainers priced by employee headcount, confirmed in the 2026 business brief.',
-        'Package by package inclusions are Pending Input. The pricing page does not invent deliverables per tier.',
+        'Package by package inclusions are confirmed in writing after your Free HR Audit. The pricing page does not invent deliverables per tier.',
         'All packages are delivered remotely unless a different arrangement is agreed.',
-        'Recruitment fees, payroll tax and disbursement scope, and legal advice qualifications are Pending Input and confirmed in consultation.',
+        'Recruitment fees, payroll tax and disbursement scope, and legal advice qualifications are confirmed in writing after your Free HR Audit.',
     ],
 
     'legacy_pricing' => [
@@ -268,7 +268,7 @@ return [
                 ],
                 [
                     'q' => 'Is delivery onsite or remote?',
-                    'a' => 'Remote HR support is the confirmed delivery model. A dedicated HR representative provides direct access to the client CEO or founder. Full time versus shared allocation is Pending Input.',
+                    'a' => 'Remote HR support is the confirmed delivery model. A dedicated HR representative provides direct access to the client CEO or founder. Full time versus shared allocation is confirmed in writing after your Free HR Audit.',
                 ],
                 [
                     'q' => 'Does Emplowise replace our leadership or board?',
@@ -276,7 +276,7 @@ return [
                 ],
                 [
                     'q' => 'Can you guarantee legal compliance?',
-                    'a' => 'No. Emplowise provides legal and compliance support and coordination. Legal advice qualifications and jurisdiction coverage are Pending Input, and no compliance outcome is guaranteed.',
+                    'a' => 'No. Emplowise provides legal and compliance support and coordination. Legal advice qualifications and jurisdiction coverage are confirmed in writing after your Free HR Audit, and no compliance outcome is guaranteed.',
                 ],
             ],
         ],
@@ -289,19 +289,19 @@ return [
                 ],
                 [
                     'q' => 'What is included in each package?',
-                    'a' => 'Package level inclusions are Pending Input. This is deliberate. Rather than publish invented deliverables, the audit conversation confirms which services apply to your headcount and risk profile.',
+                    'a' => 'Package inclusions are confirmed in writing after your Free HR Audit. Rather than publish invented deliverables, that conversation confirms which services apply to your headcount and risk profile.',
                 ],
                 [
                     'q' => 'Are recruitment fees included?',
-                    'a' => 'Recruitment is a confirmed service. Whether recruitment fees sit inside the retainer or are billed separately is Pending Input.',
+                    'a' => 'Recruitment is a confirmed service. Whether recruitment fees sit inside the retainer or are billed separately is confirmed in writing after your Free HR Audit.',
                 ],
                 [
                     'q' => 'Does payroll include tax filing and salary disbursement?',
-                    'a' => 'Payroll management is confirmed. Exact tax, statutory contribution, and disbursement scope is Pending Input and confirmed in writing before work starts.',
+                    'a' => 'Payroll management is confirmed. Exact tax, statutory contribution, and disbursement scope is confirmed in writing before work starts.',
                 ],
                 [
                     'q' => 'Is there a minimum contract length?',
-                    'a' => 'Contract length is Pending Input. Pricing is quoted as a monthly retainer.',
+                    'a' => 'Contract length is confirmed in writing after your Free HR Audit. Pricing is quoted as a monthly retainer.',
                 ],
                 [
                     'q' => 'Why did older pages list Foundation, Growth, and Scale?',
@@ -318,7 +318,7 @@ return [
                 ],
                 [
                     'q' => 'How long does it take?',
-                    'a' => 'The intake form takes about four minutes. The audit conversation itself is scheduled in the window you select. Assessment cadence is Pending Input.',
+                    'a' => 'The intake form takes about four minutes. The audit conversation itself is scheduled in the window you select. Assessment cadence is confirmed in writing after your Free HR Audit.',
                 ],
                 [
                     'q' => 'What do I need to prepare?',
@@ -361,7 +361,7 @@ return [
         ],
     ],
 
-    'faq_note' => 'Answers use only confirmed business data. Anything unresolved is dated and labelled Pending Input.',
+    'faq_note' => 'Answers use only confirmed business data. Anything unresolved is confirmed in writing after your Free HR Audit.',
 
     'student' => [
         'intro' => 'Five working tools. No account. No cost. Built on the same structure Emplowise uses for client HR, pointed at your career.',

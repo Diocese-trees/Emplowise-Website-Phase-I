@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'FAQ | Emplowise')
-@section('meta_description', 'Answers about Emplowise services, pricing, the free HR audit, and the free student hub. Confirmed data only, with unresolved details labelled Pending Input.')
+@section('meta_description', 'Answers about Emplowise services, pricing, the free HR audit, and the free student hub. Confirmed data only, with unresolved details confirmed in writing after your Free HR Audit.')
 
 @section('content')
     <section class="page-head">
@@ -15,7 +15,7 @@
             <h1>The questions clients and students actually ask.</h1>
             <p class="lede">
                 Search it, filter it, or open the assistant. Every answer uses confirmed business data. Anything
-                unresolved is dated and labelled Pending Input.
+                unresolved is confirmed in writing after your Free HR Audit.
             </p>
         </div>
     </section>

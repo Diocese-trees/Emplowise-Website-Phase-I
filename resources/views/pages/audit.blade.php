@@ -221,7 +221,7 @@
                         @endforeach
                     </ul>
                     <p class="small muted s35">
-                        Inclusions are Pending Input and confirmed in the audit conversation.
+                        Inclusions are confirmed in writing after your Free HR Audit.
                     </p>
                 </div>
             </aside>
