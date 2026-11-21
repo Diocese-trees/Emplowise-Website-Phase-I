@@ -5,7 +5,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset_v('css/student.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/print.css') }}">
+    <link rel="stylesheet" href="{{ asset_v('css/print.css') }}" media="print">
 @endpush
 
 @section('content')
@@ -241,7 +241,7 @@
                     </div>
 
                     <div class="result-block">
-                        <h4>Fix list</h4>
+                        <h3>Fix list</h3>
                         <ul class="feedback-block--fix checklist" id="ats-fixes"></ul>
                     </div>
                 </div>
@@ -383,19 +383,19 @@
 
                     <div id="profile-result" hidden>
                         <div class="result-block">
-                            <h4>Headline options</h4>
+                            <h3>Headline options</h3>
                             <div id="profile-headlines"></div>
                         </div>
                         <div class="result-block">
                             <div class="s28">
-                                <h4 class="s16">Summary</h4>
+                                <h3 class="s16">Summary</h3>
                                 <button type="button" class="copy-btn" data-copy-target="profile-summary-out">Copy</button>
                             </div>
                             <div class="result-text" id="profile-summary-out"></div>
                         </div>
                         <div class="result-block">
                             <div class="s28">
-                                <h4 class="s16">Rewritten bullets</h4>
+                                <h3 class="s16">Rewritten bullets</h3>
                                 <button type="button" class="copy-btn" data-copy-target="profile-bullets-out">Copy</button>
                             </div>
                             <div class="result-text" id="profile-bullets-out"></div>

@@ -183,7 +183,7 @@
     animation: acc-in 0.4s var(--ease-out);
 }
 
-.pillar-detail h4 {
+.pillar-detail h3, .pillar-detail h4 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -196,7 +196,7 @@
     margin: var(--s-5) 0 var(--s-3);
 }
 
-.pillar-detail h4::before {
+.pillar-detail h3::before, .pillar-detail h4::before {
     content: "";
     width: 14px;
     height: 2px;

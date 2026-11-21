@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Emplowise | Remote HR Solutions for Growing Businesses')
-@section('meta_description', 'Remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making with a proposed AI automation layer, plus a free student career toolkit.')
+@section('meta_description', 'Remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free student career toolkit.')
 
 @section('content')
     @php
@@ -74,7 +74,7 @@
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">Payroll inputs, leave, records</span>
-                            <span class="stack-bar"><i data-fill="86"></i></span>
+                            <span class="stack-count">{{ count($pillars[0]['services']) }} services</span>
                         </span>
                         <span class="stack-state">One source</span>
                     </div>
@@ -85,7 +85,7 @@
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">Review cycles and manager prompts</span>
-                            <span class="stack-bar"><i data-fill="72"></i></span>
+                            <span class="stack-count">{{ count($pillars[1]['services']) }} services</span>
                         </span>
                         <span class="stack-state">One cadence</span>
                     </div>
@@ -96,7 +96,7 @@
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">Policies with owners and versions</span>
-                            <span class="stack-bar"><i data-fill="64"></i></span>
+                            <span class="stack-count">{{ count($pillars[2]['services']) }} services</span>
                         </span>
                         <span class="stack-state">One register</span>
                     </div>
@@ -139,7 +139,7 @@
                     <h2>Three pillars. One operating rhythm.</h2>
                 </div>
                 <p class="lede">
-                    Open a pillar to see the confirmed services behind it and the automation layer we propose to
+                    Open a pillar to see the confirmed services behind it and the workflow checks and templates that
                     remove manual chase work.
                 </p>
             </div>
@@ -169,14 +169,14 @@
                         </button>
 
                         <div class="pillar-detail" id="pillar-{{ $pillar['slug'] }}">
-                            <h4>AI automation · proposed</h4>
+                            <h3>Workflow checks and templates</h3>
                             <ul class="pillar-list">
                                 @foreach ($pillar['automation'] as $item)
                                     <li>{{ $item }}</li>
                                 @endforeach
                             </ul>
 
-                            <h4>Confirmed services</h4>
+                            <h3>Confirmed services</h3>
                             <ul class="pillar-list">
                                 @foreach ($pillar['services'] as $service)
                                     <li>{{ $service }}</li>
@@ -226,8 +226,8 @@
                     <h2>Pricing by headcount, not by guesswork.</h2>
                 </div>
                 <p class="lede">
-                    Three confirmed tiers from the 2026 business brief. Package inclusions are deliberately marked
-                    Pending Input and agreed in the audit conversation.
+                    Three confirmed tiers from the 2026 business brief. Package inclusions are confirmed in writing
+                    after your Free HR Audit.
                 </p>
             </div>
 
@@ -244,7 +244,7 @@
                         <ul class="price-list">
                             <li>{{ $package['summary'] }}</li>
                             <li>{{ $package['best_for'] }}</li>
-                            <li>Inclusions: Pending Input.</li>
+                            <li>Inclusions: confirmed in writing after your Free HR Audit.</li>
                         </ul>
                         <a href="{{ route('pricing') }}" class="btn {{ $package['featured'] ? 'btn--light' : 'btn--ghost' }} btn--sm">View the full breakdown</a>
                     </article>
@@ -253,7 +253,7 @@
 
             <p class="small muted s1">
                 Prices are monthly retainers in PKR. Recruitment fees, payroll tax scope, and legal advice
-                qualifications are Pending Input and confirmed in consultation.
+                qualifications are confirmed in writing after your Free HR Audit.
             </p>
         </div>
     </section>
