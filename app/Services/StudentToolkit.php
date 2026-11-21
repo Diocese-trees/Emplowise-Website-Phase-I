@@ -217,10 +217,10 @@ final class StudentToolkit
     /**
      * @return array{headlines: array<int, string>, summary: string, bullets: array<int, string>, fixes: array<int, string>, source: string}
      */
-    public function optimizeProfile(string $headline, string $summary, string $bullets): array
+    public function optimizeProfile(string $headline, string $summary, string $bullets, string $targetRole = ''): array
     {
         $lines = array_values(array_filter(array_map('trim', preg_split('/\R/', $bullets) ?: [])));
-        $local = $this->localProfile($headline, $summary, $lines);
+        $local = $this->localProfile($headline, $summary, $lines, $targetRole);
 
         if (! $this->client->configured()) {
             return [...$local, 'source' => 'local'];
@@ -230,7 +230,8 @@ final class StudentToolkit
             $result = $this->client->chat([
                 ['role' => 'system', 'content' => 'You rewrite professional profiles for early career candidates. Return strict JSON only. Never invent employers, degrees, or metrics. Use [placeholder] brackets when a number is missing.'],
                 ['role' => 'user', 'content' => sprintf(
-                    "Headline: %s\nSummary: %s\nExperience bullets:\n%s\n\nRewrite for a LinkedIn profile. Give 3 headline options under 120 characters with one searchable keyword each. Give one summary of 80 words or fewer in first person. Rewrite each bullet to start with an action verb, one measurable placeholder allowed. Remove weak words like passionate, hardworking, aspiring. Return JSON: {\"headlines\":[\"...\"],\"summary\":\"...\",\"bullets\":[\"...\"],\"fixes\":[\"...\"]}",
+                    "Target role: %s\nHeadline: %s\nSummary: %s\nExperience bullets:\n%s\n\nRewrite for a LinkedIn profile. Give 3 headline options under 120 characters with one searchable keyword each. Give one summary of 80 words or fewer in first person. Rewrite each bullet to start with an action verb, one measurable placeholder allowed. Remove weak words like passionate, hardworking, aspiring. Return JSON: {\"headlines\":[\"...\"],\"summary\":\"...\",\"bullets\":[\"...\"],\"fixes\":[\"...\"]}",
+                    trim($targetRole) === '' ? 'derive from the headline' : Str::limit($targetRole, 80),
                     Str::limit($headline, 200),
                     Str::limit($summary, 1200),
                     Str::limit(implode("\n", $lines), 1500),
@@ -751,9 +752,11 @@ final class StudentToolkit
      * @param  array<int, string>  $lines
      * @return array{headlines: array<int, string>, summary: string, bullets: array<int, string>, fixes: array<int, string>}
      */
-    private function localProfile(string $headline, string $summary, array $lines): array
+    private function localProfile(string $headline, string $summary, array $lines, string $targetRole = ''): array
     {
-        $role = $this->deriveRole($headline);
+        $role = trim($targetRole) !== ''
+            ? Str::ucfirst(Str::limit(trim($targetRole), 60, ''))
+            : $this->deriveRole($headline);
         $skills = $this->detectSkills(Str::lower($headline.' '.$summary.' '.implode(' ', $lines)));
         $skillPhrase = $skills === [] ? 'structured delivery' : implode(', ', array_slice($skills, 0, 3));
 

@@ -375,6 +375,10 @@
                 <div class="profile-grid">
                     <form class="panel-card" id="profile-form">
                         <div class="field">
+                            <label for="profile-target">{{ $copy['profile']['form']['target'] }}</label>
+                            <input id="profile-target" type="text" autocomplete="off" enterkeyhint="next" maxlength="80" placeholder="Data Analyst Intern">
+                        </div>
+                        <div class="field">
                             <label for="profile-headline">{{ $copy['profile']['form']['headline'] }}</label>
                             <input id="profile-headline" type="text" autocomplete="off" enterkeyhint="next" maxlength="200" placeholder="Final year CS student looking for internships">
                         </div>

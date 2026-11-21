@@ -58,6 +58,7 @@ final class StudentController extends Controller
             'headline' => ['nullable', 'string', 'max:200'],
             'summary' => ['nullable', 'string', 'max:1500'],
             'bullets' => ['nullable', 'string', 'max:2000'],
+            'target_role' => ['nullable', 'string', 'max:80'],
         ]);
 
         if (trim((string) ($validated['headline'] ?? '')) === ''
@@ -72,6 +73,7 @@ final class StudentController extends Controller
             (string) ($validated['headline'] ?? ''),
             (string) ($validated['summary'] ?? ''),
             (string) ($validated['bullets'] ?? ''),
+            (string) ($validated['target_role'] ?? ''),
         ));
     }
 }

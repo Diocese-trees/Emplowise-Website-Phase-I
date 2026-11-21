@@ -925,6 +925,7 @@ return [
                 'copy' => 'Copy',
                 'fixes_heading' => 'Fix list',
                 'form' => [
+                    'target' => 'Target role',
                     'headline' => 'Current headline',
                     'summary' => 'Current summary',
                     'bullets' => 'Experience bullets',

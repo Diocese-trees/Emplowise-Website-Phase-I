@@ -1007,9 +1007,11 @@
             const headlineEl = el('profile-headline');
             const summaryEl = el('profile-summary');
             const bulletsEl = el('profile-bullets');
+            const targetEl = el('profile-target');
             const headline = headlineEl ? headlineEl.value.trim() : '';
             const summary = summaryEl ? summaryEl.value.trim() : '';
             const bullets = bulletsEl ? bulletsEl.value.trim() : '';
+            const target = targetEl ? targetEl.value.trim() : '';
 
             if (!headline && !summary && !bullets) {
                 setStatus(status, 'Add a headline, a summary, or at least one bullet.', 'is-error');
@@ -1024,7 +1026,7 @@
             }
             setStatus(status, 'Rewriting…');
 
-            postJson(endpoints.profile, { headline: headline, summary: summary, bullets: bullets })
+            postJson(endpoints.profile, { target_role: target, headline: headline, summary: summary, bullets: bullets })
                 .then(function (result) {
                     if (!result.ok) {
                         setStatus(status, firstError(result.body) || 'Could not rewrite this profile.', 'is-error');

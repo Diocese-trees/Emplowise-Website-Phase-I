@@ -388,5 +388,13 @@ RESUME;
         $this->assertStringNotContainsString('passionate', strtolower((string) $response->json('headlines.0')));
         $this->assertStringContainsString('[add one number]', implode(' ', $response->json('bullets')));
         $response->assertJsonPath('source', 'local');
+
+        $aimed = $this->postJson('/api/student/profile', [
+            'target_role' => 'Cybersecurity Analyst',
+            'headline' => 'Final year CS student passionate about data',
+            'summary' => 'I am a hardworking student looking for internship opportunities.',
+        ])->assertOk();
+
+        $this->assertStringStartsWith('Cybersecurity Analyst |', (string) $aimed->json('headlines.0'));
     }
 }
