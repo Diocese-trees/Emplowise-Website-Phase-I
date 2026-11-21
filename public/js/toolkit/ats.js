@@ -26,11 +26,6 @@
         return c === ' ' || c === '\t' || c === '\n' || c === '\u000B' || c === '\f' || c === '\r';
     }
 
-    // preg_split('/\R/') in byte mode also breaks on \v, \f and the NEL byte.
-    function isBreak(c) {
-        return c === '\n' || c === '\r' || c === '\u000B' || c === '\f' || c === '\u0085';
-    }
-
     function isAlpha(c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
     }
@@ -213,50 +208,121 @@
         return rtrim(strImWidth(value, limit)) + end;
     }
 
-    // preg_split('/\R/', $subject): CRLF, then any single break character.
+    // preg_split('/\R/', $subject) without the /u flag: PCRE looks at BYTES, so
+    // the separators are CR, LF, \v, \f, the NEL byte 0x85, and CRLF as a pair.
+    // 0x85 also occurs as a continuation byte inside multi-byte characters, so
+    // PHP can split a character in half. Working on the UTF-8 bytes reproduces
+    // that; an orphaned part of a character is dropped here, and every caller
+    // feeds the pieces to normalise(), where those bytes become a space anyway.
     function splitBreaks(subject) {
+        var bytes = toUtf8(subject);
         var parts = [];
-        var buffer = '';
+        var start = 0;
         var i = 0;
-        while (i < subject.length) {
-            var c = subject.charAt(i);
-            if (c === '\r') {
-                parts.push(buffer);
-                buffer = '';
-                i += subject.charAt(i + 1) === '\n' ? 2 : 1;
-            } else if (isBreak(c)) {
-                parts.push(buffer);
-                buffer = '';
-                i += 1;
-            } else {
-                buffer += c;
-                i += 1;
+
+        while (i < bytes.length) {
+            var byte = bytes[i];
+            var size = 0;
+
+            if (byte === 0x0D) size = bytes[i + 1] === 0x0A ? 2 : 1;
+            else if (byte === 0x0A || byte === 0x0B || byte === 0x0C || byte === 0x85) size = 1;
+
+            if (size === 0) {
+                i++;
+                continue;
             }
+
+            parts.push(fromUtf8(bytes.slice(start, i)));
+            i += size;
+            start = i;
         }
-        parts.push(buffer);
+
+        parts.push(fromUtf8(bytes.slice(start)));
         return parts;
     }
 
-    // str_word_count(): runs of ASCII letters, where an apostrophe or hyphen
-    // stays inside the word only when a letter follows it. Digits, underscores
-    // and anything non-ASCII break a word.
-    function wordCount(str) {
-        var words = 0;
-        var inWord = false;
+    function toUtf8(str) {
+        var bytes = [];
         for (var i = 0; i < str.length; i++) {
-            var c = str.charAt(i);
-            if (isAlpha(c)) {
-                if (!inWord) {
-                    words++;
-                    inWord = true;
-                }
-            } else if ((c === '\'' || c === '-') && inWord && isAlpha(str.charAt(i + 1))) {
-                // Still inside the same word.
+            var code = str.charCodeAt(i);
+
+            if (code < 0x80) {
+                bytes.push(code);
+            } else if (code < 0x800) {
+                bytes.push(0xC0 | (code >> 6), 0x80 | (code & 0x3F));
+            } else if (code >= 0xD800 && code < 0xDC00 && i + 1 < str.length
+                && str.charCodeAt(i + 1) >= 0xDC00 && str.charCodeAt(i + 1) < 0xE000) {
+                var pair = 0x10000 + ((code - 0xD800) << 10) + (str.charCodeAt(i + 1) - 0xDC00);
+                bytes.push(0xF0 | (pair >> 18), 0x80 | ((pair >> 12) & 0x3F), 0x80 | ((pair >> 6) & 0x3F), 0x80 | (pair & 0x3F));
+                i++;
             } else {
-                inWord = false;
+                bytes.push(0xE0 | (code >> 12), 0x80 | ((code >> 6) & 0x3F), 0x80 | (code & 0x3F));
             }
         }
+        return bytes;
+    }
+
+    function fromUtf8(bytes) {
+        var out = '';
+        var i = 0;
+
+        while (i < bytes.length) {
+            var byte = bytes[i];
+            var need = 0;
+            var code = 0;
+
+            if (byte < 0x80) { out += String.fromCharCode(byte); i++; continue; }
+            if (byte >= 0xC2 && byte <= 0xDF) { need = 1; code = byte & 0x1F; }
+            else if (byte >= 0xE0 && byte <= 0xEF) { need = 2; code = byte & 0x0F; }
+            else if (byte >= 0xF0 && byte <= 0xF4) { need = 3; code = byte & 0x07; }
+            else { i++; continue; } // orphaned continuation byte
+
+            if (i + need > bytes.length) break; // the character was cut off
+
+            var valid = true;
+            for (var n = 1; n <= need; n++) {
+                if (bytes[i + n] < 0x80 || bytes[i + n] > 0xBF) valid = false;
+                code = (code << 6) | (bytes[i + n] & 0x3F);
+            }
+            if (!valid) { i++; continue; }
+
+            if (code < 0x10000) {
+                out += String.fromCharCode(code);
+            } else {
+                out += String.fromCharCode(0xD800 + ((code - 0x10000) >> 10), 0xDC00 + ((code - 0x10000) & 0x3FF));
+            }
+            i += need + 1;
+        }
+
+        return out;
+    }
+
+    // str_word_count(), which is not what it looks like: a word is a run of
+    // locale letters, and an apostrophe or hyphen counts as part of that run
+    // even when no letter is next to it. A leading ' or - and a trailing - are
+    // cut off first, so a bare "-" between digits is itself a word. Non-ASCII
+    // bytes are never letters in the C locale, so they break a run here too.
+    function wordCount(str) {
+        var head = 0;
+        var tail = str.length;
+
+        if (str.charAt(0) === '\'' || str.charAt(0) === '-') head = 1;
+        if (str.charAt(tail - 1) === '-') tail--;
+
+        var words = 0;
+        var p = head;
+        while (p < tail) {
+            var start = p;
+            while (p < tail && isWordLetter(str.charAt(p))) p++;
+            if (p > start) words++;
+            p++;
+        }
+
         return words;
+    }
+
+    function isWordLetter(c) {
+        return isAlpha(c) || c === '\'' || c === '-';
     }
 
     // \b at an offset: exactly one side is a word character.
