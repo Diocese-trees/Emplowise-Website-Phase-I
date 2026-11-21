@@ -68,8 +68,7 @@ final class EmplowiseAssistant
         return match (true) {
             Str::contains($text, ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye']) => 'thanks',
             Str::contains($text, ['price', 'cost', 'pkr', 'package', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee']) => 'pricing',
-            Str::contains($text, ['foundation', 'growth', 'scale', 'legacy', 'replit', 'old tier']) => 'legacy',
-            Str::contains($text, ['pending input', 'pending', 'tbd', 'not disclosed', 'unclear', 'not confirmed']) => 'pending',
+            Str::contains($text, ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed']) => 'pending',
             Str::contains($text, ['audit', 'free hr', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started']) => 'audit',
             Str::contains($text, ['student', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin']) => 'student',
             Str::contains($text, ['resume', 'cv', 'ats', 'interview', 'cover letter']) => 'tools',
@@ -106,7 +105,7 @@ You are a Gen Z HR bestie: warm, quick, a little playful. Short sentences. Lower
 HARD RULES
 1. Use only the verified facts below. Never invent prices, clients, results, savings, package inclusions, or timelines.
 2. Pricing is exact. Starter is PKR 40,000 per month for up to 20 employees. Business is PKR 75,000 per month for up to 50 employees. Enterprise is custom for 50 or more employees.
-3. Package inclusions, recruitment fee terms, payroll tax and disbursement scope, legal qualifications, and representative allocation are Pending Input. Say so plainly. Never guess.
+3. Package inclusions, recruitment fee terms, payroll tax and disbursement scope, legal qualifications, and representative allocation are confirmed in writing after the free HR audit. Say so plainly. Never guess.
 4. Never promise legal compliance, guaranteed productivity, conflict elimination, or board authority.
 5. Never call Emplowise the cheapest. Never describe the platform as proprietary AI software.
 6. If the question needs a real scoping conversation, point to the Free HR Audit at /free-hr-audit.
@@ -119,7 +118,7 @@ Packages: {$packages}.
 Confirmed services: {$services}.
 Method: Assess, Identify, Improve, Review.
 Student hub: five free tools. Interview prep, ATS score, resume builder, profile optimizer, prompt library. No account needed.
-Pending Input: {$pending}.
+Confirmed in writing after the free HR audit: {$pending}.
 Guardrails: no invented metrics, no client names, no guarantees, no board authority.
 PROMPT;
     }
@@ -179,25 +178,24 @@ PROMPT;
     private function fallbackReply(string $intent): string
     {
         return match ($intent) {
-            'pricing' => "Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are Pending Input, so the audit scopes them.",
-            'legacy' => "The 2025 Replit export listed Foundation at PKR 40,000, Growth at PKR 65,000, and Scale at PKR 100,000.\nThose three tiers are not sold on this site.\nCurrent packages are Starter, Business, and Enterprise.",
+            'pricing' => "Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.",
             'audit' => "The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.",
             'student' => "Student Hub is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /student-hub and pick a tool.",
             'tools' => "The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub.",
-            'payroll' => "Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are Pending Input.\nSo we confirm those in writing before work starts.",
-            'performance' => "Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is Pending Input.\nThe review cycle stays yours, we run the structure.",
-            'policy' => "Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is Pending Input.",
+            'payroll' => "Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.",
+            'performance' => "Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.",
+            'policy' => "Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is confirmed in writing after the free HR audit.",
             'services' => "Confirmed scope: recruitment, onboarding, records, leave and attendance, policies, payroll, compliance support, performance, employee relations, reporting, consultation, assessments, and a dedicated HR rep.\nAll of it is delivered remote.",
-            'pending' => "Pending Input means not confirmed yet: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe publish them as open rather than guessing.\nThe audit pins each one down in writing.",
-            'contact' => "The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are Pending Input.\nUse /free-hr-audit and we reply from there.",
-            'careers' => "Open roles are Pending Input and nothing is published on this site yet.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.",
+            'pending' => "Some details are confirmed in writing after the free HR audit: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe list them as open rather than guessing.\nThe audit pins each one down.",
+            'contact' => "The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are confirmed in writing after the free HR audit.\nUse /free-hr-audit and we reply from there.",
+            'careers' => "Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.",
             'why' => "We sit between informal help and a full enterprise HR department.\nConfirmed structure, published prices, and a named HR representative.\nEvery process you get is documented, not improvised.\nWe do not promise legal outcomes or invented savings.",
             'who' => "Emplowise HR Services does remote HR outsourcing for startups and SMEs in Pakistan.\nConsultants backed by specialist support, plus a dedicated HR representative.\nDirect access to your CEO or founder is part of the model.",
             'where' => "We are based in Pakistan and deliver fully remote.\nThere is no walk-in office in this build.\nInternational expansion is planned long term, not live yet.",
-            'when' => "The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are Pending Input.",
+            'when' => "The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are confirmed in writing after the free HR audit.",
             'greeting' => "hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the Student Hub.\nI keep it short and never invent numbers.",
             'thanks' => "Anytime.\nIf you want a real scope, the audit at /free-hr-audit is the next step.",
-            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I say Pending Input.",
+            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I point you to the free audit.",
         };
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Free Student Hub | Emplowise')
-@section('meta_description', 'Five free career tools for students: mock interviews, ATS resume scoring, an ATS resume builder, a profile optimizer, and a copy-paste prompt library. No account required.')
+@section('title', $seo['title'])
+@section('meta_description', $seo['description'])
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset_v('css/student.css') }}">
@@ -18,27 +18,21 @@
 
     <section class="hub-banner">
         <div class="shell">
-            <p class="kicker">Free student resources</p>
-            <h1>Career tools that tell you <em>the truth.</em></h1>
-            <p class="lede">{{ $student['intro'] }}</p>
+            <p class="kicker">{{ $copy['kicker'] }}</p>
+            @include('partials.seo-h1', ['seo' => $seo])
+            <p class="lede">{{ $seo['intro'] }}</p>
             <div class="hub-stats">
-                <div class="hub-stat"><b>5</b><span>Working tools</span></div>
-                <div class="hub-stat"><b>0</b><span>Cost, forever</span></div>
-                <div class="hub-stat"><b>0</b><span>Accounts required</span></div>
-                <div class="hub-stat"><b>{{ count($student['prompts']) }}</b><span>Ready prompts</span></div>
+                <div class="hub-stat"><b>5</b><span>{{ $copy['stats'][0] }}</span></div>
+                <div class="hub-stat"><b>0</b><span>{{ $copy['stats'][1] }}</span></div>
+                <div class="hub-stat"><b>0</b><span>{{ $copy['stats'][2] }}</span></div>
+                <div class="hub-stat"><b>{{ count($student['prompts']) }}</b><span>{{ $copy['stats'][3] }}</span></div>
             </div>
         </div>
     </section>
 
     <div class="shell hub-shell">
         <aside class="hub-rail" aria-label="Student tools">
-            @php($tabs = [
-                ['id' => 'interview', 'num' => '01', 'title' => 'Mock interview', 'desc' => 'Three questions, structured feedback'],
-                ['id' => 'ats', 'num' => '02', 'title' => 'ATS score', 'desc' => 'Match a resume to a job description'],
-                ['id' => 'resume', 'num' => '03', 'title' => 'Resume builder', 'desc' => 'Single column, parser safe, printable'],
-                ['id' => 'profile', 'num' => '04', 'title' => 'Profile optimizer', 'desc' => 'Headline, summary, and bullet rewrites'],
-                ['id' => 'prompts', 'num' => '05', 'title' => 'Prompt library', 'desc' => 'Copy, paste, adapt, use'],
-            ])
+            @php($tabs = $copy['tabs'])
             @foreach ($tabs as $tab)
                 <button type="button"
                         class="hub-tab {{ $loop->first ? 'is-active' : '' }}"
@@ -59,16 +53,16 @@
             <section class="hub-panel is-active" id="panel-interview" data-hub-panel="interview" role="tabpanel">
                 <div class="panel-head">
                     <div>
-                        <h2>Mock interview simulator</h2>
-                        <p>Pick a role and a level. Answer one question at a time. Get a score, three strengths, three fixes, and a model answer built without invented facts.</p>
+                        <h2>{{ $copy['interview']['heading'] }}</h2>
+                        <p>{{ $copy['interview']['body'] }}</p>
                     </div>
-                    <span class="tool-status" id="interview-source">Local engine ready</span>
+                    <span class="tool-status" id="interview-source">{{ $copy['interview']['status'] }}</span>
                 </div>
 
                 <div class="panel-card">
                     <div class="interview-setup">
                         <div class="field">
-                            <label for="interview-role">Role</label>
+                            <label for="interview-role">{{ $copy['interview']['role_label'] }}</label>
                             <select id="interview-role">
                                 @foreach ($student['roles'] as $role)
                                     <option value="{{ $role }}">{{ $role }}</option>
@@ -76,39 +70,39 @@
                             </select>
                         </div>
                         <div class="field">
-                            <label for="interview-level">Level</label>
+                            <label for="interview-level">{{ $copy['interview']['level_label'] }}</label>
                             <select id="interview-level">
                                 @foreach ($student['levels'] as $level)
                                     <option value="{{ $level }}">{{ $level }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn btn--primary" id="interview-start">Start set</button>
+                        <button type="button" class="btn btn--primary" id="interview-start">{{ $copy['interview']['start'] }}</button>
                     </div>
                     <p class="form-status s15" id="interview-status" role="status"></p>
                 </div>
 
                 <div class="panel-card how-card">
-                    <h3>What happens after you press start</h3>
+                    <h3>{{ $copy['interview']['how_heading'] }}</h3>
                     <ol class="how-steps">
-                        <li><b>01</b><span>Three questions for your role and level, served one at a time.</span></li>
-                        <li><b>02</b><span>Each answer is scored out of 100 on structure, evidence, and clarity.</span></li>
-                        <li><b>03</b><span>You get three strengths, three fixes, and a model answer to adapt.</span></li>
+                        @foreach ($copy['interview']['how_steps'] as $index => $step)
+                            <li><b>0{{ $index + 1 }}</b><span>{{ $step }}</span></li>
+                        @endforeach
                     </ol>
-                    <p class="small muted s16">Nothing is uploaded to an account. Answers stay in this browser session, and the local scoring engine runs even when no AI key is configured.</p>
+                    <p class="small muted s16">{{ $copy['interview']['how_note'] }}</p>
                 </div>
 
                 <div class="interview-stage panel-card" id="interview-stage" hidden>
                     <div class="q-progress" id="interview-progress" aria-hidden="true"></div>
                     <p class="question-text" id="interview-question"></p>
 
-                    <label class="sr-only" for="interview-answer">Your answer</label>
+                    <label class="sr-only" for="interview-answer">{{ $copy['interview']['answer_label'] }}</label>
                     <textarea class="answer-box" id="interview-answer" autocomplete="off" enterkeyhint="enter" placeholder="Write the answer you would actually say. Situation, task, action, result."></textarea>
                     <div class="answer-meta">
-                        <span id="interview-counter">0 characters</span>
-                        <span>Use one concrete example. Numbers help.</span>
+                        <span id="interview-counter">{{ $copy['interview']['counter_zero'] }}</span>
+                        <span>{{ $copy['interview']['answer_meta'] }}</span>
                     </div>
-                    <button type="button" class="btn btn--teal" id="interview-submit">Score this answer</button>
+                    <button type="button" class="btn btn--teal" id="interview-submit">{{ $copy['interview']['submit'] }}</button>
 
                     <div class="s17" id="interview-feedback" hidden>
                         <div class="score-row">
@@ -126,33 +120,33 @@
                                 </svg>
                                 <div class="score-ring-label">
                                     <span class="score-number" id="interview-score">0</span>
-                                    <span class="score-out">Out of 100</span>
+                                    <span class="score-out">{{ $copy['interview']['out_of'] }}</span>
                                 </div>
                             </div>
                             <div>
                                 <span class="verdict" id="interview-verdict"></span>
-                                <h3 class="s18">Structured feedback</h3>
-                                <p class="small muted s16">Scored on structure, evidence, and clarity. Local heuristics run first. AI refines when a key is configured.</p>
+                                <h3 class="s18">{{ $copy['interview']['feedback_heading'] }}</h3>
+                                <p class="small muted s16">{{ $copy['interview']['score_note'] }}</p>
                             </div>
                         </div>
 
                         <div class="feedback-cols">
                             <div class="feedback-block feedback-block--good">
-                                <h4>What worked</h4>
+                                <h4>{{ $copy['interview']['worked'] }}</h4>
                                 <ul id="interview-strengths"></ul>
                             </div>
                             <div class="feedback-block feedback-block--fix">
-                                <h4>Fix next time</h4>
+                                <h4>{{ $copy['interview']['fix_next'] }}</h4>
                                 <ul id="interview-fixes"></ul>
                             </div>
                         </div>
 
                         <div class="model-answer" id="interview-model">
-                            <strong>Model answer shape</strong>
+                            <strong>{{ $copy['interview']['model_answer'] }}</strong>
                             <span></span>
                         </div>
 
-                        <button type="button" class="btn btn--ghost s8" id="interview-next">Next question</button>
+                        <button type="button" class="btn btn--ghost s8" id="interview-next">{{ $copy['interview']['next'] }}</button>
                     </div>
                 </div>
             </section>
@@ -161,27 +155,27 @@
             <section class="hub-panel" id="panel-ats" data-hub-panel="ats" role="tabpanel">
                 <div class="panel-head">
                     <div>
-                        <h2>ATS resume and JD analyzer</h2>
-                        <p>Paste a resume and a job description. Get a 0 to 100 score, the keywords you are missing, and the structure and formatting checks a parser cares about.</p>
+                        <h2>{{ $seo['h2'] }}</h2>
+                        <p>{{ $copy['ats']['body'] }}</p>
                     </div>
-                    <span class="tool-status">Explainable scoring</span>
+                    <span class="tool-status">{{ $copy['ats']['status'] }}</span>
                 </div>
 
                 <form class="panel-card" id="ats-form">
                     <div class="ats-inputs">
                         <div class="field">
-                            <label for="ats-resume">Resume text</label>
+                            <label for="ats-resume">{{ $copy['ats']['resume_label'] }}</label>
                             <textarea id="ats-resume" autocomplete="off" enterkeyhint="enter" placeholder="Paste the full resume as plain text. Minimum 60 characters. Include headings like Experience, Education, Skills."></textarea>
-                            <span class="hint">Text is processed for this request and not stored.</span>
+                            <span class="hint">{{ $copy['ats']['resume_hint'] }}</span>
                         </div>
                         <div class="field">
-                            <label for="ats-jd">Job description</label>
+                            <label for="ats-jd">{{ $copy['ats']['jd_label'] }}</label>
                             <textarea id="ats-jd" autocomplete="off" enterkeyhint="enter" placeholder="Paste the job posting. Include responsibilities and requirements."></textarea>
-                            <span class="hint">The keyword list is built from this posting only.</span>
+                            <span class="hint">{{ $copy['ats']['jd_hint'] }}</span>
                         </div>
                     </div>
                     <div class="s19">
-                        <button type="submit" class="btn btn--primary" id="ats-submit">Score the match</button>
+                        <button type="submit" class="btn btn--primary" id="ats-submit">{{ $copy['ats']['submit'] }}</button>
                         <p class="form-status s16" id="ats-status" role="status"></p>
                     </div>
                 </form>
@@ -202,46 +196,46 @@
                             </svg>
                             <div class="score-ring-label">
                                 <span class="score-number" id="ats-score">0</span>
-                                <span class="score-out">Out of 100</span>
+                                <span class="score-out">{{ $copy['ats']['out_of'] }}</span>
                             </div>
                         </div>
                         <div>
                             <span class="verdict" id="ats-verdict"></span>
-                            <h3 class="s18">Match report</h3>
-                            <p class="small muted s16">Weighting: keywords 55, structure 25, formatting 20. The score is deterministic, so re-running it stays honest.</p>
+                            <h3 class="s18">{{ $copy['ats']['report_heading'] }}</h3>
+                            <p class="small muted s16">{{ $copy['ats']['score_note'] }}</p>
                         </div>
                     </div>
 
                     <div class="bars" id="ats-bars"></div>
 
                     <div class="s1">
-                        <h4 class="mono small s21">Matched keywords</h4>
+                        <h4 class="mono small s21">{{ $copy['ats']['matched'] }}</h4>
                         <div class="chip-row s22" id="ats-matched"></div>
                     </div>
 
                     <div class="s23">
-                        <h4 class="mono small s21">Missing keywords</h4>
+                        <h4 class="mono small s21">{{ $copy['ats']['missing'] }}</h4>
                         <div class="chip-row s22" id="ats-missing"></div>
                     </div>
 
                     <div class="feedback-cols s1">
                         <div class="feedback-block">
-                            <h4>Structure checks</h4>
+                            <h4>{{ $copy['ats']['structure'] }}</h4>
                             <ul class="checklist" id="ats-structure"></ul>
                         </div>
                         <div class="feedback-block">
-                            <h4>Formatting checks</h4>
+                            <h4>{{ $copy['ats']['format'] }}</h4>
                             <ul class="checklist" id="ats-format"></ul>
                         </div>
                     </div>
 
                     <div class="result-block" id="ats-edits-block" hidden>
-                        <h4>AI suggested edits</h4>
+                        <h4>{{ $copy['ats']['edits'] }}</h4>
                         <ul class="checklist" id="ats-edits"></ul>
                     </div>
 
                     <div class="result-block">
-                        <h3>Fix list</h3>
+                        <h3>{{ $copy['ats']['fixes_heading'] }}</h3>
                         <ul class="feedback-block--fix checklist" id="ats-fixes"></ul>
                     </div>
                 </div>
@@ -251,102 +245,102 @@
             <section class="hub-panel" id="panel-resume" data-hub-panel="resume" role="tabpanel">
                 <div class="panel-head">
                     <div>
-                        <h2>ATS resume builder</h2>
-                        <p>One column. Standard headings. Plain text friendly. Fill the form, watch the preview, then print to PDF or copy the text. No account, no watermark.</p>
+                        <h2>{{ $copy['resume']['heading'] }}</h2>
+                        <p>{{ $copy['resume']['body'] }}</p>
                     </div>
-                    <span class="tool-status">Print ready</span>
+                    <span class="tool-status">{{ $copy['resume']['status'] }}</span>
                 </div>
 
                 <div class="resume-layout">
                     <form class="resume-form panel-card" id="resume-form">
                         <div class="form-grid">
                             <div class="field">
-                                <label for="res-name">Full name</label>
+                                <label for="res-name">{{ $copy['resume']['form']['name'] }}</label>
                                 <input id="res-name" data-rp="name" type="text" autocomplete="name" enterkeyhint="next" placeholder="Ayesha Khan" maxlength="80">
                             </div>
                             <div class="field">
-                                <label for="res-title">Target title</label>
+                                <label for="res-title">{{ $copy['resume']['form']['title'] }}</label>
                                 <input id="res-title" data-rp="title" type="text" autocomplete="organization-title" enterkeyhint="next" placeholder="Data Analyst" maxlength="80">
                             </div>
                             <div class="field">
-                                <label for="res-email">Email</label>
+                                <label for="res-email">{{ $copy['resume']['form']['email'] }}</label>
                                 <input id="res-email" data-rp="email" type="email" inputmode="email" autocomplete="email" enterkeyhint="next" placeholder="you@example.com" maxlength="120">
                             </div>
                             <div class="field">
-                                <label for="res-phone">Phone</label>
+                                <label for="res-phone">{{ $copy['resume']['form']['phone'] }}</label>
                                 <input id="res-phone" data-rp="phone" type="text" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="+92 300 1234567" maxlength="40">
                             </div>
                             <div class="field">
-                                <label for="res-location">Location</label>
+                                <label for="res-location">{{ $copy['resume']['form']['location'] }}</label>
                                 <input id="res-location" data-rp="location" type="text" autocomplete="address-level2" enterkeyhint="next" placeholder="Karachi, Pakistan" maxlength="80">
                             </div>
                             <div class="field">
-                                <label for="res-linkedin">LinkedIn</label>
+                                <label for="res-linkedin">{{ $copy['resume']['form']['linkedin'] }}</label>
                                 <input id="res-linkedin" data-rp="linkedin" type="text" inputmode="url" autocomplete="url" enterkeyhint="done" placeholder="linkedin.com/in/yourname" maxlength="120">
                             </div>
                         </div>
 
                         <div class="field">
-                            <label for="res-summary">Summary</label>
+                            <label for="res-summary">{{ $copy['resume']['form']['summary'] }}</label>
                             <textarea id="res-summary" data-rp="summary" autocomplete="off" enterkeyhint="enter" placeholder="Three lines: what you do, strongest proof, what you want." maxlength="700"></textarea>
                         </div>
 
                         <div>
                             <div class="panel-head s24">
-                                <h3 class="s25">Experience</h3>
-                                <button type="button" class="btn btn--ghost btn--sm" id="add-exp">Add role</button>
+                                <h3 class="s25">{{ $copy['resume']['form']['experience'] }}</h3>
+                                <button type="button" class="btn btn--ghost btn--sm" id="add-exp">{{ $copy['resume']['add_role'] }}</button>
                             </div>
                             <div class="repeat-list" id="exp-list"></div>
                         </div>
 
                         <div>
                             <div class="panel-head s24">
-                                <h3 class="s25">Education</h3>
-                                <button type="button" class="btn btn--ghost btn--sm" id="add-edu">Add education</button>
+                                <h3 class="s25">{{ $copy['resume']['form']['education'] }}</h3>
+                                <button type="button" class="btn btn--ghost btn--sm" id="add-edu">{{ $copy['resume']['add_education'] }}</button>
                             </div>
                             <div class="repeat-list" id="edu-list"></div>
                         </div>
 
                         <div class="field">
-                            <label for="res-skills">Skills</label>
+                            <label for="res-skills">{{ $copy['resume']['form']['skills'] }}</label>
                             <textarea class="s26" id="res-skills" data-rp="skills" autocomplete="off" enterkeyhint="done" placeholder="Excel, SQL, Python, stakeholder communication" maxlength="400"></textarea>
-                            <span class="hint">Comma separated. Use the exact tool names from the job posting.</span>
+                            <span class="hint">{{ $copy['resume']['skills_hint'] }}</span>
                         </div>
                     </form>
 
                     <div class="resume-preview-wrap">
                         <div class="resume-toolbar">
-                            <button type="button" class="btn btn--primary btn--sm" id="resume-print">Print or save PDF</button>
-                            <button type="button" class="btn btn--ghost btn--sm" id="resume-download">Download .txt</button>
-                            <button type="button" class="btn btn--ghost btn--sm" id="resume-copy">Copy text</button>
+                            <button type="button" class="btn btn--primary btn--sm" id="resume-print">{{ $copy['resume']['print'] }}</button>
+                            <button type="button" class="btn btn--ghost btn--sm" id="resume-download">{{ $copy['resume']['download'] }}</button>
+                            <button type="button" class="btn btn--ghost btn--sm" id="resume-copy">{{ $copy['resume']['copy'] }}</button>
                         </div>
 
                         <div class="resume-paper" id="resume-preview" aria-label="Resume preview">
-                            <p class="rp-name" id="rp-name">Your Name</p>
-                            <p class="rp-title" id="rp-title">Target title</p>
-                            <p class="rp-contact" id="rp-contact">email · phone · location · LinkedIn</p>
+                            <p class="rp-name" id="rp-name">{{ $copy['resume']['preview']['name'] }}</p>
+                            <p class="rp-title" id="rp-title">{{ $copy['resume']['preview']['title'] }}</p>
+                            <p class="rp-contact" id="rp-contact">{{ $copy['resume']['preview']['contact'] }}</p>
 
                             <div class="rp-section" id="rp-summary-section">
-                                <h3>Summary</h3>
-                                <p id="rp-summary" class="rp-empty">Add a three line summary.</p>
+                                <h3>{{ $copy['resume']['preview']['summary_section'] }}</h3>
+                                <p id="rp-summary" class="rp-empty">{{ $copy['resume']['preview']['summary_empty'] }}</p>
                             </div>
 
                             <div class="rp-section">
-                                <h3>Experience</h3>
-                                <div id="rp-experience"><p class="rp-empty">Add at least one role.</p></div>
+                                <h3>{{ $copy['resume']['preview']['experience_section'] }}</h3>
+                                <div id="rp-experience"><p class="rp-empty">{{ $copy['resume']['preview']['experience_empty'] }}</p></div>
                             </div>
 
                             <div class="rp-section">
-                                <h3>Education</h3>
-                                <div id="rp-education"><p class="rp-empty">Add your degree or qualification.</p></div>
+                                <h3>{{ $copy['resume']['preview']['education_section'] }}</h3>
+                                <div id="rp-education"><p class="rp-empty">{{ $copy['resume']['preview']['education_empty'] }}</p></div>
                             </div>
 
                             <div class="rp-section">
-                                <h3>Skills</h3>
-                                <p id="rp-skills" class="rp-empty">Add skills.</p>
+                                <h3>{{ $copy['resume']['preview']['skills_section'] }}</h3>
+                                <p id="rp-skills" class="rp-empty">{{ $copy['resume']['preview']['skills_empty'] }}</p>
                             </div>
                         </div>
-                        <p class="rp-print-note">Print it, save it as PDF, or copy the plain text into any application form.</p>
+                        <p class="rp-print-note">{{ $copy['resume']['preview_note'] }}</p>
                     </div>
                 </div>
             </section>
@@ -355,53 +349,53 @@
             <section class="hub-panel" id="panel-profile" data-hub-panel="profile" role="tabpanel">
                 <div class="panel-head">
                     <div>
-                        <h2>Profile optimizer</h2>
-                        <p>Paste your headline, summary, and bullets. Get three headline options, a tighter summary, and bullets rewritten to start with an action verb. Placeholders appear where a number is missing.</p>
+                        <h2>{{ $copy['profile']['heading'] }}</h2>
+                        <p>{{ $copy['profile']['body'] }}</p>
                     </div>
-                    <span class="tool-status">No invented metrics</span>
+                    <span class="tool-status">{{ $copy['profile']['status'] }}</span>
                 </div>
 
                 <div class="profile-grid">
                     <form class="panel-card" id="profile-form">
                         <div class="field">
-                            <label for="profile-headline">Current headline</label>
+                            <label for="profile-headline">{{ $copy['profile']['form']['headline'] }}</label>
                             <input id="profile-headline" type="text" autocomplete="off" enterkeyhint="next" maxlength="200" placeholder="Final year CS student looking for internships">
                         </div>
                         <div class="field">
-                            <label for="profile-summary">Current summary</label>
+                            <label for="profile-summary">{{ $copy['profile']['form']['summary'] }}</label>
                             <textarea id="profile-summary" autocomplete="off" enterkeyhint="enter" maxlength="1500" placeholder="Paste your LinkedIn About or resume summary."></textarea>
                         </div>
                         <div class="field">
-                            <label for="profile-bullets">Experience bullets</label>
+                            <label for="profile-bullets">{{ $copy['profile']['form']['bullets'] }}</label>
                             <textarea id="profile-bullets" autocomplete="off" enterkeyhint="enter" maxlength="2000" placeholder="One bullet per line."></textarea>
                         </div>
                         <div class="s27">
-                            <button type="submit" class="btn btn--primary" id="profile-submit">Rewrite my profile</button>
+                            <button type="submit" class="btn btn--primary" id="profile-submit">{{ $copy['profile']['submit'] }}</button>
                             <p class="form-status s16" id="profile-status" role="status"></p>
                         </div>
                     </form>
 
                     <div id="profile-result" hidden>
                         <div class="result-block">
-                            <h3>Headline options</h3>
+                            <h3>{{ $copy['profile']['headlines_heading'] }}</h3>
                             <div id="profile-headlines"></div>
                         </div>
                         <div class="result-block">
                             <div class="s28">
-                                <h3 class="s16">Summary</h3>
-                                <button type="button" class="copy-btn" data-copy-target="profile-summary-out">Copy</button>
+                                <h3 class="s16">{{ $copy['profile']['summary_heading'] }}</h3>
+                                <button type="button" class="copy-btn" data-copy-target="profile-summary-out">{{ $copy['profile']['copy'] }}</button>
                             </div>
                             <div class="result-text" id="profile-summary-out"></div>
                         </div>
                         <div class="result-block">
                             <div class="s28">
-                                <h3 class="s16">Rewritten bullets</h3>
-                                <button type="button" class="copy-btn" data-copy-target="profile-bullets-out">Copy</button>
+                                <h3 class="s16">{{ $copy['profile']['bullets_heading'] }}</h3>
+                                <button type="button" class="copy-btn" data-copy-target="profile-bullets-out">{{ $copy['profile']['copy'] }}</button>
                             </div>
                             <div class="result-text" id="profile-bullets-out"></div>
                         </div>
                         <div class="result-block">
-                            <h4>Fix list</h4>
+                            <h4>{{ $copy['profile']['fixes_heading'] }}</h4>
                             <ul class="checklist" id="profile-fixes"></ul>
                         </div>
                     </div>
@@ -412,20 +406,20 @@
             <section class="hub-panel" id="panel-prompts" data-hub-panel="prompts" role="tabpanel">
                 <div class="panel-head">
                     <div>
-                        <h2>Prompt library</h2>
-                        <p>{{ count($student['prompts']) }} copy-paste prompts for job search, resumes, interviews, LinkedIn, and career clarity. Fill the brackets with your details and run them in any assistant.</p>
+                        <h2>{{ $copy['prompts']['heading'] }}</h2>
+                        <p>{{ str_replace(':count', count($student['prompts']), $copy['prompts']['body']) }}</p>
                     </div>
-                    <span class="tool-status">Yours to adapt</span>
+                    <span class="tool-status">{{ $copy['prompts']['status'] }}</span>
                 </div>
 
                 <div class="prompt-toolbar">
                     <div class="search-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-                        <label class="sr-only" for="prompt-search">Search prompts</label>
+                        <label class="sr-only" for="prompt-search">{{ $copy['prompts']['search_label'] }}</label>
                         <input id="prompt-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Search prompts by task or keyword">
                     </div>
                     <div class="filter-row" id="prompt-filters">
-                        <button type="button" class="filter-btn is-active" data-prompt-filter="all">All</button>
+                        <button type="button" class="filter-btn is-active" data-prompt-filter="all">{{ $copy['filter_all'] ?? 'All' }}</button>
                         @foreach (array_unique(array_column($student['prompts'], 'category')) as $category)
                             <button type="button" class="filter-btn" data-prompt-filter="{{ $category }}">{{ $category }}</button>
                         @endforeach
@@ -440,23 +434,23 @@
                             <p class="prompt-use">{{ $prompt['use'] }}</p>
                             <p class="prompt-text">{{ $prompt['text'] }}</p>
                             <div class="prompt-actions">
-                                <button type="button" class="copy-btn" data-copy-prompt>Copy prompt</button>
-                                <button type="button" class="copy-btn prompt-expand">Expand</button>
+                                <button type="button" class="copy-btn" data-copy-prompt>{{ $copy['prompts']['copy'] }}</button>
+                                <button type="button" class="copy-btn prompt-expand">{{ $copy['prompts']['expand'] }}</button>
                             </div>
                         </article>
                     @endforeach
                 </div>
-                <p class="prompt-empty" id="prompt-empty">No prompts match that search. Try a broader word.</p>
+                <p class="prompt-empty" id="prompt-empty">{{ $copy['prompts']['empty'] }}</p>
             </section>
         </div>
     </div>
 
     <section class="cta-band">
         <div class="shell cta-inner">
-            <h2>Hiring soon? The audit works for teams too.</h2>
+            <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
-                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">Book the free HR audit</a>
-                <a href="{{ route('faq') }}" class="btn btn--outline-light">Student hub FAQs</a>
+                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
+                <a href="{{ route('faq') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

@@ -16,13 +16,13 @@ final class SiteAndApiTest extends TestCase
     public function test_all_seven_pages_render(): void
     {
         $pages = [
-            '/' => 'Remote HR solutions',
-            '/what-we-are' => 'Empower people. Simplify work. Build momentum.',
-            '/what-we-do' => 'Fourteen services',
+            '/' => 'Remote HR services in Pakistan',
+            '/what-we-are' => 'HR outsourcing company in Pakistan',
+            '/what-we-do' => 'HR operations outsourcing',
             '/pricing' => 'PKR 40,000',
-            '/student-hub' => 'Mock interview simulator',
-            '/faq' => 'The questions clients and students actually ask',
-            '/free-hr-audit' => 'Tell us where HR hurts',
+            '/student-hub' => 'Free ATS resume checker',
+            '/faq' => 'HR outsourcing questions',
+            '/free-hr-audit' => 'free HR audit in Pakistan',
         ];
 
         foreach ($pages as $path => $needle) {
@@ -98,6 +98,47 @@ final class SiteAndApiTest extends TestCase
         $home->assertSee('PKR', false);
 
         $this->get('/faq')->assertOk()->assertSee('FAQPage', false);
+    }
+
+    public function test_each_route_uses_its_configured_seo_snippet(): void
+    {
+        $routes = [
+            '/' => 'home',
+            '/what-we-are' => 'what-we-are',
+            '/what-we-do' => 'what-we-do',
+            '/pricing' => 'pricing',
+            '/student-hub' => 'student-hub',
+            '/faq' => 'faq',
+            '/free-hr-audit' => 'free-hr-audit',
+        ];
+
+        $titles = [];
+        $descriptions = [];
+
+        foreach ($routes as $path => $key) {
+            $seo = config('emplowise.seo.'.$key);
+            $html = (string) $this->get($path)->assertOk()->getContent();
+
+            $this->assertStringContainsString('<title>'.e($seo['title']).'</title>', $html, $path);
+            $this->assertStringContainsString('name="description" content="'.e($seo['description']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:title" content="'.e($seo['title']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:description" content="'.e($seo['description']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:url" content="'.url($path).'"', $html, $path);
+            $this->assertStringContainsString('name="twitter:title" content="'.e($seo['title']).'"', $html, $path);
+            $this->assertStringContainsString('rel="canonical" href="'.url($path).'"', $html, $path);
+            $this->assertStringContainsString('<h1', $html, $path);
+
+            $titles[] = $seo['title'];
+            $descriptions[] = $seo['description'];
+        }
+
+        $this->assertCount(count($routes), array_unique($titles));
+        $this->assertCount(count($routes), array_unique($descriptions));
+    }
+
+    public function test_seo_audit_command_passes_for_the_shipped_config(): void
+    {
+        $this->artisan('emplowise:seo-audit')->assertSuccessful();
     }
 
     public function test_sitemap_lists_every_public_page(): void

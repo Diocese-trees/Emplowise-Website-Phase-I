@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Pricing | Emplowise')
-@section('meta_description', 'Emplowise monthly retainers: Starter PKR 40,000 for up to 20 employees, Business PKR 75,000 for up to 50, and Enterprise custom for 50 plus. Confirmed 2026 pricing.')
+@section('title', $seo['title'])
+@section('meta_description', $seo['description'])
 
 @section('content')
     <section class="page-head">
         <div class="shell shell--narrow">
             <nav class="breadcrumb" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('home') }}">{{ config('emplowise.copy.layout.breadcrumb_home') }}</a>
                 <span aria-hidden="true">/</span>
-                <span>Pricing</span>
+                <span>{{ $copy['breadcrumb'] }}</span>
             </nav>
-            <p class="kicker">Monthly retainers</p>
-            <h1>Three packages. Prices published. Inclusions scoped honestly.</h1>
+            <p class="kicker">{{ $copy['kicker'] }}</p>
+            @include('partials.seo-h1', ['seo' => $seo])
             <p class="lede">
-                These are the confirmed 2026 monthly retainers. Package by package deliverables are confirmed
-                in writing after your Free HR Audit, so we do not pretend a tier contains services the source material never fixed.
+                {{ $seo['intro'] }}
             </p>
         </div>
     </section>
@@ -26,7 +25,7 @@
                 @foreach ($packages as $package)
                     <article class="price-card {{ $package['featured'] ? 'price-card--featured' : '' }}">
                         @if ($package['featured'])
-                            <span class="price-tag">Core tier</span>
+                            <span class="price-tag">{{ $copy['tag'] }}</span>
                         @endif
                         <p class="price-name">{{ $package['name'] }}</p>
                         <p class="price-amount">{{ $package['price_display'] }}</p>
@@ -35,12 +34,13 @@
                         <ul class="price-list">
                             <li>{{ $package['summary'] }}</li>
                             <li>{{ $package['best_for'] }}</li>
-                            <li>Services drawn from the confirmed catalogue.</li>
-                            <li>Deliverables per tier: confirmed in writing after your Free HR Audit.</li>
+                            @foreach ($copy['bullets'] as $bullet)
+                                <li>{{ $bullet }}</li>
+                            @endforeach
                         </ul>
                         <p class="price-note">{{ $package['inclusions'] }}</p>
                         <a href="{{ route('free-hr-audit') }}" class="btn {{ $package['featured'] ? 'btn--light' : 'btn--ghost' }} btn--sm s8">
-                            {{ $package['price_pkr'] === null ? 'Request a quote' : 'Start with the free audit' }}
+                            {{ $package['price_pkr'] === null ? $copy['button_quote'] : $copy['button_audit'] }}
                         </a>
                     </article>
                 @endforeach
@@ -48,7 +48,7 @@
 
             <div class="grid-2 s9">
                 <div>
-                    <h2 class="s10">What the price includes, and what it does not</h2>
+                    <h2 class="s10">{{ $copy['includes']['heading'] }}</h2>
                     <ul class="notes-list">
                         @foreach ($notes as $note)
                             <li><span>{{ $note }}</span></li>
@@ -56,14 +56,12 @@
                     </ul>
                 </div>
                 <div class="card card--flat">
-                    <p class="kicker s11">Scope guardrail</p>
-                    <h3 class="s12">No invented deliverables</h3>
+                    <p class="kicker s11">{{ $copy['guardrail']['kicker'] }}</p>
+                    <h3 class="s12">{{ $copy['guardrail']['heading'] }}</h3>
                     <p class="small s13">
-                        A pricing page that invents inclusions is worse than one that admits the gap. The audit
-                        conversation fixes which confirmed services apply to your headcount, risk profile, and
-                        current documentation.
+                        {{ $copy['guardrail']['body'] }}
                     </p>
-                    <a href="{{ route('free-hr-audit') }}" class="link-arrow">Book the free audit</a>
+                    <a href="{{ route('free-hr-audit') }}" class="link-arrow">{{ $copy['guardrail']['link'] }}</a>
                 </div>
             </div>
         </div>
@@ -72,11 +70,10 @@
     <section class="section section--alt">
         <div class="shell">
             <div class="section-head">
-                <p class="kicker">Side by side</p>
-                <h2>The comparison, without invented rows.</h2>
+                <p class="kicker">{{ $copy['compare']['kicker'] }}</p>
+                <h2>{{ $seo['h2'] }}</h2>
                 <p class="lede">
-                    Headcount capacity and price are confirmed. Inclusion rows are confirmed in writing after your
-                    Free HR Audit.
+                    {{ $copy['compare']['lede'] }}
                 </p>
             </div>
 
@@ -84,11 +81,11 @@
                 <table class="data">
                     <thead>
                         <tr>
-                            <th scope="col">Package</th>
-                            <th scope="col">Headcount</th>
-                            <th scope="col">Monthly price</th>
-                            <th scope="col">Best for</th>
-                            <th scope="col">Inclusions</th>
+                            <th scope="col">{{ $copy['compare']['table'][0] }}</th>
+                            <th scope="col">{{ $copy['compare']['table'][1] }}</th>
+                            <th scope="col">{{ $copy['compare']['table'][2] }}</th>
+                            <th scope="col">{{ $copy['compare']['table'][3] }}</th>
+                            <th scope="col">{{ $copy['compare']['table'][4] }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,17 +93,16 @@
                             <tr>
                                 <td>{{ $package['name'] }}</td>
                                 <td>{{ $package['capacity'] }}</td>
-                                <td>{{ $package['price_pkr'] === null ? $package['price_display'].' (scoped monthly)' : $package['price_display'].' / month' }}</td>
+                                <td>{{ $package['price_pkr'] === null ? $package['price_display'].' ('.$copy['compare']['scoped'].')' : $package['price_display'].' '.$copy['compare']['per_month'] }}</td>
                                 <td>{{ $package['best_for'] }}</td>
-                                <td class="is-pending">Confirmed in writing after your Free HR Audit.</td>
+                                <td class="is-pending">{{ $copy['compare']['pending_cell'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <p class="service-table-note">
-                Recruitment fee inclusion, payroll tax scope, and legal advice qualifications are confirmed in
-                writing after your Free HR Audit.
+                {{ $copy['compare']['note'] }}
             </p>
         </div>
     </section>
@@ -114,11 +110,10 @@
     <section class="section">
         <div class="shell">
             <div class="section-head">
-                <p class="kicker">Confirmed catalogue</p>
-                <h2>Every service that can sit inside a retainer.</h2>
+                <p class="kicker">{{ $copy['catalogue']['kicker'] }}</p>
+                <h2>{{ $copy['catalogue']['heading'] }}</h2>
                 <p class="lede">
-                    Packages are priced by headcount. Which of these fourteen services are active in your
-                    retainer is confirmed in scope.
+                    {{ $copy['catalogue']['lede'] }}
                 </p>
             </div>
 
@@ -126,9 +121,9 @@
                 <table class="data">
                     <thead>
                         <tr>
-                            <th scope="col">Service</th>
-                            <th scope="col">Operating family</th>
-                            <th scope="col">Scope note</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][0] }}</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][1] }}</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][2] }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,25 +137,15 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="legacy s14">
-                <strong>Note on older pricing</strong>
-                {{ $legacy['note'] }}
-                <div class="legacy-row">
-                    @foreach ($legacy['tiers'] as $tier)
-                        <span>{{ $tier['name'] }} · {{ $tier['price'] }}</span>
-                    @endforeach
-                </div>
-            </div>
         </div>
     </section>
 
     <section class="cta-band">
         <div class="shell cta-inner">
-            <h2>Pick a package after the audit, not before.</h2>
+            <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
-                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">Book the free audit</a>
-                <a href="{{ route('faq') }}" class="btn btn--outline-light">Read pricing FAQs</a>
+                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
+                <a href="{{ route('faq') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

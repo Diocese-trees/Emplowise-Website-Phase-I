@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#081B3E">
     @php
+        $ui = config('emplowise.copy.layout');
         $pageTitle = trim($__env->yieldContent('title', 'Emplowise | Remote HR Solutions for Growing Businesses'));
         $pageDescription = trim($__env->yieldContent('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free student career toolkit.'));
         $pageUrl = url()->current();
@@ -75,7 +76,7 @@
     </script>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">{{ $ui['skip_link'] }}</a>
 
 <div class="page-bg" aria-hidden="true">
     <span class="aurora-1"></span>
@@ -88,7 +89,7 @@
 
 <header class="site-header" id="site-header">
     <div class="shell header-inner">
-        <a href="{{ route('home') }}" class="brand" aria-label="Emplowise home">
+        <a href="{{ route('home') }}" class="brand" aria-label="{{ $ui['logo_alt'] }}">
             <img src="{{ asset_v('img/logo-primary.png') }}" alt="Emplowise" width="1056" height="270" fetchpriority="high">
         </a>
 
@@ -100,12 +101,12 @@
                     {{ $item['label'] }}
                 </a>
             @endforeach
-            <a href="{{ route('free-hr-audit') }}" class="nav-link nav-link--cta">Free HR Audit</a>
+            <a href="{{ route('free-hr-audit') }}" class="nav-link nav-link--cta">{{ $ui['nav_audit_label'] }}</a>
         </nav>
 
         <div class="header-actions">
-            <a href="{{ route('free-hr-audit') }}" class="btn btn--primary btn--sm">Free HR Audit</a>
-            <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+            <a href="{{ route('free-hr-audit') }}" class="btn btn--primary btn--sm">{{ $ui['nav_audit_label'] }}</a>
+            <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="{{ $ui['menu_open'] }}">
                 <span></span>
             </button>
         </div>
@@ -121,50 +122,47 @@
         <div class="footer-top">
             <div class="footer-brand">
                 <img src="{{ asset_v('img/logo-reverse.png') }}" alt="Emplowise" width="1056" height="270" loading="lazy">
-                <p class="footer-note">Remote HR solutions for growing businesses. Built on clarity, structure, and plain language.</p>
+                <p class="footer-note">{{ $ui['footer_note'] }}</p>
             </div>
 
             <div>
-                <p class="footer-title">Company</p>
+                <p class="footer-title">{{ $ui['footer_company_title'] }}</p>
                 <div class="footer-links">
-                    <a href="{{ route('what-we-are') }}">What We Are</a>
-                    <a href="{{ route('what-we-do') }}">What We Do</a>
-                    <a href="{{ route('pricing') }}">Pricing</a>
-                    <a href="{{ route('faq') }}">FAQ</a>
+                    @foreach (collect(config('emplowise.nav'))->reject(fn ($item) => in_array($item['route'], ['home', 'student-hub'], true)) as $item)
+                        <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
+                    @endforeach
                 </div>
             </div>
 
             <div>
-                <p class="footer-title">Student Hub</p>
+                <p class="footer-title">{{ $ui['footer_student_title'] }}</p>
                 <div class="footer-links">
-                    <a href="{{ route('student-hub') }}#interview">Interview Prep</a>
-                    <a href="{{ route('student-hub') }}#ats">ATS Score</a>
-                    <a href="{{ route('student-hub') }}#resume">Resume Builder</a>
-                    <a href="{{ route('student-hub') }}#profile">Profile Optimizer</a>
-                    <a href="{{ route('student-hub') }}#prompts">Prompt Library</a>
+                    @foreach ($ui['student_links'] as $link)
+                        <a href="{{ route('student-hub') }}#{{ $link['hash'] }}">{{ $link['label'] }}</a>
+                    @endforeach
                 </div>
             </div>
 
             <div>
-                <p class="footer-title">Start here</p>
+                <p class="footer-title">{{ $ui['footer_start_title'] }}</p>
                 <div class="footer-links">
-                    <a href="{{ route('free-hr-audit') }}">Free HR Audit</a>
-                    <span>Market: {{ config('emplowise.brand.market') }}</span>
+                    <a href="{{ route('free-hr-audit') }}">{{ $ui['nav_audit_label'] }}</a>
+                    <span>{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</span>
                     <span>{{ config('emplowise.brand.expansion') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <span>&copy; {{ date('Y') }} Emplowise HR Services. All rights reserved.</span>
-            <span>Scope details are confirmed in writing after your Free HR Audit. Nothing on this site is a legal or compliance guarantee.</span>
+            <span>&copy; {{ date('Y') }} {{ config('emplowise.brand.legal_name') }}. {{ $ui['footer_rights'] }}</span>
+            <span>{{ $ui['footer_legal'] }}</span>
         </div>
     </div>
 </footer>
 
 @include('partials.chat')
 
-<button class="to-top" id="to-top" type="button" aria-label="Back to top">
+<button class="to-top" id="to-top" type="button" aria-label="{{ $ui['back_to_top'] }}">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
