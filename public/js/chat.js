@@ -76,6 +76,19 @@
         return KB[localIntent(text)] || KB.general;
     }
 
+    // Answer from the bundled knowledge base. Used when there is no endpoint
+    // (static host) or the endpoint fails, so the conversation keeps its shape.
+    function replyLocally(message) {
+        const intent = localIntent(message);
+        const reply = clamp(localReply(message));
+        previousIntent = intent;
+        append('assistant', reply);
+        renderSuggestions(localSuggestions(intent));
+        history.push({ role: 'user', content: message });
+        history.push({ role: 'assistant', content: reply });
+        history = history.slice(-8);
+    }
+
     const LOCAL_SUGGESTIONS = {
         pricing: [
             ['What is included', 'What is included in the packages?'],
@@ -274,6 +287,15 @@
         showTyping();
         setBusy(true);
 
+        // A static build has no chat endpoint; skip the request entirely.
+        if (!endpoint) {
+            hideTyping();
+            replyLocally(message);
+            setBusy(false);
+            input.focus();
+            return;
+        }
+
         const payload = {
             message: message,
             session_id: sessionId || null,
@@ -306,14 +328,7 @@
                     } else if (result.status === 419) {
                         append('assistant', 'Your session expired. Reload the page and send that again.');
                     } else if (result.status >= 500 || result.status === 404 || result.status === 405 || result.status === 501) {
-                        const intent = localIntent(message);
-                        const reply = clamp(localReply(message));
-                        previousIntent = intent;
-                        append('assistant', reply);
-                        renderSuggestions(localSuggestions(intent));
-                        history.push({ role: 'user', content: message });
-                        history.push({ role: 'assistant', content: reply });
-                        history = history.slice(-8);
+                        replyLocally(message);
                     } else {
                         append('assistant', 'That request did not go through. Try once more.');
                     }
@@ -334,14 +349,7 @@
             })
             .catch(function () {
                 hideTyping();
-                const intent = localIntent(message);
-                const reply = clamp(localReply(message));
-                previousIntent = intent;
-                append('assistant', reply);
-                renderSuggestions(localSuggestions(intent));
-                history.push({ role: 'user', content: message });
-                history.push({ role: 'assistant', content: reply });
-                history = history.slice(-8);
+                replyLocally(message);
             })
             .finally(function () {
                 setBusy(false);

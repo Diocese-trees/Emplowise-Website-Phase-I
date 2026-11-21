@@ -12,7 +12,7 @@ return [
     /*
      * Optional Web3Forms access key. With a key, the Free HR Audit form on the
      * static build posts to Web3Forms and emails the submission. Without one,
-     * the form stays wired to the Laravel endpoint.
+     * the form is still rebuilt but marked inert so it never posts nowhere.
      */
     'web3forms_key' => env('WEB3FORMS_ACCESS_KEY', ''),
 ];

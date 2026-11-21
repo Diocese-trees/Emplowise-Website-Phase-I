@@ -174,6 +174,10 @@ final class ExportStatic extends Command
             );
         }
 
+        // No chat endpoint on a static host. Dropping the attribute makes the
+        // widget answer from its bundled knowledge base without a request.
+        $html = preg_replace('/\s+data-endpoint="[^"]*\/api\/chat"/', '', $html) ?? $html;
+
         $html = str_replace(
             ['data-endpoint="'.$base.'/api/audit"', 'data-endpoint="/api/audit"'],
             'data-endpoint="https://api.web3forms.com/submit" data-audit-mode="web3forms"'

@@ -98,6 +98,20 @@ final class ExportStaticTest extends TestCase
         $this->assertStringNotContainsString('csrf-token', $hub);
     }
 
+    public function test_the_chat_widget_has_no_endpoint_on_a_static_host(): void
+    {
+        $this->artisan('emplowise:export-static', [
+            'path' => $this->target,
+            '--base' => 'https://example.github.io/demo',
+            '--audit-key' => 'test-key',
+        ])->assertSuccessful();
+
+        foreach (['index.html', 'faq/index.html', 'free-hr-audit/index.html'] as $page) {
+            $html = (string) File::get($this->target.'/'.$page);
+            $this->assertStringNotContainsString('/api/chat', $html, $page.' still points at the chat API');
+        }
+    }
+
     public function test_it_swaps_the_booking_form_to_web3forms(): void
     {
         $this->artisan('emplowise:export-static', [

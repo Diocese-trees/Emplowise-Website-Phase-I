@@ -654,8 +654,8 @@
         }
 
         if (keyword.indexOf(' ') === -1) {
-            var stem = stem(keyword);
-            if (stem !== '' && resumeStems['\u0001' + stem] === true) return 0.7;
+            var stemmed = stem(keyword);
+            if (stemmed !== '' && resumeStems['\u0001' + stemmed] === true) return 0.7;
         }
 
         return null;
@@ -700,48 +700,77 @@
     }
 
     // preg_match('/(?:hiring|seeking|looking for|role|position)\s*(?:an?|:)?\s*([a-z][a-z0-9 ,\/-]{2,50})/i')
+    //
+    // Written as an explicit backtrack so the greedy quantifiers and the
+    // optional article are tried in the same order PCRE tries them.
     var TITLE_LEADS = ['hiring', 'seeking', 'looking for', 'role', 'position'];
 
-    function jobTitleInside(jobDescription) {
-        for (var i = 0; i < jobDescription.length; i++) {
+    function jobTitleInside(text) {
+        for (var i = 0; i < text.length; i++) {
             for (var l = 0; l < TITLE_LEADS.length; l++) {
-                var lead = TITLE_LEADS[l];
-                if (!equalsIgnoreCase(jobDescription, i, lead)) continue;
-
-                var at = skipSpaces(jobDescription, i + lead.length);
-                var article = matchArticle(jobDescription, at);
-                at = skipSpaces(jobDescription, article.next);
-
-                if (at >= jobDescription.length) continue;
-                var head = jobDescription.charAt(at);
-                if (!isAsciiLetter(head)) continue;
-
-                var end = at + 1;
-                while (end < jobDescription.length && isTitleChar(jobDescription.charAt(end)) && (end - at) < 51) end++;
-
-                // {2,50} needs at least two characters after the first one.
-                if (end - at >= 3) return jobDescription.slice(at, end);
+                if (!equalsIgnoreCase(text, i, TITLE_LEADS[l])) continue;
+                var captured = matchAfterLead(text, i + TITLE_LEADS[l].length);
+                if (captured !== null) return captured;
             }
         }
         return null;
     }
 
-    function skipSpaces(value, at) {
+    function matchAfterLead(text, from) {
+        var max = spaceRunEnd(text, from);
+        for (var at = max; at >= from; at--) {
+            var captured = matchArticleAndTitle(text, at);
+            if (captured !== null) return captured;
+        }
+        return null;
+    }
+
+    function matchArticleAndTitle(text, at) {
+        var options = [];
+        var head = text.charAt(at);
+        var next = text.charAt(at + 1);
+
+        if (foldAsciiCode(head) === 'a') {
+            if (foldAsciiCode(next) === 'n') options.push(at + 2); // an
+            options.push(at + 1);                                  // a
+        }
+        if (head === ':') options.push(at + 1);
+        options.push(at); // the group is optional
+
+        for (var o = 0; o < options.length; o++) {
+            var max = spaceRunEnd(text, options[o]);
+            for (var b = max; b >= options[o]; b--) {
+                var captured = matchTitleCapture(text, b);
+                if (captured !== null) return captured;
+            }
+        }
+
+        return null;
+    }
+
+    function matchTitleCapture(text, at) {
+        var head = text.charAt(at);
+        if (!isAsciiLetter(head)) return null;
+
+        var limit = Math.min(text.length, at + 51);
+        var end = at + 1;
+        while (end < limit && isTitleChar(text.charAt(end))) end++;
+
+        // {2,50} counts characters after the first one, and nothing follows the
+        // group, so the longest run that is long enough is the match.
+        if (end - at < 3) return null;
+        return text.slice(at, end);
+    }
+
+    function spaceRunEnd(value, at) {
         var i = at;
         while (i < value.length && isSpace(value.charAt(i))) i++;
         return i;
     }
 
-    // (?:an?|:)? with the greedy order PCRE uses: longest alternative first.
-    function matchArticle(value, at) {
-        var char = value.charAt(at);
-        if (char === ':') return { next: at + 1 };
-        if (char === 'a' || char === 'A') {
-            var after = value.charAt(at + 1);
-            if (after === 'n' || after === 'N') return { next: at + 2 };
-            return { next: at + 1 };
-        }
-        return { next: at };
+    function foldAsciiCode(c) {
+        var code = c.charCodeAt(0);
+        return String.fromCharCode(code >= 0x41 && code <= 0x5A ? code + 32 : code);
     }
 
     function isAsciiLetter(c) {

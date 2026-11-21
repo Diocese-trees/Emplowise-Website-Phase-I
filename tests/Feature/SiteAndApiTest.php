@@ -86,6 +86,20 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringNotContainsString('media="print"', $home);
     }
 
+    public function test_the_hub_loads_every_browser_engine_before_student_js(): void
+    {
+        $html = (string) $this->get('/student-hub')->assertOk()->getContent();
+
+        $student = strpos($html, '/js/student.js');
+        $this->assertNotFalse($student);
+
+        foreach (['interview', 'ats', 'profile'] as $engine) {
+            $position = strpos($html, '/js/toolkit/'.$engine.'.js');
+            $this->assertNotFalse($position, 'Missing toolkit script for '.$engine);
+            $this->assertLessThan($student, $position, $engine.'.js must load before student.js');
+        }
+    }
+
     public function test_pages_render_without_php_diagnostics(): void
     {
         $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
