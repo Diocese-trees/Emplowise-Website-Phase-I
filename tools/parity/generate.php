@@ -86,6 +86,13 @@ $fixtures = [
             'resume' => "Hana Yousuf\nKarachi | hana@example.com | +92 300 1112223\n\nSummary\nCross-functional HR generalist who owns the team's onboarding and e-commerce hiring.\n\nExperience\nHR Generalist - Northline\n- Ran 12 cross-functional onboarding sessions for the team's new joiners.\n- Cut time-to-hire from 45 to 28 days across three e-commerce roles.\n- Wrote the on-boarding check-list that four managers now use.\n\nEducation\nBBA Human Resources\n\nSkills\nOnboarding, stakeholder communication, HRIS, e-commerce hiring",
             'job_description' => "HR Generalist\nWe are hiring an HR generalist for our e-commerce team. You will own cross-functional onboarding, cut time-to-hire, and keep the team's check-list current. Experience with HRIS and stakeholder communication is required.",
         ],
+        // 6 of 11 keywords makes coverage 6/11, where 55 * 0.5454 * 1.15 is
+        // 34.49999999999999. PHP's round() pre-rounds to 14 significant digits
+        // and returns 35; a plain Math.round() would return 34.
+        'rounding' => [
+            'resume' => "Ali Raza\nKarachi | ali@example.com | +92 300 1234567\n\nSummary\nHR officer handling payroll, policy, hiring, onboarding, retention, and compliance for a 40 person company.\n\nExperience\nHR Officer - Northline\n- Ran payroll for 40 people every month.\n- Wrote the policy manual and the hiring pack.\n- Owned onboarding and retention work for two years.\n- Kept the compliance file current for two audits.\n\nEducation\nBBA Human Resources\n\nSkills\nPayroll, policy, hiring, onboarding, retention, compliance",
+            'job_description' => 'We need payroll and policy and hiring and onboarding and retention and compliance and training and review and records and attendance and grievance.',
+        ],
     ],
     'profile' => [
         'weak' => [

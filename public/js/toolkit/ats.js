@@ -112,6 +112,46 @@
         return count;
     }
 
+    // php_intpow10(): the exact powers PHP keeps in a lookup table, 1e-8..1e22.
+    var POW10 = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1,
+        1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14,
+        1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22];
+
+    // php_intlog10abs(): floor(log10(fabs(value))).
+    function intLog10Abs(value) {
+        value = Math.abs(value);
+        if (value < 1e-8 || value > 1e22) return Math.floor(Math.log(value) / Math.LN10);
+        for (var power = 22; power >= -8; power--) {
+            if (value >= POW10[power + 8]) return power;
+        }
+        return -8;
+    }
+
+    // php_round_helper() in PHP_ROUND_HALF_UP mode.
+    function roundHelper(value) {
+        return value >= 0 ? Math.floor(value + 0.5) : Math.ceil(value - 0.5);
+    }
+
+    // round($value) with the default places of 0. PHP first pre-rounds to the
+    // 14 significant digits floating point guarantees, so a product that lands
+    // a hair below .5, such as 55 * (6 / 11) * 1.15 = 34.49999999999999, still
+    // rounds up to 35. Math.round() would give 34.
+    function phpRound(value) {
+        if (!isFinite(value) || value === 0) return value;
+
+        var precisionPlaces = 14 - intLog10Abs(value);
+
+        if (precisionPlaces > 0 && precisionPlaces - 15 < 0) {
+            var scale = POW10[precisionPlaces + 8];
+            var prerounded = roundHelper(value * scale);
+            return roundHelper(prerounded / scale);
+        }
+
+        // Beyond the precision FP guarantees, rounding would only shuffle noise.
+        if (Math.abs(value) >= 1e15) return value;
+        return roundHelper(value);
+    }
+
     // mb_strwidth(): the East Asian Wide and Fullwidth code points, dumped from
     // PHP so the table is the same one mbstring uses. Everything else is 1.
     var WIDE_RANGES_SOURCE =
@@ -985,7 +1025,7 @@
 
         var keywordCount = Math.max(1, keywords.length);
         var coverage = weighted / keywordCount;
-        var keywordScore = Math.round(55 * Math.min(1.0, coverage * 1.15));
+        var keywordScore = phpRound(55 * Math.min(1.0, coverage * 1.15));
 
         var structure = structureChecks(resumeText, title);
         var structureScore = 0;

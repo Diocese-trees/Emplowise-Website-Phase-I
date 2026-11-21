@@ -762,6 +762,122 @@
                 "Aim for 220 to 900 words, one to two pages."
             ],
             "source": "local"
+        },
+        "rounding": {
+            "score": 72,
+            "verdict": "Promising, needs tailoring",
+            "breakdown": [
+                {
+                    "label": "Keyword coverage",
+                    "score": 35,
+                    "max": 55,
+                    "detail": "6 of 11 priority keywords found"
+                },
+                {
+                    "label": "Resume structure",
+                    "score": 25,
+                    "max": 25,
+                    "detail": "Standard sections a parser can label"
+                },
+                {
+                    "label": "Formatting hygiene",
+                    "score": 12,
+                    "max": 20,
+                    "detail": "Length, bullets, and parser safe layout"
+                }
+            ],
+            "title": "d onboarding and retention and compliance and train",
+            "title_match": true,
+            "matched": [
+                "payroll",
+                "policy",
+                "hiring",
+                "onboarding",
+                "retention",
+                "compliance"
+            ],
+            "missing": [
+                "training",
+                "review",
+                "records",
+                "attendance",
+                "grievance"
+            ],
+            "structure": [
+                {
+                    "label": "Contact email",
+                    "ok": true,
+                    "weight": 5,
+                    "hint": "Add a plain email address in the header, not inside an image."
+                },
+                {
+                    "label": "Phone or LinkedIn",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Add a phone number or a LinkedIn URL in plain text."
+                },
+                {
+                    "label": "Experience section",
+                    "ok": true,
+                    "weight": 5,
+                    "hint": "Use the standard heading Experience."
+                },
+                {
+                    "label": "Education section",
+                    "ok": true,
+                    "weight": 3,
+                    "hint": "Add an Education section with degree and institution."
+                },
+                {
+                    "label": "Skills section",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Add a Skills block with the exact tool names from the posting."
+                },
+                {
+                    "label": "Summary or objective",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Open with a three line summary aimed at this role."
+                },
+                {
+                    "label": "Target title present",
+                    "ok": true,
+                    "weight": 0,
+                    "hint": "Put the exact job title from the posting in your header or summary."
+                }
+            ],
+            "format": [
+                {
+                    "label": "Readable length",
+                    "ok": false,
+                    "weight": 8,
+                    "hint": "Aim for 220 to 900 words, one to two pages."
+                },
+                {
+                    "label": "Bullet points used",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Use simple dash bullets, at least three."
+                },
+                {
+                    "label": "No table layout",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Remove table and column layouts. Parsers read them out of order."
+                },
+                {
+                    "label": "No personal noise",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Remove photo, date of birth, marital status, religion, and ID numbers."
+                }
+            ],
+            "fixes": [
+                "Add these keywords where they are true: training, review, records, attendance, grievance.",
+                "Aim for 220 to 900 words, one to two pages."
+            ],
+            "source": "local"
         }
     },
     "profile": {
@@ -912,6 +1028,10 @@
             "hyphens": {
                 "resume": "Hana Yousuf\nKarachi | hana@example.com | +92 300 1112223\n\nSummary\nCross-functional HR generalist who owns the team's onboarding and e-commerce hiring.\n\nExperience\nHR Generalist - Northline\n- Ran 12 cross-functional onboarding sessions for the team's new joiners.\n- Cut time-to-hire from 45 to 28 days across three e-commerce roles.\n- Wrote the on-boarding check-list that four managers now use.\n\nEducation\nBBA Human Resources\n\nSkills\nOnboarding, stakeholder communication, HRIS, e-commerce hiring",
                 "job_description": "HR Generalist\nWe are hiring an HR generalist for our e-commerce team. You will own cross-functional onboarding, cut time-to-hire, and keep the team's check-list current. Experience with HRIS and stakeholder communication is required."
+            },
+            "rounding": {
+                "resume": "Ali Raza\nKarachi | ali@example.com | +92 300 1234567\n\nSummary\nHR officer handling payroll, policy, hiring, onboarding, retention, and compliance for a 40 person company.\n\nExperience\nHR Officer - Northline\n- Ran payroll for 40 people every month.\n- Wrote the policy manual and the hiring pack.\n- Owned onboarding and retention work for two years.\n- Kept the compliance file current for two audits.\n\nEducation\nBBA Human Resources\n\nSkills\nPayroll, policy, hiring, onboarding, retention, compliance",
+                "job_description": "We need payroll and policy and hiring and onboarding and retention and compliance and training and review and records and attendance and grievance."
             }
         },
         "profile": {
