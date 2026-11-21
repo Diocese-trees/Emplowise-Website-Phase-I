@@ -132,13 +132,19 @@ Branch: `feat/student-hub-chat-upgrade`.
 - C2 `feat(interview): expose score dimensions and a next probe`.
 - C3 `feat(ats): match synonyms, rescue critical phrases, check title`.
 - C4 `feat(resume): autosave drafts locally with restore and clear`.
-- C5 `feat(profile): accept a target role and copy output blocks`.
+- C5 `feat(profile): accept a target role and aim the rewrite`.
 - C6 `feat(chat): score intents, suggest follow-ups, link internal routes`.
 - C7 `feat(prompts): show category counts and copy visible results`.
 - C8 `docs: update editing guide for the new controls`.
 
 Each commit: `php artisan test` green, `php artisan emplowise:seo-audit` green,
 no inline styles or scripts, facts unchanged.
+
+### Status
+
+All eight commits are on `feat/student-hub-chat-upgrade` in the order above.
+C1–C7 are committed; C8 is the docs refresh that carries this status note.
+The test suite stood at 37 tests / 344 assertions when C7 landed.
 
 ## 5. Acceptance checks
 

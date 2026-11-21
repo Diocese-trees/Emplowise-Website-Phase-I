@@ -37,6 +37,18 @@ Each `copy` block mirrors the page from top to bottom. For example, `copy.pricin
 
 Field labels, helper hints, and tool result headings live in the same `copy` block as the rest of the page. Input placeholders stay in the Blade file next to the field, because they are example values tied to that one input. Short status messages that the JavaScript swaps in at runtime stay in `public/js`. Assistant answers are generated at request time from `app/Services/EmplowiseAssistant.php` and the local knowledge base in `public/js/chat.js`, so edit those two files to change how the chat replies.
 
+## Student Hub and chat controls
+
+The five Student Hub tools and the chat widget keep their visible labels in `copy.student-hub`:
+
+- **Interview:** `interview.breakdown_heading` ("Why this score") and `interview.probe_heading` ("Ask yourself next") label the score dimensions and the practice prompt. `interview.score_note` names the four dimensions, so keep it in step with the 35/25/25/15 weights in `app/Services/StudentToolkit.php`.
+- **Resume builder:** `resume.example`, `resume.clear`, and `resume.save_note`. The note must keep saying the draft stays in the browser and is never sent to a server.
+- **Profile optimizer:** `profile.form.target` labels the optional Target role field. The rewrite uses that role when it is filled in.
+- **Prompt library:** `prompts.search_placeholder`, `prompts.clear_search`, `prompts.copy`, and `prompts.copy_visible`. The counts on the filter buttons come from the `student.prompts` array, so they update automatically when you add, remove, or recategorise a prompt.
+- **Chat:** `chat.reset` labels the "Start over" button and `chat.quick` holds the opening chips. Follow-up suggestion chips and intent scoring live in `app/Services/EmplowiseAssistant.php`; the browser fallback copy and its internal links live in `public/js/chat.js`. Keep both in step with the confirmed facts.
+
+Interview and ATS scores are calculated by the local engines first. A configured model can refine the wording around a result, but the numbers a student sees always come from the deterministic local calculation, so a model change cannot move a score.
+
 ## Editing prices and facts
 
 Prices live in `packages`. Each entry has `price_pkr` (a number, or `null` for custom), `price_display`, `capacity`, and `period`. If a price changes, update both `price_pkr` and `price_display` so the visible price and the structured data stay aligned.
