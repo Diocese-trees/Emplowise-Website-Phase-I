@@ -1053,6 +1053,9 @@
     const promptGrid = el('prompt-grid');
     if (promptGrid) {
         const search = el('prompt-search');
+        const searchBox = el('prompt-search-box');
+        const clearBtn = el('prompt-clear');
+        const copyVisibleBtn = el('prompt-copy-visible');
         const filters = el('prompt-filters');
         const empty = el('prompt-empty');
         const cards = Array.prototype.slice.call(promptGrid.querySelectorAll('[data-prompt]'));
@@ -1073,9 +1076,49 @@
             });
 
             if (empty) empty.classList.toggle('is-visible', visible === 0);
+            if (searchBox) searchBox.classList.toggle('has-value', term !== '');
+            if (clearBtn) clearBtn.hidden = term === '';
         }
 
-        if (search) search.addEventListener('input', applyPrompts);
+        if (search) {
+            search.addEventListener('input', applyPrompts);
+
+            search.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && search.value !== '') {
+                    event.preventDefault();
+                    search.value = '';
+                    applyPrompts();
+                }
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                if (search) {
+                    search.value = '';
+                    search.focus();
+                }
+                applyPrompts();
+            });
+        }
+
+        if (copyVisibleBtn) {
+            copyVisibleBtn.addEventListener('click', function () {
+                const visible = cards.filter(function (card) { return !card.hidden; });
+                if (!visible.length) {
+                    toast('No prompts to copy. Clear the search first.');
+                    return;
+                }
+                const text = visible.map(function (card) {
+                    const title = card.querySelector('h3');
+                    const body = card.querySelector('.prompt-text');
+                    return (title ? title.textContent.trim() : 'Prompt') + '\n' + (body ? body.textContent.trim() : '');
+                }).join('\n\n');
+                copy(text).then(function (ok) {
+                    toast(ok ? 'Copied ' + visible.length + ' prompts.' : 'Could not copy. Select the prompts manually.');
+                });
+            });
+        }
 
         if (filters) {
             filters.addEventListener('click', function (event) {

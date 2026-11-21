@@ -61,6 +61,18 @@ final class SiteAndApiTest extends TestCase
             ->assertSee('The draft saves in this browser only.');
     }
 
+    public function test_prompt_library_shows_counts_and_bulk_actions(): void
+    {
+        $html = (string) $this->get('/student-hub')->assertOk()->getContent();
+
+        $this->assertStringContainsString('id="prompt-copy-visible"', $html);
+        $this->assertStringContainsString('Copy visible prompts', $html);
+        $this->assertStringContainsString('id="prompt-clear"', $html);
+        $this->assertStringContainsString('class="search-clear"', $html);
+        $this->assertMatchesRegularExpression('/data-prompt-filter="all">All <span class="filter-count">14<\/span>/', $html);
+        $this->assertMatchesRegularExpression('/data-prompt-filter="Job search">Job search <span class="filter-count">3<\/span>/', $html);
+    }
+
     public function test_print_stylesheet_is_non_blocking_and_scripts_defer(): void
     {
         $hub = (string) $this->get('/student-hub')->assertOk()->getContent();

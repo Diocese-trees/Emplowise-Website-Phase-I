@@ -940,6 +940,9 @@ return [
                 'copy' => 'Copy prompt',
                 'expand' => 'Expand',
                 'search_label' => 'Search prompts',
+                'search_placeholder' => 'Search prompts by task or keyword',
+                'clear_search' => 'Clear',
+                'copy_visible' => 'Copy visible prompts',
             ],
             'cta_band' => [
                 'heading' => 'Hiring soon? The audit works for teams too.',

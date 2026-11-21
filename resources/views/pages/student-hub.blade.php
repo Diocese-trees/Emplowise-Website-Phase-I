@@ -434,17 +434,19 @@
                 </div>
 
                 <div class="prompt-toolbar">
-                    <div class="search-box">
+                    <div class="search-box" id="prompt-search-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
                         <label class="sr-only" for="prompt-search">{{ $copy['prompts']['search_label'] }}</label>
-                        <input id="prompt-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Search prompts by task or keyword">
+                        <input id="prompt-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="{{ $copy['prompts']['search_placeholder'] }}">
+                        <button type="button" class="search-clear" id="prompt-clear" aria-label="{{ $copy['prompts']['clear_search'] }}" hidden>&times;</button>
                     </div>
                     <div class="filter-row" id="prompt-filters">
-                        <button type="button" class="filter-btn is-active" data-prompt-filter="all">{{ $copy['filter_all'] ?? 'All' }}</button>
+                        <button type="button" class="filter-btn is-active" data-prompt-filter="all">{{ $copy['filter_all'] ?? 'All' }} <span class="filter-count">{{ count($student['prompts']) }}</span></button>
                         @foreach (array_unique(array_column($student['prompts'], 'category')) as $category)
-                            <button type="button" class="filter-btn" data-prompt-filter="{{ $category }}">{{ $category }}</button>
+                            <button type="button" class="filter-btn" data-prompt-filter="{{ $category }}">{{ $category }} <span class="filter-count">{{ collect($student['prompts'])->where('category', $category)->count() }}</span></button>
                         @endforeach
                     </div>
+                    <button type="button" class="btn btn--ghost btn--sm" id="prompt-copy-visible">{{ $copy['prompts']['copy_visible'] }}</button>
                 </div>
 
                 <div class="prompt-grid" id="prompt-grid">

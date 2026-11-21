@@ -1012,6 +1012,24 @@
     box-shadow: var(--shadow-teal);
 }
 
+.filter-count {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0.05rem 0.42rem;
+    border-radius: var(--radius-pill);
+    background: rgba(13, 148, 136, 0.12);
+    color: var(--teal-deep);
+    font-size: 0.67rem;
+    font-weight: 600;
+    line-height: 1.4;
+    vertical-align: 1px;
+}
+
+.filter-btn.is-active .filter-count {
+    background: rgba(255, 255, 255, 0.24);
+    color: var(--white);
+}
+
 .faq-group { margin-top: var(--s-7); }
 
 .faq-group-head {
