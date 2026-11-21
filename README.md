@@ -20,7 +20,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | Student Hub | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
-| Security | Enforced CSP, HSTS on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
+| Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
 | Delivery | 16 feature tests (102 assertions), Docker + Nginx + Apache configs, static export, single-file offline demo |
 
 ### Screens
@@ -158,7 +158,7 @@ SECURITY_CSP_REPORT_URI=/api/csp-report
 SECURITY_HSTS=true
 SECURITY_HSTS_MAX_AGE=63072000
 SECURITY_HSTS_INCLUDE_SUBDOMAINS=true
-SECURITY_HSTS_PRELOAD=false
+SECURITY_HSTS_PRELOAD=true
 ```
 
 Enforced policy:
@@ -185,8 +185,9 @@ Supporting changes that made `style-src 'self'` and `font-src 'self'` possible:
 
 `Strict-Transport-Security` is only sent when the request actually arrived over HTTPS, so a plain-HTTP preview cannot pin a browser to HTTPS.
 
-- `max-age=63072000; includeSubDomains` ships by default.
-- `preload` stays off until every subdomain is HTTPS and you control the domain permanently. Then set `SECURITY_HSTS_PRELOAD=true` and submit to hstspreload.org. It is a one-way door.
+- `max-age=63072000; includeSubDomains; preload` ships by default.
+- `preload` never appears without `includeSubDomains`, because browsers ignore the token otherwise.
+- Set `SECURITY_HSTS_PRELOAD=false` to drop the token during a staged rollout. Submitting the domain to hstspreload.org is a separate, one-way step: do it only after every subdomain answers over HTTPS, including mail, staging, and old marketing domains.
 
 ### Static copies
 

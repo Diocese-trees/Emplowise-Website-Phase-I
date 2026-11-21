@@ -48,6 +48,30 @@ class SecurityHeadersTest extends TestCase
         $secure->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     }
 
+    public function test_shipped_config_sends_the_full_preload_header_over_https(): void
+    {
+        $this->get('https://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
+    public function test_preload_keeps_include_subdomains_when_it_is_switched_off(): void
+    {
+        config([
+            'security.hsts.include_subdomains' => false,
+            'security.hsts.preload' => true,
+        ]);
+
+        $this->get('https://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
+    public function test_hsts_is_sent_when_a_trusted_proxy_terminates_https(): void
+    {
+        $this->withHeaders(['X-Forwarded-Proto' => 'https'])
+            ->get('http://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
     public function test_strict_policy_has_no_inline_escapes(): void
     {
         config(['security.csp.mode' => 'enforce']);
