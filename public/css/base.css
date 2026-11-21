@@ -10,11 +10,19 @@
 
 html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
     scroll-padding-top: calc(var(--header-h) + 1.5rem);
     scrollbar-color: var(--teal) rgba(8, 27, 62, 0.08);
     scrollbar-width: thin;
+    /* Reserve the gutter so opening a drawer never shifts the page sideways. */
+    scrollbar-gutter: stable;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+}
+
+/* Overlay lock: keeps scroll position, drops the scrollbar, no page jump. */
+html.is-scroll-locked { overflow: hidden; }
 
 body {
     margin: 0;
@@ -25,7 +33,20 @@ body {
     background: #f4f9fb;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* clip, not hidden: hidden would create a scroll container and break
+       the sticky header. clip trims the same decorative overflow cleanly. */
     overflow-x: hidden;
+    overflow-x: clip;
+}
+
+/* 16px minimum stops iOS Safari zooming the page when a field is tapped.
+   The :not() pairs lift specificity above the component field styles. */
+@media (max-width: 640px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    select:not([hidden]):not([readonly]),
+    textarea:not([hidden]):not([readonly]) {
+        font-size: 16px;
+    }
 }
 
 /* ------------------------------------------------------------------

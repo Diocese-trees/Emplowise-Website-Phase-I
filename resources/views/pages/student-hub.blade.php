@@ -103,7 +103,7 @@
                     <p class="question-text" id="interview-question"></p>
 
                     <label class="sr-only" for="interview-answer">Your answer</label>
-                    <textarea class="answer-box" id="interview-answer" placeholder="Write the answer you would actually say. Situation, task, action, result."></textarea>
+                    <textarea class="answer-box" id="interview-answer" autocomplete="off" enterkeyhint="enter" placeholder="Write the answer you would actually say. Situation, task, action, result."></textarea>
                     <div class="answer-meta">
                         <span id="interview-counter">0 characters</span>
                         <span>Use one concrete example. Numbers help.</span>
@@ -171,12 +171,12 @@
                     <div class="ats-inputs">
                         <div class="field">
                             <label for="ats-resume">Resume text</label>
-                            <textarea id="ats-resume" placeholder="Paste the full resume as plain text. Minimum 60 characters. Include headings like Experience, Education, Skills."></textarea>
+                            <textarea id="ats-resume" autocomplete="off" enterkeyhint="enter" placeholder="Paste the full resume as plain text. Minimum 60 characters. Include headings like Experience, Education, Skills."></textarea>
                             <span class="hint">Text is processed for this request and not stored.</span>
                         </div>
                         <div class="field">
                             <label for="ats-jd">Job description</label>
-                            <textarea id="ats-jd" placeholder="Paste the job posting. Include responsibilities and requirements."></textarea>
+                            <textarea id="ats-jd" autocomplete="off" enterkeyhint="enter" placeholder="Paste the job posting. Include responsibilities and requirements."></textarea>
                             <span class="hint">The keyword list is built from this posting only.</span>
                         </div>
                     </div>
@@ -262,33 +262,33 @@
                         <div class="form-grid">
                             <div class="field">
                                 <label for="res-name">Full name</label>
-                                <input id="res-name" data-rp="name" type="text" placeholder="Ayesha Khan" maxlength="80">
+                                <input id="res-name" data-rp="name" type="text" autocomplete="name" enterkeyhint="next" placeholder="Ayesha Khan" maxlength="80">
                             </div>
                             <div class="field">
                                 <label for="res-title">Target title</label>
-                                <input id="res-title" data-rp="title" type="text" placeholder="Data Analyst" maxlength="80">
+                                <input id="res-title" data-rp="title" type="text" autocomplete="organization-title" enterkeyhint="next" placeholder="Data Analyst" maxlength="80">
                             </div>
                             <div class="field">
                                 <label for="res-email">Email</label>
-                                <input id="res-email" data-rp="email" type="email" placeholder="you@example.com" maxlength="120">
+                                <input id="res-email" data-rp="email" type="email" inputmode="email" autocomplete="email" enterkeyhint="next" placeholder="you@example.com" maxlength="120">
                             </div>
                             <div class="field">
                                 <label for="res-phone">Phone</label>
-                                <input id="res-phone" data-rp="phone" type="text" placeholder="+92 300 1234567" maxlength="40">
+                                <input id="res-phone" data-rp="phone" type="text" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="+92 300 1234567" maxlength="40">
                             </div>
                             <div class="field">
                                 <label for="res-location">Location</label>
-                                <input id="res-location" data-rp="location" type="text" placeholder="Karachi, Pakistan" maxlength="80">
+                                <input id="res-location" data-rp="location" type="text" autocomplete="address-level2" enterkeyhint="next" placeholder="Karachi, Pakistan" maxlength="80">
                             </div>
                             <div class="field">
                                 <label for="res-linkedin">LinkedIn</label>
-                                <input id="res-linkedin" data-rp="linkedin" type="text" placeholder="linkedin.com/in/yourname" maxlength="120">
+                                <input id="res-linkedin" data-rp="linkedin" type="text" inputmode="url" autocomplete="url" enterkeyhint="done" placeholder="linkedin.com/in/yourname" maxlength="120">
                             </div>
                         </div>
 
                         <div class="field">
                             <label for="res-summary">Summary</label>
-                            <textarea id="res-summary" data-rp="summary" placeholder="Three lines: what you do, strongest proof, what you want." maxlength="700"></textarea>
+                            <textarea id="res-summary" data-rp="summary" autocomplete="off" enterkeyhint="enter" placeholder="Three lines: what you do, strongest proof, what you want." maxlength="700"></textarea>
                         </div>
 
                         <div>
@@ -309,7 +309,7 @@
 
                         <div class="field">
                             <label for="res-skills">Skills</label>
-                            <textarea class="s26" id="res-skills" data-rp="skills" placeholder="Excel, SQL, Python, stakeholder communication" maxlength="400"></textarea>
+                            <textarea class="s26" id="res-skills" data-rp="skills" autocomplete="off" enterkeyhint="done" placeholder="Excel, SQL, Python, stakeholder communication" maxlength="400"></textarea>
                             <span class="hint">Comma separated. Use the exact tool names from the job posting.</span>
                         </div>
                     </form>
@@ -365,15 +365,15 @@
                     <form class="panel-card" id="profile-form">
                         <div class="field">
                             <label for="profile-headline">Current headline</label>
-                            <input id="profile-headline" type="text" maxlength="200" placeholder="Final year CS student looking for internships">
+                            <input id="profile-headline" type="text" autocomplete="off" enterkeyhint="next" maxlength="200" placeholder="Final year CS student looking for internships">
                         </div>
                         <div class="field">
                             <label for="profile-summary">Current summary</label>
-                            <textarea id="profile-summary" maxlength="1500" placeholder="Paste your LinkedIn About or resume summary."></textarea>
+                            <textarea id="profile-summary" autocomplete="off" enterkeyhint="enter" maxlength="1500" placeholder="Paste your LinkedIn About or resume summary."></textarea>
                         </div>
                         <div class="field">
                             <label for="profile-bullets">Experience bullets</label>
-                            <textarea id="profile-bullets" maxlength="2000" placeholder="One bullet per line."></textarea>
+                            <textarea id="profile-bullets" autocomplete="off" enterkeyhint="enter" maxlength="2000" placeholder="One bullet per line."></textarea>
                         </div>
                         <div class="s27">
                             <button type="submit" class="btn btn--primary" id="profile-submit">Rewrite my profile</button>
@@ -422,7 +422,7 @@
                     <div class="search-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
                         <label class="sr-only" for="prompt-search">Search prompts</label>
-                        <input id="prompt-search" type="search" placeholder="Search prompts by task or keyword">
+                        <input id="prompt-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Search prompts by task or keyword">
                     </div>
                     <div class="filter-row" id="prompt-filters">
                         <button type="button" class="filter-btn is-active" data-prompt-filter="all">All</button>

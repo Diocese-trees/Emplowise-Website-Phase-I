@@ -23,10 +23,11 @@
     <section class="section section--tight">
         <div class="shell shell--narrow">
             <div class="faq-toolbar">
-                <div class="search-box">
+                <div class="search-box" id="faq-search-box">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
                     <label class="sr-only" for="faq-search">Search frequently asked questions</label>
                     <input id="faq-search" type="search" placeholder="Search pricing, audit, ATS, payroll..." autocomplete="off">
+                    <button type="button" class="search-clear" id="faq-clear" aria-label="Clear the search" hidden>&times;</button>
                 </div>
                 <div class="filter-row" id="faq-filters">
                     <button type="button" class="filter-btn is-active" data-faq-filter="all">All</button>

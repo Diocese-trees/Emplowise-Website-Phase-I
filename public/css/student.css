@@ -511,6 +511,11 @@
     color: var(--slate-500);
 }
 
+/* Detail line under each score bar. */
+.bar-row .bar-detail {
+    margin: 0.35rem 0 0;
+}
+
 .bar {
     height: 8px;
     border-radius: var(--radius-pill);

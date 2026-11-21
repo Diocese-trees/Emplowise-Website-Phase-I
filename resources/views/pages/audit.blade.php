@@ -39,22 +39,22 @@
                         <div class="form-grid">
                             <div class="field" data-field="contact_name">
                                 <label for="audit-name">Contact name</label>
-                                <input id="audit-name" name="contact_name" type="text" autocomplete="name" maxlength="120" placeholder="Your full name" required>
+                                <input id="audit-name" name="contact_name" type="text" autocomplete="name" enterkeyhint="next" maxlength="120" placeholder="Your full name" required>
                                 <span class="field-error"></span>
                             </div>
                             <div class="field" data-field="company_name">
                                 <label for="audit-company">Company</label>
-                                <input id="audit-company" name="company_name" type="text" autocomplete="organization" maxlength="160" placeholder="Company or venture name" required>
+                                <input id="audit-company" name="company_name" type="text" autocomplete="organization" enterkeyhint="next" maxlength="160" placeholder="Company or venture name" required>
                                 <span class="field-error"></span>
                             </div>
                             <div class="field" data-field="email">
                                 <label for="audit-email">Work email</label>
-                                <input id="audit-email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@company.com" required>
+                                <input id="audit-email" name="email" type="email" inputmode="email" autocomplete="email" enterkeyhint="next" maxlength="160" placeholder="you@company.com" required>
                                 <span class="field-error"></span>
                             </div>
                             <div class="field" data-field="phone">
                                 <label for="audit-phone">Phone</label>
-                                <input id="audit-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="+92 300 1234567" required>
+                                <input id="audit-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" maxlength="40" placeholder="+92 300 1234567" required>
                                 <span class="field-error"></span>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
 
                             <div class="field field--full" data-field="notes">
                                 <label for="audit-notes">Anything else we should know? <span class="muted">(optional)</span></label>
-                                <textarea id="audit-notes" name="notes" maxlength="1500" placeholder="Current tools, recent incidents, a policy that is out of date, a review cycle that stalled."></textarea>
+                                <textarea id="audit-notes" name="notes" autocomplete="off" enterkeyhint="enter" maxlength="1500" placeholder="Current tools, recent incidents, a policy that is out of date, a review cycle that stalled."></textarea>
                                 <span class="field-error"></span>
                             </div>
                         </div>

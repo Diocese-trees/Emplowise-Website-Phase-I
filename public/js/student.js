@@ -85,6 +85,19 @@
     const tabs = Array.prototype.slice.call(document.querySelectorAll('[data-hub-tab]'));
     const panels = Array.prototype.slice.call(document.querySelectorAll('[data-hub-panel]'));
 
+    function revealTab(tab) {
+        const rail = tab.parentElement;
+        if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+        const railRect = rail.getBoundingClientRect();
+        const tabRect = tab.getBoundingClientRect();
+        const left = rail.scrollLeft + (tabRect.left - railRect.left) - (railRect.width - tabRect.width) / 2;
+        if (rail.scrollTo) {
+            rail.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? 'auto' : 'smooth' });
+        } else {
+            rail.scrollLeft = Math.max(0, left);
+        }
+    }
+
     function activateTab(id) {
         if (!id) return;
         const target = panels.filter(function (panel) { return panel.getAttribute('data-hub-panel') === id; })[0];
@@ -93,6 +106,7 @@
             const active = tab.getAttribute('data-hub-tab') === id;
             tab.classList.toggle('is-active', active);
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            if (active) revealTab(tab);
         });
         panels.forEach(function (panel) {
             panel.classList.toggle('is-active', panel === target);
@@ -105,6 +119,12 @@
             activateTab(id);
             if (window.history && window.history.replaceState) {
                 window.history.replaceState(null, '', '#' + id);
+            }
+            // On narrow screens the rail wraps above the panel, so bring the
+            // newly selected panel into view instead of leaving it offscreen.
+            if (window.innerWidth <= 760) {
+                const panel = document.querySelector('[data-hub-panel="' + id + '"]');
+                if (panel) panel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
             }
         });
     });
@@ -242,10 +262,10 @@
         if (submitBtn) {
             submitBtn.addEventListener('click', function () {
                 if (state.busy || !state.questions.length) return;
-                const answer = (answerEl.value || '').trim();
+                const answer = answerEl ? (answerEl.value || '').trim() : '';
                 if (answer.length < 10) {
                     setStatus(status, 'Write at least one full sentence before scoring.', 'is-error');
-                    answerEl.focus();
+                    if (answerEl) answerEl.focus();
                     return;
                 }
                 if (answer.length > 5000) {
@@ -302,7 +322,9 @@
         const jdEl = el('ats-jd');
         const status = el('ats-status');
         const submitBtn = el('ats-submit');
+        const submitLabel = submitBtn && submitBtn.textContent.trim() ? submitBtn.textContent.trim() : 'Score my resume';
         const resultPanel = el('ats-result');
+        let busy = false;
 
         function renderChecklist(node, checks) {
             if (!node) return;
@@ -342,7 +364,8 @@
             if (bars) {
                 bars.innerHTML = '';
                 (data.breakdown || []).forEach(function (row) {
-                    const pct = Math.round((row.score / row.max) * 100);
+                    const max = Number(row.max) > 0 ? Number(row.max) : 1;
+                    const pct = Math.round((Number(row.score) || 0) / max * 100);
                     const wrap = document.createElement('div');
                     wrap.className = 'bar-row';
 
@@ -362,8 +385,7 @@
                     bar.appendChild(fill);
 
                     const detail = document.createElement('p');
-                    detail.className = 'small muted';
-                    detail.style.margin = '0.35rem 0 0';
+                    detail.className = 'small muted bar-detail';
                     detail.textContent = row.detail;
                     wrap.appendChild(head);
                     wrap.appendChild(bar);
@@ -396,21 +418,26 @@
 
         atsForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const resume = (resumeEl.value || '').trim();
-            const jd = (jdEl.value || '').trim();
+            if (busy) return;
+            const resume = resumeEl ? (resumeEl.value || '').trim() : '';
+            const jd = jdEl ? (jdEl.value || '').trim() : '';
 
             if (resume.length < 60) {
                 setStatus(status, 'Paste a fuller resume. At least 60 characters.', 'is-error');
-                resumeEl.focus();
+                if (resumeEl) resumeEl.focus();
                 return;
             }
             if (jd.length < 60) {
                 setStatus(status, 'Paste the full job description. At least 60 characters.', 'is-error');
-                jdEl.focus();
+                if (jdEl) jdEl.focus();
                 return;
             }
 
-            submitBtn.disabled = true;
+            busy = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Scoring…';
+            }
             setStatus(status, 'Scoring the match…');
 
             postJson(endpoints.ats, { resume: resume, job_description: jd })
@@ -426,7 +453,11 @@
                     setStatus(status, 'Network error while scoring.', 'is-error');
                 })
                 .finally(function () {
-                    submitBtn.disabled = false;
+                    busy = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = submitLabel;
+                    }
                 });
         });
     }
@@ -509,11 +540,15 @@
         function expData() {
             if (!expList) return [];
             return Array.prototype.slice.call(expList.querySelectorAll('.repeat-item')).map(function (item) {
+                const role = item.querySelector('.exp-role');
+                const company = item.querySelector('.exp-company');
+                const dates = item.querySelector('.exp-dates');
+                const bullets = item.querySelector('.exp-bullets');
                 return {
-                    role: (item.querySelector('.exp-role').value || '').trim(),
-                    company: (item.querySelector('.exp-company').value || '').trim(),
-                    dates: (item.querySelector('.exp-dates').value || '').trim(),
-                    bullets: (item.querySelector('.exp-bullets').value || '').trim()
+                    role: role ? (role.value || '').trim() : '',
+                    company: company ? (company.value || '').trim() : '',
+                    dates: dates ? (dates.value || '').trim() : '',
+                    bullets: bullets ? (bullets.value || '').trim() : ''
                 };
             });
         }
@@ -521,11 +556,15 @@
         function eduData() {
             if (!eduList) return [];
             return Array.prototype.slice.call(eduList.querySelectorAll('.repeat-item')).map(function (item) {
+                const degree = item.querySelector('.edu-degree');
+                const school = item.querySelector('.edu-school');
+                const dates = item.querySelector('.edu-dates');
+                const detail = item.querySelector('.edu-detail');
                 return {
-                    degree: (item.querySelector('.edu-degree').value || '').trim(),
-                    school: (item.querySelector('.edu-school').value || '').trim(),
-                    dates: (item.querySelector('.edu-dates').value || '').trim(),
-                    detail: (item.querySelector('.edu-detail').value || '').trim()
+                    degree: degree ? (degree.value || '').trim() : '',
+                    school: school ? (school.value || '').trim() : '',
+                    dates: dates ? (dates.value || '').trim() : '',
+                    detail: detail ? (detail.value || '').trim() : ''
                 };
             });
         }
@@ -719,6 +758,9 @@
     if (profileForm) {
         const status = el('profile-status');
         const resultPanel = el('profile-result');
+        const submitBtn = el('profile-submit');
+        const submitLabel = submitBtn && submitBtn.textContent.trim() ? submitBtn.textContent.trim() : 'Rewrite my profile';
+        let busy = false;
 
         function renderProfile(data) {
             const headlines = el('profile-headlines');
@@ -757,18 +799,25 @@
 
         profileForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const headline = el('profile-headline').value.trim();
-            const summary = el('profile-summary').value.trim();
-            const bullets = el('profile-bullets').value.trim();
+            if (busy) return;
+            const headlineEl = el('profile-headline');
+            const summaryEl = el('profile-summary');
+            const bulletsEl = el('profile-bullets');
+            const headline = headlineEl ? headlineEl.value.trim() : '';
+            const summary = summaryEl ? summaryEl.value.trim() : '';
+            const bullets = bulletsEl ? bulletsEl.value.trim() : '';
 
             if (!headline && !summary && !bullets) {
                 setStatus(status, 'Add a headline, a summary, or at least one bullet.', 'is-error');
-                el('profile-headline').focus();
+                if (headlineEl) headlineEl.focus();
                 return;
             }
 
-            const submitBtn = el('profile-submit');
-            submitBtn.disabled = true;
+            busy = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Rewriting…';
+            }
             setStatus(status, 'Rewriting…');
 
             postJson(endpoints.profile, { headline: headline, summary: summary, bullets: bullets })
@@ -783,7 +832,11 @@
                     setStatus(status, 'Network error while rewriting.', 'is-error');
                 })
                 .finally(function () {
-                    submitBtn.disabled = false;
+                    busy = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = submitLabel;
+                    }
                 });
         });
     }

@@ -10,6 +10,7 @@
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
     const sendBtn = document.getElementById('chat-send');
+    const sendLabel = sendBtn && sendBtn.textContent.trim() ? sendBtn.textContent.trim() : 'Send';
     const quick = document.getElementById('chat-quick');
 
     if (!root || !panel || !launcher || !log || !form || !input) return;
@@ -77,17 +78,42 @@
         return lines.slice(0, 5).join('\n');
     }
 
-    let sessionId = window.sessionStorage.getItem('emplowise_chat_session') || '';
+    // Session storage can throw in private modes and framed contexts; the
+    // widget must stay usable when it does.
+    function readSession() {
+        try {
+            return window.sessionStorage.getItem('emplowise_chat_session') || '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function writeSession(value) {
+        try {
+            window.sessionStorage.setItem('emplowise_chat_session', value);
+        } catch (error) {
+            /* not fatal */
+        }
+    }
+
+    let sessionId = readSession();
     let history = [];
     let sending = false;
     let typingEl = null;
+
+    const compact = window.matchMedia('(max-width: 520px)');
 
     function setOpen(open) {
         panel.hidden = !open;
         launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
         if (open) {
+            if (compact.matches && window.Emplowise && window.Emplowise.lockScroll) {
+                window.Emplowise.lockScroll('chat');
+            }
             window.setTimeout(function () { input.focus(); }, 60);
             scrollDown();
+        } else if (window.Emplowise && window.Emplowise.unlockScroll) {
+            window.Emplowise.unlockScroll('chat');
         }
     }
 
@@ -98,15 +124,23 @@
     if (closeBtn) {
         closeBtn.addEventListener('click', function () {
             setOpen(false);
-            launcher.focus();
+            launcher.focus({ preventScroll: true });
         });
     }
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && !panel.hidden) {
             setOpen(false);
-            launcher.focus();
+            launcher.focus({ preventScroll: true });
         }
+    });
+
+    // Click away to dismiss the panel, returning focus to the launcher.
+    document.addEventListener('click', function (event) {
+        if (panel.hidden) return;
+        if (panel.contains(event.target) || launcher.contains(event.target)) return;
+        setOpen(false);
+        launcher.focus({ preventScroll: true });
     });
 
     function scrollDown() {
@@ -144,7 +178,7 @@
         sending = busy;
         if (sendBtn) {
             sendBtn.disabled = busy;
-            sendBtn.textContent = busy ? '…' : 'Send';
+            sendBtn.textContent = busy ? '…' : sendLabel;
         }
     }
 
@@ -193,6 +227,8 @@
                         append('assistant', 'Slow down a second. Too many messages at once. Try again in a minute.');
                     } else if (result.status === 422) {
                         append('assistant', 'That message did not pass validation. Keep it under 800 characters and try again.');
+                    } else if (result.status === 419) {
+                        append('assistant', 'Your session expired. Reload the page and send that again.');
                     } else if (result.status >= 500) {
                         append('assistant', clamp(localReply(message)));
                     } else {
@@ -203,7 +239,7 @@
 
                 if (result.body.session_id) {
                     sessionId = result.body.session_id;
-                    window.sessionStorage.setItem('emplowise_chat_session', sessionId);
+                    writeSession(sessionId);
                 }
 
                 append('assistant', clamp(result.body.reply || localReply(message)));

@@ -69,4 +69,15 @@ class SecurityHeadersTest extends TestCase
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->assertHeader('Cross-Origin-Opener-Policy', 'same-origin');
     }
+
+    public function test_frame_headers_do_not_contradict_the_csp_directive(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $response = $this->get('/')->assertOk();
+        $policy = (string) $response->headers->get('Content-Security-Policy');
+
+        $this->assertStringContainsString("frame-ancestors 'none'", $policy);
+        $this->assertSame('DENY', $response->headers->get('X-Frame-Options'));
+    }
 }

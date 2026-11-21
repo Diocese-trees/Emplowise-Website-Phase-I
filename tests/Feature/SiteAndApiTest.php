@@ -52,6 +52,41 @@ final class SiteAndApiTest extends TestCase
         $home->assertDontSee('js/student.js', false);
     }
 
+    public function test_print_stylesheet_is_non_blocking_and_scripts_defer(): void
+    {
+        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/css\/print\.css\?v=\d+" media="print"/', $hub);
+        $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
+
+        $home = (string) $this->get('/')->assertOk()->getContent();
+        $this->assertMatchesRegularExpression('/<script src="\/js\/app\.js\?v=\d+" defer><\/script>/', $home);
+        $this->assertMatchesRegularExpression('/<script src="\/js\/chat\.js\?v=\d+" defer><\/script>/', $home);
+        $this->assertStringNotContainsString('media="print"', $home);
+    }
+
+    public function test_pages_render_without_php_diagnostics(): void
+    {
+        $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+        $markers = ['Warning:', 'Notice:', 'Deprecated:', 'Fatal error', 'Undefined variable', 'Undefined array key'];
+
+        foreach ($pages as $path) {
+            $html = (string) $this->get($path)->assertOk()->getContent();
+            foreach ($markers as $marker) {
+                $this->assertStringNotContainsString($marker, $html, $path.' rendered '.$marker);
+            }
+        }
+    }
+
+    public function test_favicon_is_a_real_icon_not_an_empty_placeholder(): void
+    {
+        $path = public_path('favicon.ico');
+
+        $this->assertFileExists($path);
+        $this->assertGreaterThan(0, (int) filesize($path));
+        $this->assertSame("\x00\x00\x01\x00", (string) file_get_contents($path, false, null, 0, 4));
+    }
+
     public function test_seo_metadata_and_structured_data_render(): void
     {
         $home = $this->get('/')->assertOk();

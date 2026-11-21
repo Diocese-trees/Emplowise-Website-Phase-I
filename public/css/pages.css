@@ -954,6 +954,38 @@
     stroke: var(--slate-400);
 }
 
+/* Clear-search affordance: only rendered once the field has a value. */
+.search-box.has-value input { padding-right: 3.1rem; }
+
+.search-clear {
+    position: absolute;
+    right: 0.45rem;
+    top: 50%;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--slate-500);
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.search-clear:hover {
+    background: rgba(13, 148, 136, 0.12);
+    color: var(--teal-deep);
+}
+
+.search-clear[hidden] { display: none; }
+
+@media (max-width: 640px) {
+    .search-clear { width: 44px; height: 44px; margin-top: -22px; }
+}
+
 .filter-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
 .filter-btn {
