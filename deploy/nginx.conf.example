@@ -39,11 +39,21 @@ server {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+
+        # Tell PHP the request arrived over TLS. Without this the app sees HTTP,
+        # skips HSTS, and builds http:// URLs even on the certbot 443 server.
+        fastcgi_param HTTPS $https if_not_empty;
+
+        # The app sets these too. Drop its copy so the browser sees one value.
         fastcgi_hide_header X-Powered-By;
+        fastcgi_hide_header X-Content-Type-Options;
+        fastcgi_hide_header X-Frame-Options;
+        fastcgi_hide_header Referrer-Policy;
     }
 
+    # Framing is denied here and by the app's CSP frame-ancestors 'none'.
     add_header X-Content-Type-Options "nosniff" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Frame-Options "DENY" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     gzip on;

@@ -104,4 +104,22 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString("frame-ancestors 'none'", $policy);
         $this->assertSame('DENY', $response->headers->get('X-Frame-Options'));
     }
+
+    public function test_every_public_page_denies_framing(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $paths = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+
+        foreach ($paths as $path) {
+            $response = $this->get($path)->assertOk();
+
+            $response->assertHeader('X-Frame-Options', 'DENY');
+            $this->assertStringContainsString(
+                "frame-ancestors 'none'",
+                (string) $response->headers->get('Content-Security-Policy'),
+                $path.' is missing frame-ancestors'
+            );
+        }
+    }
 }
