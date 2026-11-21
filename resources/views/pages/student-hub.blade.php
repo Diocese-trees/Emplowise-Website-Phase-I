@@ -130,6 +130,11 @@
                             </div>
                         </div>
 
+                        <div class="s18">
+                            <h4>{{ $copy['interview']['breakdown_heading'] }}</h4>
+                            <div class="bars" id="interview-bars"></div>
+                        </div>
+
                         <div class="feedback-cols">
                             <div class="feedback-block feedback-block--good">
                                 <h4>{{ $copy['interview']['worked'] }}</h4>
@@ -143,6 +148,11 @@
 
                         <div class="model-answer" id="interview-model">
                             <strong>{{ $copy['interview']['model_answer'] }}</strong>
+                            <span></span>
+                        </div>
+
+                        <div class="model-answer" id="interview-probe">
+                            <strong>{{ $copy['interview']['probe_heading'] }}</strong>
                             <span></span>
                         </div>
 

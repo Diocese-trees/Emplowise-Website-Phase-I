@@ -62,7 +62,7 @@ final class StudentToolkit
     }
 
     /**
-     * @return array{score: int, verdict: string, strengths: array<int, string>, fixes: array<int, string>, model_answer: string, source: string}
+     * @return array{score: int, verdict: string, breakdown: array<int, array{label: string, score: int, max: int, detail: string}>, strengths: array<int, string>, fixes: array<int, string>, model_answer: string, next_probe: string, source: string}
      */
     public function interviewFeedback(string $role, string $level, string $question, string $answer): array
     {
@@ -93,9 +93,11 @@ final class StudentToolkit
             return [
                 'score' => max(0, min(100, (int) $decoded['score'])),
                 'verdict' => (string) ($decoded['verdict'] ?? $this->verdict((int) $decoded['score'])),
+                'breakdown' => $local['breakdown'],
                 'strengths' => array_slice(array_values(array_map('strval', (array) $decoded['strengths'])), 0, 4),
                 'fixes' => array_slice(array_values(array_map('strval', (array) $decoded['fixes'])), 0, 4),
                 'model_answer' => (string) $decoded['model_answer'],
+                'next_probe' => $local['next_probe'],
                 'source' => 'model:'.$result['model'],
             ];
         } catch (RuntimeException) {
@@ -307,7 +309,7 @@ final class StudentToolkit
     }
 
     /**
-     * @return array{score: int, verdict: string, strengths: array<int, string>, fixes: array<int, string>, model_answer: string}
+     * @return array{score: int, verdict: string, breakdown: array<int, array{label: string, score: int, max: int, detail: string}>, strengths: array<int, string>, fixes: array<int, string>, model_answer: string, next_probe: string}
      */
     private function localFeedback(string $role, string $level, string $question, string $answer): array
     {
@@ -319,6 +321,12 @@ final class StudentToolkit
             return [
                 'score' => 18,
                 'verdict' => 'Too thin to score',
+                'breakdown' => [
+                    ['label' => 'Structure', 'score' => 6, 'max' => 35, 'detail' => 'No complete STAR sequence found'],
+                    ['label' => 'Evidence', 'score' => 3, 'max' => 25, 'detail' => 'No detail or numbers to weigh'],
+                    ['label' => 'Clarity', 'score' => 5, 'max' => 25, 'detail' => 'Too short to judge flow'],
+                    ['label' => 'Ownership', 'score' => 4, 'max' => 15, 'detail' => 'Your part is not visible yet'],
+                ],
                 'strengths' => ['You started the answer instead of stalling.'],
                 'fixes' => [
                     'Write at least four sentences so an interviewer can follow your reasoning.',
@@ -326,6 +334,7 @@ final class StudentToolkit
                     'Name the tools, people, or numbers involved. Specifics make it credible.',
                 ],
                 'model_answer' => $this->modelAnswerTemplate($role, $question),
+                'next_probe' => 'Give one concrete example: where were you, what were you asked to do, and what did you do?',
             ];
         }
 
@@ -345,7 +354,37 @@ final class StudentToolkit
         $clarity = max(4, $clarity);
         $ownership = min(15, 5 + $firstPerson * 2);
 
-        $score = max(20, min(96, (int) round(($structure / 35) * 35 + ($evidence / 25) * 25 + ($clarity / 25) * 25 + ($ownership / 15) * 15)));
+        $score = max(20, min(96, $structure + $evidence + $clarity + $ownership));
+
+        $missingParts = [];
+        if (! $hasSituation) {
+            $missingParts[] = 'situation';
+        }
+        if (! $hasTask) {
+            $missingParts[] = 'task';
+        }
+        if (! $hasAction) {
+            $missingParts[] = 'action';
+        }
+        if (! $hasResult) {
+            $missingParts[] = 'result';
+        }
+
+        $nextProbe = match (true) {
+            ! $hasResult => 'What changed after you acted? Name one result, even a small one.',
+            ! $hasAction => 'What three actions did you take, in order? Say what you did, not what the team did.',
+            ! $hasTask => 'What were you specifically asked to do, and what was the deadline or constraint?',
+            ! $hasSituation => 'Where and when did this happen? Give one line of context before the task.',
+            $numbers === 0 => 'What number proves the result? Users, hours saved, marks, headcount, or error rate.',
+            default => 'Record a 30 second version. Keep the result last and cut the setup.',
+        };
+
+        $breakdown = [
+            ['label' => 'Structure', 'score' => $structure, 'max' => 35, 'detail' => $missingParts === [] ? 'Situation, task, action, and result all present' : 'Missing '.implode(', ', $missingParts)],
+            ['label' => 'Evidence', 'score' => $evidence, 'max' => 25, 'detail' => $numbers > 0 ? $numbers.' number'.($numbers === 1 ? '' : 's').' used' : 'No numbers found'],
+            ['label' => 'Clarity', 'score' => $clarity, 'max' => 25, 'detail' => $words.' words'.($filler > 0 ? ', '.$filler.' filler word'.($filler === 1 ? '' : 's') : '')],
+            ['label' => 'Ownership', 'score' => $ownership, 'max' => 15, 'detail' => $firstPerson === 0 ? 'No first-person reference' : $firstPerson.' first-person reference'.($firstPerson === 1 ? '' : 's')],
+        ];
 
         $strengths = [];
         $fixes = [];
@@ -397,9 +436,11 @@ final class StudentToolkit
         return [
             'score' => $score,
             'verdict' => $this->verdict($score),
+            'breakdown' => $breakdown,
             'strengths' => array_slice($strengths, 0, 3),
             'fixes' => array_slice($fixes, 0, 3),
             'model_answer' => $this->modelAnswerTemplate($role, $question),
+            'next_probe' => $nextProbe,
         ];
     }
 

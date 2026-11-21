@@ -164,6 +164,8 @@
         const strengthsEl = el('interview-strengths');
         const fixesEl = el('interview-fixes');
         const modelEl = el('interview-model');
+        const probeEl = el('interview-probe');
+        const barsEl = el('interview-bars');
         const nextBtn = el('interview-next');
 
         const state = { questions: [], index: 0, busy: false, role: '', level: '' };
@@ -196,16 +198,58 @@
             if (answerEl) answerEl.focus();
         }
 
+        function renderBars(rows) {
+            if (!barsEl) return;
+            barsEl.innerHTML = '';
+            (rows || []).forEach(function (row) {
+                const max = Number(row.max) > 0 ? Number(row.max) : 1;
+                const pct = Math.round((Number(row.score) || 0) / max * 100);
+                const wrap = document.createElement('div');
+                wrap.className = 'bar-row';
+                wrap.setAttribute('role', 'img');
+                wrap.setAttribute('aria-label', row.label + ': ' + row.score + ' of ' + row.max + '. ' + (row.detail || ''));
+
+                const head = document.createElement('div');
+                head.className = 'bar-head';
+                const label = document.createElement('span');
+                label.textContent = row.label;
+                const score = document.createElement('span');
+                score.textContent = row.score + ' / ' + row.max;
+                head.appendChild(label);
+                head.appendChild(score);
+
+                const bar = document.createElement('div');
+                bar.className = 'bar' + (pct < 50 ? ' is-low' : (pct < 75 ? ' is-mid' : ''));
+                const fill = document.createElement('span');
+                fill.style.width = pct + '%';
+                bar.appendChild(fill);
+
+                const detail = document.createElement('p');
+                detail.className = 'small muted bar-detail';
+                detail.textContent = row.detail || '';
+                wrap.appendChild(head);
+                wrap.appendChild(bar);
+                wrap.appendChild(detail);
+                barsEl.appendChild(wrap);
+            });
+        }
+
         function renderFeedback(data) {
             if (feedback) feedback.hidden = false;
             if (scoreEl) scoreEl.textContent = String(data.score);
             setRing(ringEl, data.score);
             if (verdictEl) verdictEl.textContent = data.verdict || '';
+            renderBars(data.breakdown);
             fillList(strengthsEl, data.strengths);
             fillList(fixesEl, data.fixes);
             if (modelEl) {
                 const span = modelEl.querySelector('span');
                 if (span) span.textContent = data.model_answer || '';
+            }
+            if (probeEl) {
+                const span = probeEl.querySelector('span');
+                if (span) span.textContent = data.next_probe || '';
+                probeEl.hidden = !data.next_probe;
             }
             if (nextBtn) {
                 const last = state.index >= state.questions.length - 1;

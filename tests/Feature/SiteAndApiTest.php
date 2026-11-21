@@ -269,6 +269,34 @@ final class SiteAndApiTest extends TestCase
         $first->assertJsonStructure(['score', 'verdict', 'strengths', 'fixes', 'model_answer', 'source']);
     }
 
+    public function test_interview_feedback_explains_its_score_and_offers_a_probe(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $response = $this->postJson('/api/student/interview/feedback', [
+            'role' => 'Data and Analytics',
+            'level' => 'Entry level',
+            'question' => 'Describe a dataset you cleaned. What was messy?',
+            'answer' => 'At my university lab we had a survey dataset with duplicate rows and missing income values. I removed duplicates, standardised city names, and filled missing values with the median. As a result the analysis error dropped and the team could trust the report.',
+        ])->assertOk();
+
+        $breakdown = $response->json('breakdown');
+        $this->assertCount(4, $breakdown);
+        $this->assertSame([35, 25, 25, 15], array_column($breakdown, 'max'));
+        $this->assertSame($response->json('score'), array_sum(array_column($breakdown, 'score')));
+        $this->assertNotEmpty($response->json('next_probe'));
+
+        $this->postJson('/api/student/interview/feedback', [
+            'role' => 'Data and Analytics',
+            'level' => 'Entry level',
+            'question' => 'Describe a dataset you cleaned. What was messy?',
+            'answer' => 'I cleaned data.',
+        ])->assertOk()
+            ->assertJsonCount(4, 'breakdown')
+            ->assertJsonPath('score', 18)
+            ->assertJsonStructure(['next_probe']);
+    }
+
     public function test_ats_score_is_explainable_and_bounded(): void
     {
         config(['ai.alibaba.api_key' => null]);
