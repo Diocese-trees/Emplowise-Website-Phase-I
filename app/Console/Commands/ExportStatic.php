@@ -56,7 +56,15 @@ final class ExportStatic extends Command
             return self::FAILURE;
         }
 
-        config(['app.url' => $base, 'app.asset_url' => $base]);
+        // Rendering runs the web middleware, which starts a session. A static
+        // export has no session or cache to persist, and a fresh checkout has
+        // no migrated database, so keep both in memory.
+        config([
+            'app.url' => $base,
+            'app.asset_url' => $base,
+            'session.driver' => 'array',
+            'cache.default' => 'array',
+        ]);
         URL::forceRootUrl($base);
         URL::forceScheme((string) (parse_url($base, PHP_URL_SCHEME) ?: 'https'));
 

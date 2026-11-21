@@ -166,6 +166,18 @@ final class ExportStaticTest extends TestCase
         }
     }
 
+    public function test_the_export_does_not_need_a_session_store_or_a_database(): void
+    {
+        config(['session.driver' => 'not-a-real-driver', 'cache.default' => 'not-a-real-store']);
+
+        $this->artisan('emplowise:export-static', [
+            'path' => $this->target,
+            '--base' => 'https://example.github.io/demo',
+        ])->assertSuccessful();
+
+        $this->assertFileExists($this->target.'/index.html');
+    }
+
     public function test_it_refuses_to_write_into_the_application_root(): void
     {
         $this->artisan('emplowise:export-static', [
