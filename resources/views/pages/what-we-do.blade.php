@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'What We Do | Emplowise')
-@section('meta_description', 'Payroll operations, performance management, and policy making run remotely by Emplowise, with a proposed AI automation layer and a four-stage diagnostic method.')
+@section('meta_description', 'Payroll operations, performance management, and policy making run remotely by Emplowise, with workflow checks, templates, and a four-stage diagnostic method.')
 
 @section('content')
     <section class="page-head">
@@ -15,7 +15,7 @@
             <h1>We run the work, not the workshop.</h1>
             <p class="lede">
                 Three operational pillars, fourteen confirmed services, and a diagnostic method that ends in
-                running processes. The automation layer is proposed, not shipped software.
+                running processes. Workflow checks and templates support the service and are not sold as standalone software.
             </p>
         </div>
     </section>
@@ -49,18 +49,18 @@
                     </div>
 
                     <div>
-                        <h4 class="s39">
-                            AI automation · proposed
-                        </h4>
+                        <h3 class="s39">
+                            Workflow checks and templates
+                        </h3>
                         <div class="auto-list">
                             @foreach ($pillar['automation'] as $item)
                                 <div class="auto-item"><span>{{ $item }}</span></div>
                             @endforeach
                         </div>
 
-                        <h4 class="s40">
+                        <h3 class="s40">
                             Confirmed services
-                        </h4>
+                        </h3>
                         <div class="table-wrap">
                             <table class="data">
                                 <thead>
@@ -119,7 +119,7 @@
                 </table>
             </div>
             <p class="service-table-note">
-                Every service above is confirmed in the 2026 brief. Package inclusion per tier is Pending Input.
+                Every service above is confirmed in the 2026 brief. Package inclusion per tier is confirmed in writing after your Free HR Audit.
             </p>
         </div>
     </section>
@@ -155,7 +155,7 @@
                 <h2>What changes when the structure lands.</h2>
                 <p class="lede">
                     These are operating outcomes Emplowise works toward. Baseline metrics and verified client
-                    results are Pending Input, so no percentages are published here.
+                    results are confirmed in writing after your Free HR Audit, so no percentages are published here.
                 </p>
                 <a href="{{ route('free-hr-audit') }}" class="btn btn--teal s1">Start with the audit</a>
             </div>

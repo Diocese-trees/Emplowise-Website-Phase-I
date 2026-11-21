@@ -113,7 +113,7 @@
                     @endforeach
                 </ul>
                 <p class="small muted s8">
-                    Full time versus shared allocation of the dedicated representative is Pending Input.
+                    Full time versus shared allocation of the dedicated representative is confirmed in writing after your Free HR Audit.
                 </p>
             </div>
         </div>
@@ -127,7 +127,7 @@
                         <p class="kicker s24">Open items</p>
                         <h2 class="s31">What we have not published yet</h2>
                     </div>
-                    <span class="badge badge--pending">Pending Input</span>
+                    <span class="badge badge--pending">Confirmed after audit</span>
                 </div>
                 <p class="small muted s30">
                     These details are unresolved in the source material. We list them rather than fill the gaps

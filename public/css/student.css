@@ -724,7 +724,7 @@
 
 .result-block + .result-block { margin-top: var(--s-3); }
 
-.result-block h4 {
+.result-block h3, .result-block h4 {
     font-family: var(--font-mono);
     font-size: 0.64rem;
     letter-spacing: 0.12em;

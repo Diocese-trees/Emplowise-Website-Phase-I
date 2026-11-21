@@ -995,5 +995,40 @@
     .hero-proof { grid-template-columns: 1fr; gap: var(--s-3); }
     .footer-top { grid-template-columns: 1fr; gap: var(--s-5); }
     .hero-float { display: none; }
-    .to-top { bottom: calc(1rem + 58px); width: 42px; height: 42px; }
+    .to-top { bottom: calc(1rem + 58px); width: 44px; height: 44px; }
+}
+
+/* ------------------------------------------------------------------
+   Scorecard pass: hero counts, anchor offset, touch targets
+------------------------------------------------------------------- */
+.stack-count {
+    display: block;
+    margin-top: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+h1, h2, h3 { text-wrap: balance; }
+
+#main,
+#pillars,
+#payroll,
+#performance,
+#policy { scroll-margin-top: 96px; }
+
+@media (pointer: coarse) {
+    .quick-chip,
+    .filter-btn,
+    .chat-send,
+    .nav-link,
+    .hub-tab { min-height: 44px; }
+    .quick-chip,
+    .filter-btn { padding-block: 0.6rem; }
+}
+
+@media (max-width: 520px) {
+    .site-footer { padding-bottom: 5.5rem; }
 }
