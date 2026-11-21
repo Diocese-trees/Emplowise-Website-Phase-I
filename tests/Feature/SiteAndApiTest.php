@@ -37,8 +37,59 @@ final class SiteAndApiTest extends TestCase
         $this->get('/pricing')
             ->assertOk()
             ->assertSee('PKR 75,000')
-            ->assertSee('Pending Input')
+            ->assertSee('Confirmed in writing after your Free HR Audit')
             ->assertDontSee('most popular', false);
+    }
+
+    public function test_student_assets_load_only_on_the_hub(): void
+    {
+        $hub = $this->get('/student-hub')->assertOk();
+        $hub->assertSee('css/student.css', false);
+        $hub->assertSee('js/student.js', false);
+
+        $home = $this->get('/')->assertOk();
+        $home->assertDontSee('css/student.css', false);
+        $home->assertDontSee('js/student.js', false);
+    }
+
+    public function test_seo_metadata_and_structured_data_render(): void
+    {
+        $home = $this->get('/')->assertOk();
+        $home->assertSee('<link rel="canonical" href="http', false);
+        $home->assertSee('property="og:title"', false);
+        $home->assertSee('name="twitter:card"', false);
+        $home->assertSee('application/ld+json', false);
+        $home->assertSee('ProfessionalService', false);
+        $home->assertSee('PKR', false);
+
+        $this->get('/faq')->assertOk()->assertSee('FAQPage', false);
+    }
+
+    public function test_sitemap_lists_every_public_page(): void
+    {
+        $response = $this->get('/sitemap.xml')->assertOk();
+        $response->assertHeader('Content-Type', 'application/xml');
+
+        $xml = simplexml_load_string((string) $response->getContent());
+        $this->assertNotFalse($xml);
+
+        $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
+        $this->assertCount(7, $locations);
+
+        foreach (['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'] as $path) {
+            $this->assertTrue(
+                collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),
+                'Missing sitemap entry for '.$path
+            );
+        }
+    }
+
+    public function test_home_headings_follow_a_strict_order(): void
+    {
+        $html = (string) $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, '<h1'));
+        $this->assertSame(0, substr_count($html, '<h4'));
     }
 
     public function test_faq_page_lists_all_verified_answers(): void

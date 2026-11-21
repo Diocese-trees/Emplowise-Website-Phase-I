@@ -48,6 +48,18 @@ class SecurityHeadersTest extends TestCase
         $secure->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     }
 
+    public function test_strict_policy_has_no_inline_escapes(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $response = $this->get('/')->assertOk();
+        $policy = (string) $response->headers->get('Content-Security-Policy');
+
+        $this->assertStringNotContainsString("'unsafe-inline'", $policy);
+        $this->assertStringNotContainsString("'unsafe-eval'", $policy);
+        $this->assertStringNotContainsString('style=', (string) $response->getContent());
+    }
+
     public function test_baseline_headers_are_present(): void
     {
         $response = $this->get('/');
