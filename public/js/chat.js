@@ -12,6 +12,8 @@
     const sendBtn = document.getElementById('chat-send');
     const sendLabel = sendBtn && sendBtn.textContent.trim() ? sendBtn.textContent.trim() : 'Send';
     const quick = document.getElementById('chat-quick');
+    const suggestionsEl = document.getElementById('chat-suggestions');
+    const resetBtn = document.getElementById('chat-reset');
 
     if (!root || !panel || !launcher || !log || !form || !input) return;
 
@@ -62,12 +64,43 @@
         [/\b(hi|hello|hey|salam|assalam|yo|sup)\b/, 'greeting']
     ];
 
-    function localReply(text) {
+    function localIntent(text) {
         const lower = String(text || '').toLowerCase();
         for (let i = 0; i < RULES.length; i += 1) {
-            if (RULES[i][0].test(lower)) return KB[RULES[i][1]];
+            if (RULES[i][0].test(lower)) return RULES[i][1];
         }
-        return KB.general;
+        return 'general';
+    }
+
+    function localReply(text) {
+        return KB[localIntent(text)] || KB.general;
+    }
+
+    const LOCAL_SUGGESTIONS = {
+        pricing: [
+            ['What is included', 'What is included in the packages?'],
+            ['Free audit', 'How does the free HR audit work?'],
+            ['Services', 'Which HR services do you run?']
+        ],
+        student: [
+            ['ATS score', 'How does the ATS score work?'],
+            ['Mock interview', 'How does the mock interview tool work?'],
+            ['Resume builder', 'Is the resume builder free?']
+        ],
+        tools: [
+            ['Student Hub', 'What is in the Student Hub?'],
+            ['Prompt library', 'What is in the prompt library?'],
+            ['Profile help', 'Can you help with my LinkedIn profile?']
+        ],
+        general: [
+            ['Pricing', 'What do the packages cost?'],
+            ['Services', 'Which HR services do you run?'],
+            ['Free audit', 'How does the free HR audit work?']
+        ]
+    };
+
+    function localSuggestions(intent) {
+        return LOCAL_SUGGESTIONS[intent] || LOCAL_SUGGESTIONS.general;
     }
 
     // Trailing newline-free trim plus a five line ceiling on any reply.
@@ -94,8 +127,12 @@
         }
     }
 
+    const introNode = log.querySelector('.msg');
+    const introText = introNode ? introNode.textContent : '';
+
     let sessionId = readSession();
     let history = [];
+    let previousIntent = '';
     let sending = false;
     let typingEl = null;
 
@@ -145,20 +182,60 @@
         log.scrollTop = log.scrollHeight;
     }
 
+    function linkify(text, node) {
+        const pattern = /(\/free-hr-audit|\/student-hub)/g;
+        let last = 0;
+        let match = pattern.exec(text);
+
+        while (match !== null) {
+            if (match.index > last) {
+                node.appendChild(document.createTextNode(text.slice(last, match.index)));
+            }
+            const link = document.createElement('a');
+            link.href = match[1];
+            link.textContent = match[1];
+            link.className = 'chat-link';
+            node.appendChild(link);
+            last = match.index + match[1].length;
+            match = pattern.exec(text);
+        }
+
+        if (last < text.length) {
+            node.appendChild(document.createTextNode(text.slice(last)));
+        }
+    }
+
     function append(role, text) {
         const bubble = document.createElement('div');
         bubble.className = 'msg' + (role === 'user' ? ' msg--user' : '');
-        bubble.textContent = text;
+        if (role === 'assistant') {
+            linkify(String(text || ''), bubble);
+        } else {
+            bubble.textContent = text;
+        }
         log.appendChild(bubble);
         scrollDown();
         return bubble;
+    }
+
+    function renderSuggestions(items) {
+        if (!suggestionsEl) return;
+        suggestionsEl.innerHTML = '';
+        (items || []).slice(0, 4).forEach(function (item) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quick-chip';
+            button.setAttribute('data-q', item.query);
+            button.textContent = item.label;
+            suggestionsEl.appendChild(button);
+        });
     }
 
     function showTyping() {
         if (typingEl) return;
         typingEl = document.createElement('div');
         typingEl.className = 'msg msg--typing';
-        typingEl.setAttribute('aria-label', 'Assistant is typing');
+        typingEl.setAttribute('aria-hidden', 'true');
         for (let i = 0; i < 3; i += 1) {
             typingEl.appendChild(document.createElement('i'));
         }
@@ -200,6 +277,7 @@
         const payload = {
             message: message,
             session_id: sessionId || null,
+            previous_intent: previousIntent || null,
             history: history.slice(-8)
         };
 
@@ -228,7 +306,10 @@
                     } else if (result.status === 419) {
                         append('assistant', 'Your session expired. Reload the page and send that again.');
                     } else if (result.status >= 500) {
+                        const intent = localIntent(message);
+                        previousIntent = intent;
                         append('assistant', clamp(localReply(message)));
+                        renderSuggestions(localSuggestions(intent));
                     } else {
                         append('assistant', 'That request did not go through. Try once more.');
                     }
@@ -240,14 +321,19 @@
                     writeSession(sessionId);
                 }
 
+                previousIntent = result.body.intent || localIntent(message);
                 append('assistant', clamp(result.body.reply || localReply(message)));
+                renderSuggestions(result.body.suggestions || localSuggestions(previousIntent));
                 history.push({ role: 'user', content: message });
                 history.push({ role: 'assistant', content: result.body.reply || '' });
                 history = history.slice(-8);
             })
             .catch(function () {
                 hideTyping();
+                const intent = localIntent(message);
+                previousIntent = intent;
                 append('assistant', clamp(localReply(message)));
+                renderSuggestions(localSuggestions(intent));
             })
             .finally(function () {
                 setBusy(false);
@@ -265,6 +351,34 @@
             const chip = event.target.closest('[data-q]');
             if (!chip) return;
             sendMessage(chip.getAttribute('data-q'));
+        });
+    }
+
+    if (suggestionsEl) {
+        suggestionsEl.addEventListener('click', function (event) {
+            const chip = event.target.closest('[data-q]');
+            if (!chip) return;
+            sendMessage(chip.getAttribute('data-q'));
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            log.innerHTML = '';
+            if (introText) {
+                const intro = document.createElement('div');
+                intro.className = 'msg';
+                intro.textContent = introText;
+                log.appendChild(intro);
+            }
+            history = [];
+            previousIntent = '';
+            sessionId = '';
+            writeSession('');
+            renderSuggestions([]);
+            input.value = '';
+            input.focus();
+            scrollDown();
         });
     }
 })();

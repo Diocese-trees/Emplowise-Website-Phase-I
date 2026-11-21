@@ -602,6 +602,7 @@ return [
             'title' => 'Emplowise assistant',
             'sub' => 'Grounded answers only',
             'close' => 'Close chat',
+            'reset' => 'Start over',
             'intro' => 'hey. I am the Emplowise assistant. Ask about packages, what we run, or the free audit. Prices stay exact, guesses do not happen.',
             'quick' => [
                 ['label' => 'Pricing', 'query' => 'What do the packages cost?'],

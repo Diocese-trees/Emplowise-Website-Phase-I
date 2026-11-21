@@ -21,11 +21,12 @@ final class EmplowiseAssistant
 
     /**
      * @param  array<int, array{role: string, content: string}>  $history
-     * @return array{reply: string, intent: string, model: string, source: string}
+     * @return array{reply: string, intent: string, model: string, source: string, suggestions: array<int, array{label: string, query: string}>}
      */
-    public function reply(string $message, array $history = []): array
+    public function reply(string $message, array $history = [], string $previousIntent = ''): array
     {
-        $intent = $this->detectIntent($message);
+        $intent = $this->detectIntent($message, $previousIntent);
+        $suggestions = $this->suggestions($intent);
 
         if (! $this->client->configured()) {
             return [
@@ -33,6 +34,7 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => 'local-rules',
                 'source' => 'fallback',
+                'suggestions' => $suggestions,
             ];
         }
 
@@ -50,6 +52,7 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => $result['model'],
                 'source' => 'model',
+                'suggestions' => $suggestions,
             ];
         } catch (RuntimeException) {
             return [
@@ -57,34 +60,131 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => 'local-rules',
                 'source' => 'fallback',
+                'suggestions' => $suggestions,
             ];
         }
     }
 
-    public function detectIntent(string $message): string
+    /**
+     * Score every intent and take the best match. First-match rules lose
+     * mixed messages such as "how much is the free audit", so phrases count
+     * double and the previous turn acts as a weak prior for follow-ups.
+     */
+    public function detectIntent(string $message, string $previousIntent = ''): string
     {
         $text = Str::lower(trim($message));
+        $words = preg_split('/\s+/', $text) ?: [];
+        $wordCount = count(array_filter($words));
 
-        return match (true) {
-            Str::contains($text, ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye']) => 'thanks',
-            Str::contains($text, ['price', 'cost', 'pkr', 'package', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee']) => 'pricing',
-            Str::contains($text, ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed']) => 'pending',
-            Str::contains($text, ['audit', 'free hr', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started']) => 'audit',
-            Str::contains($text, ['student', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin']) => 'student',
-            Str::contains($text, ['resume', 'cv', 'ats', 'interview', 'cover letter']) => 'tools',
-            Str::contains($text, ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document']) => 'payroll',
-            Str::contains($text, ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr']) => 'performance',
-            Str::contains($text, ['policy', 'policies', 'sop', 'compliance', 'legal', 'contract', 'labour', 'labor']) => 'policy',
-            Str::contains($text, ['service', 'services', 'what do you do', 'what you do', 'recruit', 'hr support', 'offer']) => 'services',
-            Str::contains($text, ['contact', 'email', 'phone', 'whatsapp', 'reach you', 'number', 'inbox', 'address', 'office']) => 'contact',
-            Str::contains($text, ['job', 'career', 'hiring me', 'apply', 'vacancy', 'open role']) => 'careers',
-            Str::contains($text, ['why', 'different', 'better than', 'vs ', 'instead of', 'in-house', 'in house', 'whey']) => 'why',
-            Str::contains($text, ['who are you', 'who is', 'about you', 'about emplowise', 'what is emplowise', 'your team', 'founder', 'ceo', 'company']) => 'who',
-            Str::contains($text, ['where', 'location', 'based', 'city', 'onsite', 'on-site', 'pakistan', 'remote', 'international']) => 'where',
-            Str::contains($text, ['when', 'timeline', 'how soon', 'start date', 'how long', 'duration', 'notice period']) => 'when',
-            preg_match('/\b(hi|hello|hey|salam|assalam|yo|sup)\b/', $text) === 1 && Str::wordCount($text) <= 5 => 'greeting',
-            default => 'general',
-        };
+        $rules = [
+            'thanks' => ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye'],
+            'pricing' => ['price', 'pricing', 'cost', 'pkr', 'package', 'packages', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee', 'per month'],
+            'pending' => ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed'],
+            'audit' => ['audit', 'free hr', 'free audit', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started'],
+            'student' => ['student', 'student hub', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
+            'tools' => ['resume', 'cv', 'ats', 'interview', 'cover letter'],
+            'payroll' => ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document'],
+            'performance' => ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr'],
+            'policy' => ['policy', 'policies', 'sop', 'compliance', 'legal', 'contract', 'labour', 'labor'],
+            'services' => ['service', 'services', 'what do you do', 'what you do', 'recruit', 'hr support', 'offer'],
+            'contact' => ['contact', 'email', 'phone', 'whatsapp', 'reach you', 'number', 'inbox', 'address', 'office'],
+            'careers' => ['job', 'career', 'hiring me', 'apply', 'vacancy', 'open role'],
+            'why' => ['why', 'different', 'better than', 'vs', 'instead of', 'in-house', 'in house'],
+            'who' => ['who are you', 'who is', 'about you', 'about emplowise', 'what is emplowise', 'your team', 'founder', 'ceo', 'company'],
+            'where' => ['where', 'location', 'based', 'city', 'onsite', 'on-site', 'pakistan', 'remote', 'international'],
+            'when' => ['when', 'timeline', 'how soon', 'start date', 'how long', 'duration', 'notice period'],
+        ];
+
+        if ($wordCount <= 5) {
+            $rules['greeting'] = ['hi', 'hello', 'hey', 'salam', 'assalam', 'yo', 'sup'];
+        }
+
+        $scores = [];
+
+        foreach ($rules as $intent => $phrases) {
+            $score = 0.0;
+
+            foreach ($phrases as $phrase) {
+                $pattern = str_contains($phrase, ' ')
+                    ? '/'.preg_quote($phrase, '/').'/'
+                    : '/\b'.preg_quote($phrase, '/').'\b/';
+
+                if (preg_match($pattern, $text) === 1) {
+                    $score += str_contains($phrase, ' ') ? 2.0 : 1.0;
+                }
+            }
+
+            if ($score > 0) {
+                $scores[$intent] = $score;
+            }
+        }
+
+        if ($previousIntent !== '' && isset($rules[$previousIntent])) {
+            $scores[$previousIntent] = ($scores[$previousIntent] ?? 0) + ($wordCount <= 8 ? 0.9 : 0.4);
+        }
+
+        if ($scores === []) {
+            return 'general';
+        }
+
+        arsort($scores);
+        $intents = array_keys($scores);
+        $top = $scores[$intents[0]];
+        $second = count($intents) > 1 ? $scores[$intents[1]] : 0.0;
+
+        // A near tie means the message could belong to either intent, so ask
+        // rather than guessing. The previous turn breaks the tie when it can.
+        if ($second > 0 && ($top - $second) < 0.5) {
+            if ($previousIntent !== '' && isset($scores[$previousIntent]) && $scores[$previousIntent] === $top) {
+                return $previousIntent;
+            }
+
+            return 'general';
+        }
+
+        return $intents[0];
+    }
+
+    /**
+     * @return array<int, array{label: string, query: string}>
+     */
+    private function suggestions(string $intent): array
+    {
+        $groups = [
+            'pricing' => [
+                ['label' => 'What is included', 'query' => 'What is included in the packages?'],
+                ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+                ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+            ],
+            'student' => [
+                ['label' => 'ATS score', 'query' => 'How does the ATS score work?'],
+                ['label' => 'Mock interview', 'query' => 'How does the mock interview tool work?'],
+                ['label' => 'Resume builder', 'query' => 'Is the resume builder free?'],
+            ],
+            'tools' => [
+                ['label' => 'Student Hub', 'query' => 'What is in the Student Hub?'],
+                ['label' => 'Prompt library', 'query' => 'What is in the prompt library?'],
+                ['label' => 'Profile help', 'query' => 'Can you help with my LinkedIn profile?'],
+            ],
+            'contact' => [
+                ['label' => 'Free audit', 'query' => 'How do I book the free HR audit?'],
+                ['label' => 'Where you are', 'query' => 'Where is Emplowise based?'],
+                ['label' => 'Who you are', 'query' => 'Who is Emplowise?'],
+            ],
+            'careers' => [
+                ['label' => 'Student Hub', 'query' => 'What free help do you offer students?'],
+                ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+                ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+            ],
+        ];
+
+        $fallback = [
+            ['label' => 'Pricing', 'query' => 'What do the packages cost?'],
+            ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+            ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+        ];
+
+        return $groups[$intent] ?? $fallback;
     }
 
     private function systemPrompt(): string

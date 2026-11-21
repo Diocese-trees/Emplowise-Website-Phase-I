@@ -237,13 +237,43 @@ final class SiteAndApiTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['session_id', 'reply', 'intent', 'model', 'source'])
+            ->assertJsonStructure(['session_id', 'reply', 'intent', 'model', 'source', 'suggestions'])
             ->assertJsonPath('intent', 'pricing')
             ->assertJsonPath('source', 'fallback');
 
+        $this->assertCount(3, $response->json('suggestions'));
         $this->assertStringContainsString('PKR 40,000', (string) $response->json('reply'));
         $this->assertDatabaseCount('chat_messages', 2);
         $this->assertSame(2, ChatMessage::query()->count());
+    }
+
+    public function test_chat_scores_mixed_intents_and_keeps_follow_up_context(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $this->postJson('/api/chat', ['message' => 'How much is the free audit?'])
+            ->assertOk()
+            ->assertJsonPath('intent', 'audit');
+
+        $this->postJson('/api/chat', [
+            'message' => 'and for 20 people?',
+            'previous_intent' => 'pricing',
+        ])->assertOk()
+            ->assertJsonPath('intent', 'pricing')
+            ->assertJsonStructure(['suggestions' => [['label', 'query']]]);
+
+        $this->postJson('/api/chat', ['message' => 'Hi'])
+            ->assertOk()
+            ->assertJsonPath('intent', 'greeting');
+    }
+
+    public function test_browser_chat_knowledge_base_matches_the_server_facts(): void
+    {
+        $js = (string) file_get_contents(public_path('js/chat.js'));
+
+        foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/student-hub'] as $fact) {
+            $this->assertStringContainsString($fact, $js, 'Browser KB missing: '.$fact);
+        }
     }
 
     public function test_interview_questions_come_from_the_local_bank_without_an_api_key(): void

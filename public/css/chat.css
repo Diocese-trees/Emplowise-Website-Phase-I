@@ -151,6 +151,34 @@
 
 .chat-close:hover { background: rgba(255, 255, 255, 0.16); transform: rotate(90deg); }
 
+.chat-head-actions { display: flex; align-items: center; gap: 0.45rem; }
+
+.chat-reset {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: var(--white);
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.28rem 0.6rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+}
+
+.chat-reset:hover { background: rgba(255, 255, 255, 0.14); }
+
+.chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem 0;
+    background: var(--ice);
+    flex: 0 0 auto;
+}
+
+.chat-suggestions:empty { display: none; }
+
+.chat-suggestions .quick-chip { font-size: 0.68rem; }
+
 .chat-log {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -185,8 +213,14 @@
     to { opacity: 1; transform: none; }
 }
 
-.msg--user {
-    align-self: flex-end;
+.chat-link {
+    color: var(--teal-deep);
+    font-weight: 600;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+}
+
+.msg--user {    align-self: flex-end;
     background: linear-gradient(120deg, var(--navy), var(--teal-deep));
     border-color: transparent;
     color: var(--white);

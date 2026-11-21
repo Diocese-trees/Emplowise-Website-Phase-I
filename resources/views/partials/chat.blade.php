@@ -9,12 +9,17 @@
                     <p class="chat-sub">{{ $chat['sub'] }}</p>
                 </div>
             </div>
-            <button type="button" class="chat-close" id="chat-close" aria-label="{{ $chat['close'] }}">&times;</button>
+            <div class="chat-head-actions">
+                <button type="button" class="chat-reset" id="chat-reset">{{ $chat['reset'] }}</button>
+                <button type="button" class="chat-close" id="chat-close" aria-label="{{ $chat['close'] }}">&times;</button>
+            </div>
         </header>
 
         <div class="chat-log" id="chat-log" role="log" aria-live="polite">
             <div class="msg">{{ $chat['intro'] }}</div>
         </div>
+
+        <div class="chat-suggestions" id="chat-suggestions" aria-label="Suggested replies"></div>
 
         <div class="chat-quick" id="chat-quick">
             @foreach ($chat['quick'] as $chip)
