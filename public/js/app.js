@@ -68,39 +68,66 @@
     window.Emplowise.copy = copyText;
 
     // -----------------------------------------------------------------
+    // Overlay scroll lock (drawer, chat sheet)
+    // Token based so two overlays never unlock each other. Uses a root
+    // overflow toggle, which keeps the current scroll position intact
+    // and pairs with scrollbar-gutter: stable so nothing shifts.
+    // -----------------------------------------------------------------
+    const locks = new Set();
+
+    function lockScroll(token) {
+        locks.add(token || 'default');
+        document.documentElement.classList.add('is-scroll-locked');
+    }
+
+    function unlockScroll(token) {
+        locks.delete(token || 'default');
+        if (!locks.size) document.documentElement.classList.remove('is-scroll-locked');
+    }
+
+    window.Emplowise.lockScroll = lockScroll;
+    window.Emplowise.unlockScroll = unlockScroll;
+
+    // -----------------------------------------------------------------
     // Header navigation
     // -----------------------------------------------------------------
     const navToggle = document.getElementById('nav-toggle');
     const mainNav = document.getElementById('main-nav');
 
     if (navToggle && mainNav) {
+        const closeNav = function (returnFocus) {
+            if (!mainNav.classList.contains('is-open')) return;
+            mainNav.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Open menu');
+            unlockScroll('nav');
+            if (returnFocus) navToggle.focus({ preventScroll: true });
+        };
+
         navToggle.addEventListener('click', function () {
             const open = mainNav.classList.toggle('is-open');
             navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            if (open) {
+                lockScroll('nav');
+            } else {
+                unlockScroll('nav');
+            }
         });
 
         mainNav.addEventListener('click', function (event) {
-            if (event.target.closest('a')) {
-                mainNav.classList.remove('is-open');
-                navToggle.setAttribute('aria-expanded', 'false');
-            }
+            if (event.target.closest('a')) closeNav(false);
         });
 
         document.addEventListener('click', function (event) {
             if (!mainNav.classList.contains('is-open')) return;
             if (event.target.closest('#main-nav') || event.target.closest('#nav-toggle')) return;
-            mainNav.classList.remove('is-open');
-            navToggle.setAttribute('aria-expanded', 'false');
-            navToggle.setAttribute('aria-label', 'Open menu');
+            closeNav(false);
         });
 
         document.addEventListener('keydown', function (event) {
             if (event.key !== 'Escape' || !mainNav.classList.contains('is-open')) return;
-            mainNav.classList.remove('is-open');
-            navToggle.setAttribute('aria-expanded', 'false');
-            navToggle.setAttribute('aria-label', 'Open menu');
-            navToggle.focus();
+            closeNav(true);
         });
     }
 
@@ -162,13 +189,21 @@
     const progressBar = document.getElementById('scroll-progress-bar');
     const toTop = document.getElementById('to-top');
     let scrollTicking = false;
+    let scrollMax = 0;
+
+    // Cache the scrollable range: reading scrollHeight per frame forces layout.
+    function measureScroll() {
+        scrollMax = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    }
 
     function onScroll() {
         const y = window.scrollY || document.documentElement.scrollTop;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
 
         if (header) header.classList.toggle('is-stuck', y > 12);
-        if (progressBar) progressBar.style.width = (max > 0 ? Math.min(100, (y / max) * 100) : 0) + '%';
+        if (progressBar) {
+            const ratio = scrollMax > 0 ? Math.min(1, Math.max(0, y / scrollMax)) : 0;
+            progressBar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+        }
         if (toTop) toTop.classList.toggle('is-visible', y > 600);
 
         scrollTicking = false;
@@ -180,6 +215,23 @@
         window.requestAnimationFrame(onScroll);
     }, { passive: true });
 
+    let resizeTicking = false;
+    window.addEventListener('resize', function () {
+        if (resizeTicking) return;
+        resizeTicking = true;
+        window.requestAnimationFrame(function () {
+            measureScroll();
+            onScroll();
+            resizeTicking = false;
+        });
+    }, { passive: true });
+
+    window.addEventListener('load', function () {
+        measureScroll();
+        onScroll();
+    });
+
+    measureScroll();
     onScroll();
 
     if (toTop) {
@@ -252,15 +304,17 @@
     const heroPanel = document.getElementById('hero-panel');
     if (heroPanel && !reducedMotion && window.matchMedia('(hover: hover) and (min-width: 981px)').matches) {
         const hero = heroPanel.closest('.hero');
-        hero.addEventListener('pointermove', function (event) {
-            const rect = heroPanel.getBoundingClientRect();
-            const dx = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
-            const dy = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
-            heroPanel.style.transform = 'perspective(1100px) rotateY(' + (dx * 5).toFixed(2) + 'deg) rotateX(' + (-dy * 4).toFixed(2) + 'deg) translateY(-3px)';
-        });
-        hero.addEventListener('pointerleave', function () {
-            heroPanel.style.transform = '';
-        });
+        if (hero) {
+            hero.addEventListener('pointermove', function (event) {
+                const rect = heroPanel.getBoundingClientRect();
+                const dx = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
+                const dy = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
+                heroPanel.style.transform = 'perspective(1100px) rotateY(' + (dx * 5).toFixed(2) + 'deg) rotateX(' + (-dy * 4).toFixed(2) + 'deg) translateY(-3px)';
+            });
+            hero.addEventListener('pointerleave', function () {
+                heroPanel.style.transform = '';
+            });
+        }
     }
 
     // -----------------------------------------------------------------
@@ -280,11 +334,14 @@
     const faqList = document.getElementById('faq-list');
     const faqEmpty = document.getElementById('faq-empty');
     const faqFilters = document.getElementById('faq-filters');
+    const faqSearchBox = document.getElementById('faq-search-box');
+    const faqClear = document.getElementById('faq-clear');
 
     if (faqSearch && faqList) {
         const items = Array.prototype.slice.call(faqList.querySelectorAll('.acc-item'));
         const groups = Array.prototype.slice.call(faqList.querySelectorAll('[data-faq-group]'));
         let activeCategory = 'all';
+        let applyTimer = null;
 
         const cache = items.map(function (item) {
             const q = item.querySelector('.acc-q');
@@ -367,9 +424,43 @@
             });
 
             if (faqEmpty) faqEmpty.classList.toggle('is-visible', totalVisible === 0);
+
+            if (faqSearchBox) faqSearchBox.classList.toggle('has-value', term !== '');
+            if (faqClear) faqClear.hidden = term === '';
         }
 
-        faqSearch.addEventListener('input', apply);
+        function scheduleApply() {
+            if (applyTimer) window.clearTimeout(applyTimer);
+            applyTimer = window.setTimeout(apply, 110);
+        }
+
+        faqSearch.addEventListener('input', scheduleApply);
+
+        faqSearch.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && faqSearch.value !== '') {
+                event.preventDefault();
+                faqSearch.value = '';
+                apply();
+            }
+        });
+
+        if (faqClear) {
+            faqClear.addEventListener('click', function () {
+                faqSearch.value = '';
+                apply();
+                faqSearch.focus();
+            });
+        }
+
+        // Press "/" anywhere that is not an input to jump to the search box.
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+            const tag = (event.target && event.target.tagName) || '';
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (event.target && event.target.isContentEditable)) return;
+            event.preventDefault();
+            faqSearch.focus();
+            faqSearch.select();
+        });
 
         if (faqFilters) {
             faqFilters.addEventListener('click', function (event) {
@@ -379,6 +470,7 @@
                 faqFilters.querySelectorAll('.filter-btn').forEach(function (btn) {
                     btn.classList.toggle('is-active', btn === button);
                 });
+                if (applyTimer) window.clearTimeout(applyTimer);
                 apply();
             });
         }
@@ -399,6 +491,7 @@
         const backBtn = document.getElementById('wizard-back');
         const nextBtn = document.getElementById('wizard-next');
         const submitBtn = document.getElementById('wizard-submit');
+        const submitLabel = submitBtn && submitBtn.textContent.trim() ? submitBtn.textContent.trim() : 'Submit audit request';
         const progress = document.getElementById('wizard-progress');
         const dots = document.getElementById('wizard-dots');
         const label = document.getElementById('wizard-label');
@@ -411,6 +504,12 @@
         const stepNames = ['Contact', 'Operations', 'Schedule', 'Review'];
         let current = 1;
         let sending = false;
+        let lastNav = 0;
+
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+        const DRAFT_KEY = 'emplowise_audit_draft';
+        const DRAFT_FIELDS = ['contact_name', 'company_name', 'email', 'phone', 'headcount_band', 'notes', 'preferred_date', 'preferred_slot'];
 
         function stepEl(number) {
             return steps[number - 1];
@@ -419,6 +518,73 @@
         function fieldWrap(name) {
             return form.querySelector('[data-field="' + name + '"]');
         }
+
+        function fieldEl(name) {
+            return form.querySelector('[name="' + name + '"]');
+        }
+
+        function fieldValue(name) {
+            const input = fieldEl(name);
+            return input ? String(input.value || '').trim() : '';
+        }
+
+        // Draft persistence: contact and scheduling inputs only. The consent
+        // checkbox and the honeypot are deliberately never stored.
+        function readDraft() {
+            try {
+                const raw = window.sessionStorage.getItem(DRAFT_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function writeDraft() {
+            try {
+                const draft = { fields: {}, pains: [] };
+                DRAFT_FIELDS.forEach(function (name) {
+                    const input = fieldEl(name);
+                    if (input && input.value) draft.fields[name] = input.value;
+                });
+                form.querySelectorAll('[name="pain_points[]"]:checked').forEach(function (input) {
+                    draft.pains.push(input.value);
+                });
+                window.sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+            } catch (error) {
+                /* storage blocked: draft safety is optional, never fatal */
+            }
+        }
+
+        function clearDraft() {
+            try {
+                window.sessionStorage.removeItem(DRAFT_KEY);
+            } catch (error) {
+                /* ignore */
+            }
+        }
+
+        function restoreDraft() {
+            const draft = readDraft();
+            if (!draft || (!draft.fields && !draft.pains)) return;
+
+            Object.keys(draft.fields || {}).forEach(function (name) {
+                const input = fieldEl(name);
+                if (!input) return;
+                if (name === 'preferred_date') {
+                    const value = draft.fields[name];
+                    if (input.min && value < input.min) return;
+                    if (input.max && value > input.max) return;
+                }
+                input.value = draft.fields[name];
+            });
+
+            (draft.pains || []).forEach(function (value) {
+                const box = form.querySelector('[name="pain_points[]"][value="' + value + '"]');
+                if (box) box.checked = true;
+            });
+        }
+
+        restoreDraft();
 
         function setError(name, message) {
             const wrap = fieldWrap(name);
@@ -550,21 +716,23 @@
         function buildReview() {
             if (!reviewList) return;
             reviewList.innerHTML = '';
-            const name = auditForm.querySelector('[name="contact_name"]').value.trim();
-            const company = auditForm.querySelector('[name="company_name"]').value.trim();
-            const email = auditForm.querySelector('[name="email"]').value.trim();
-            const phone = auditForm.querySelector('[name="phone"]').value.trim();
-            const headcount = auditForm.querySelector('[name="headcount_band"]');
-            const date = auditForm.querySelector('[name="preferred_date"]').value;
-            const slot = auditForm.querySelector('[name="preferred_slot"]');
-            const notes = auditForm.querySelector('[name="notes"]').value.trim();
+            const name = fieldValue('contact_name');
+            const company = fieldValue('company_name');
+            const email = fieldValue('email');
+            const phone = fieldValue('phone');
+            const headcount = fieldEl('headcount_band');
+            const dateInput = fieldEl('preferred_date');
+            const date = dateInput ? dateInput.value : '';
+            const slot = fieldEl('preferred_slot');
+            const notes = fieldValue('notes');
 
             const pains = Array.prototype.slice.call(auditForm.querySelectorAll('[name="pain_points[]"]:checked')).map(function (input) {
                 const labelEl = input.closest('.check');
-                return labelEl ? labelEl.querySelector('span').textContent.trim() : input.value;
+                const text = labelEl ? labelEl.querySelector('span') : null;
+                return text ? text.textContent.trim() : input.value;
             });
 
-            addRow('Contact', name + (company ? ' · ' + company : ''));
+            addRow('Contact', company ? name + ' · ' + company : name);
             addRow('Email', email);
             addRow('Phone', phone);
             addRow('Headcount', readLabel(headcount));
@@ -576,6 +744,10 @@
 
         if (nextBtn) {
             nextBtn.addEventListener('click', function () {
+                // Ignore a fast double click so one tap cannot skip a whole step.
+                const now = Date.now();
+                if (now - lastNav < 250) return;
+                lastNav = now;
                 if (!validateStep(current)) return;
                 showStep(current + 1, true);
             });
@@ -583,10 +755,25 @@
 
         if (backBtn) {
             backBtn.addEventListener('click', function () {
+                const now = Date.now();
+                if (now - lastNav < 250) return;
+                lastNav = now;
                 clearErrors(stepEl(current));
                 showStep(current - 1, true);
             });
         }
+
+        // Keep the draft warm while the user types; debounce so storage writes
+        // stay off the keystroke path.
+        let draftTimer = null;
+        form.addEventListener('input', function () {
+            if (draftTimer) window.clearTimeout(draftTimer);
+            draftTimer = window.setTimeout(writeDraft, 400);
+        });
+        form.addEventListener('change', function () {
+            if (draftTimer) window.clearTimeout(draftTimer);
+            draftTimer = window.setTimeout(writeDraft, 200);
+        });
 
         auditForm.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -597,7 +784,7 @@
                 return;
             }
 
-            for (let index = 1; index <= 3; index += 1) {
+            for (let index = 1; index < steps.length; index += 1) {
                 if (!validateStep(index)) {
                     showStep(index, true);
                     return;
@@ -612,7 +799,7 @@
             sending = true;
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
+                submitBtn.textContent = 'Submitting…';
             }
 
             const data = new FormData(auditForm);
@@ -621,7 +808,7 @@
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': csrfToken
                 },
                 body: data,
                 credentials: 'same-origin'
@@ -633,6 +820,7 @@
                 })
                 .then(function (result) {
                     if (result.ok) {
+                        clearDraft();
                         if (document.getElementById('success-ref')) {
                             document.getElementById('success-ref').textContent = result.body.reference || 'Reference pending';
                         }
@@ -670,7 +858,20 @@
                             status.classList.add('is-error');
                             status.textContent = 'Check the highlighted fields and submit again.';
                         }
-                        if (firstStep !== 99) showStep(firstStep, true);
+                        if (firstStep !== 99) {
+                            showStep(firstStep, true);
+                            const step = stepEl(firstStep);
+                            const invalid = step ? step.querySelector('.field.has-error input, .field.has-error select, .field.has-error textarea, .field.has-error [name="consent"]') : null;
+                            if (invalid) invalid.focus({ preventScroll: true });
+                        }
+                        return;
+                    }
+
+                    if (result.status === 419) {
+                        if (status) {
+                            status.classList.add('is-error');
+                            status.textContent = 'Your session expired. Your draft is saved — reload the page and submit again.';
+                        }
                         return;
                     }
 
@@ -697,7 +898,7 @@
                     sending = false;
                     if (submitBtn) {
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Submit audit request';
+                        submitBtn.textContent = submitLabel;
                     }
                 });
         });

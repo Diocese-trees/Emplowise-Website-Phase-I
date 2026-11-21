@@ -85,6 +85,19 @@
     const tabs = Array.prototype.slice.call(document.querySelectorAll('[data-hub-tab]'));
     const panels = Array.prototype.slice.call(document.querySelectorAll('[data-hub-panel]'));
 
+    function revealTab(tab) {
+        const rail = tab.parentElement;
+        if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+        const railRect = rail.getBoundingClientRect();
+        const tabRect = tab.getBoundingClientRect();
+        const left = rail.scrollLeft + (tabRect.left - railRect.left) - (railRect.width - tabRect.width) / 2;
+        if (rail.scrollTo) {
+            rail.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? 'auto' : 'smooth' });
+        } else {
+            rail.scrollLeft = Math.max(0, left);
+        }
+    }
+
     function activateTab(id) {
         if (!id) return;
         const target = panels.filter(function (panel) { return panel.getAttribute('data-hub-panel') === id; })[0];
@@ -93,6 +106,7 @@
             const active = tab.getAttribute('data-hub-tab') === id;
             tab.classList.toggle('is-active', active);
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            if (active) revealTab(tab);
         });
         panels.forEach(function (panel) {
             panel.classList.toggle('is-active', panel === target);
@@ -105,6 +119,12 @@
             activateTab(id);
             if (window.history && window.history.replaceState) {
                 window.history.replaceState(null, '', '#' + id);
+            }
+            // On narrow screens the rail wraps above the panel, so bring the
+            // newly selected panel into view instead of leaving it offscreen.
+            if (window.innerWidth <= 760) {
+                const panel = document.querySelector('[data-hub-panel="' + id + '"]');
+                if (panel) panel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
             }
         });
     });
@@ -144,6 +164,8 @@
         const strengthsEl = el('interview-strengths');
         const fixesEl = el('interview-fixes');
         const modelEl = el('interview-model');
+        const probeEl = el('interview-probe');
+        const barsEl = el('interview-bars');
         const nextBtn = el('interview-next');
 
         const state = { questions: [], index: 0, busy: false, role: '', level: '' };
@@ -176,16 +198,58 @@
             if (answerEl) answerEl.focus();
         }
 
+        function renderBars(rows) {
+            if (!barsEl) return;
+            barsEl.innerHTML = '';
+            (rows || []).forEach(function (row) {
+                const max = Number(row.max) > 0 ? Number(row.max) : 1;
+                const pct = Math.round((Number(row.score) || 0) / max * 100);
+                const wrap = document.createElement('div');
+                wrap.className = 'bar-row';
+                wrap.setAttribute('role', 'img');
+                wrap.setAttribute('aria-label', row.label + ': ' + row.score + ' of ' + row.max + '. ' + (row.detail || ''));
+
+                const head = document.createElement('div');
+                head.className = 'bar-head';
+                const label = document.createElement('span');
+                label.textContent = row.label;
+                const score = document.createElement('span');
+                score.textContent = row.score + ' / ' + row.max;
+                head.appendChild(label);
+                head.appendChild(score);
+
+                const bar = document.createElement('div');
+                bar.className = 'bar' + (pct < 50 ? ' is-low' : (pct < 75 ? ' is-mid' : ''));
+                const fill = document.createElement('span');
+                fill.style.width = pct + '%';
+                bar.appendChild(fill);
+
+                const detail = document.createElement('p');
+                detail.className = 'small muted bar-detail';
+                detail.textContent = row.detail || '';
+                wrap.appendChild(head);
+                wrap.appendChild(bar);
+                wrap.appendChild(detail);
+                barsEl.appendChild(wrap);
+            });
+        }
+
         function renderFeedback(data) {
             if (feedback) feedback.hidden = false;
             if (scoreEl) scoreEl.textContent = String(data.score);
             setRing(ringEl, data.score);
             if (verdictEl) verdictEl.textContent = data.verdict || '';
+            renderBars(data.breakdown);
             fillList(strengthsEl, data.strengths);
             fillList(fixesEl, data.fixes);
             if (modelEl) {
                 const span = modelEl.querySelector('span');
                 if (span) span.textContent = data.model_answer || '';
+            }
+            if (probeEl) {
+                const span = probeEl.querySelector('span');
+                if (span) span.textContent = data.next_probe || '';
+                probeEl.hidden = !data.next_probe;
             }
             if (nextBtn) {
                 const last = state.index >= state.questions.length - 1;
@@ -242,10 +306,10 @@
         if (submitBtn) {
             submitBtn.addEventListener('click', function () {
                 if (state.busy || !state.questions.length) return;
-                const answer = (answerEl.value || '').trim();
+                const answer = answerEl ? (answerEl.value || '').trim() : '';
                 if (answer.length < 10) {
                     setStatus(status, 'Write at least one full sentence before scoring.', 'is-error');
-                    answerEl.focus();
+                    if (answerEl) answerEl.focus();
                     return;
                 }
                 if (answer.length > 5000) {
@@ -302,7 +366,9 @@
         const jdEl = el('ats-jd');
         const status = el('ats-status');
         const submitBtn = el('ats-submit');
+        const submitLabel = submitBtn && submitBtn.textContent.trim() ? submitBtn.textContent.trim() : 'Score my resume';
         const resultPanel = el('ats-result');
+        let busy = false;
 
         function renderChecklist(node, checks) {
             if (!node) return;
@@ -342,7 +408,8 @@
             if (bars) {
                 bars.innerHTML = '';
                 (data.breakdown || []).forEach(function (row) {
-                    const pct = Math.round((row.score / row.max) * 100);
+                    const max = Number(row.max) > 0 ? Number(row.max) : 1;
+                    const pct = Math.round((Number(row.score) || 0) / max * 100);
                     const wrap = document.createElement('div');
                     wrap.className = 'bar-row';
 
@@ -362,8 +429,7 @@
                     bar.appendChild(fill);
 
                     const detail = document.createElement('p');
-                    detail.className = 'small muted';
-                    detail.style.margin = '0.35rem 0 0';
+                    detail.className = 'small muted bar-detail';
                     detail.textContent = row.detail;
                     wrap.appendChild(head);
                     wrap.appendChild(bar);
@@ -396,21 +462,26 @@
 
         atsForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const resume = (resumeEl.value || '').trim();
-            const jd = (jdEl.value || '').trim();
+            if (busy) return;
+            const resume = resumeEl ? (resumeEl.value || '').trim() : '';
+            const jd = jdEl ? (jdEl.value || '').trim() : '';
 
             if (resume.length < 60) {
                 setStatus(status, 'Paste a fuller resume. At least 60 characters.', 'is-error');
-                resumeEl.focus();
+                if (resumeEl) resumeEl.focus();
                 return;
             }
             if (jd.length < 60) {
                 setStatus(status, 'Paste the full job description. At least 60 characters.', 'is-error');
-                jdEl.focus();
+                if (jdEl) jdEl.focus();
                 return;
             }
 
-            submitBtn.disabled = true;
+            busy = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Scoring…';
+            }
             setStatus(status, 'Scoring the match…');
 
             postJson(endpoints.ats, { resume: resume, job_description: jd })
@@ -426,7 +497,11 @@
                     setStatus(status, 'Network error while scoring.', 'is-error');
                 })
                 .finally(function () {
-                    submitBtn.disabled = false;
+                    busy = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = submitLabel;
+                    }
                 });
         });
     }
@@ -438,6 +513,9 @@
     if (resumeForm) {
         const expList = el('exp-list');
         const eduList = el('edu-list');
+        const saveStatus = el('resume-save');
+        const DRAFT_KEY = 'emplowise_resume_draft_v1';
+        let saveTimer = null;
 
         function expTemplate() {
             const item = document.createElement('div');
@@ -467,22 +545,36 @@
             return item;
         }
 
-        function addExp() {
+        function addExp(row) {
             if (!expList) return;
-            expList.appendChild(expTemplate());
+            const item = expTemplate();
+            const data = row || {};
+            const fields = { '.exp-role': data.role, '.exp-company': data.company, '.exp-dates': data.dates, '.exp-bullets': data.bullets };
+            Object.keys(fields).forEach(function (selector) {
+                const input = item.querySelector(selector);
+                if (input && fields[selector]) input.value = fields[selector];
+            });
+            expList.appendChild(item);
             renderResume();
         }
 
-        function addEdu() {
+        function addEdu(row) {
             if (!eduList) return;
-            eduList.appendChild(eduTemplate());
+            const item = eduTemplate();
+            const data = row || {};
+            const fields = { '.edu-degree': data.degree, '.edu-school': data.school, '.edu-dates': data.dates, '.edu-detail': data.detail };
+            Object.keys(fields).forEach(function (selector) {
+                const input = item.querySelector(selector);
+                if (input && fields[selector]) input.value = fields[selector];
+            });
+            eduList.appendChild(item);
             renderResume();
         }
 
         const addExpBtn = el('add-exp');
         const addEduBtn = el('add-edu');
-        if (addExpBtn) addExpBtn.addEventListener('click', addExp);
-        if (addEduBtn) addEduBtn.addEventListener('click', addEdu);
+        if (addExpBtn) addExpBtn.addEventListener('click', function () { addExp(); scheduleSave(); });
+        if (addEduBtn) addEduBtn.addEventListener('click', function () { addEdu(); scheduleSave(); });
 
         [expList, eduList].forEach(function (list) {
             if (!list) return;
@@ -492,6 +584,7 @@
                 const item = remove.closest('.repeat-item');
                 if (item) item.remove();
                 renderResume();
+                scheduleSave();
             });
         });
 
@@ -509,11 +602,15 @@
         function expData() {
             if (!expList) return [];
             return Array.prototype.slice.call(expList.querySelectorAll('.repeat-item')).map(function (item) {
+                const role = item.querySelector('.exp-role');
+                const company = item.querySelector('.exp-company');
+                const dates = item.querySelector('.exp-dates');
+                const bullets = item.querySelector('.exp-bullets');
                 return {
-                    role: (item.querySelector('.exp-role').value || '').trim(),
-                    company: (item.querySelector('.exp-company').value || '').trim(),
-                    dates: (item.querySelector('.exp-dates').value || '').trim(),
-                    bullets: (item.querySelector('.exp-bullets').value || '').trim()
+                    role: role ? (role.value || '').trim() : '',
+                    company: company ? (company.value || '').trim() : '',
+                    dates: dates ? (dates.value || '').trim() : '',
+                    bullets: bullets ? (bullets.value || '').trim() : ''
                 };
             });
         }
@@ -521,14 +618,122 @@
         function eduData() {
             if (!eduList) return [];
             return Array.prototype.slice.call(eduList.querySelectorAll('.repeat-item')).map(function (item) {
+                const degree = item.querySelector('.edu-degree');
+                const school = item.querySelector('.edu-school');
+                const dates = item.querySelector('.edu-dates');
+                const detail = item.querySelector('.edu-detail');
                 return {
-                    degree: (item.querySelector('.edu-degree').value || '').trim(),
-                    school: (item.querySelector('.edu-school').value || '').trim(),
-                    dates: (item.querySelector('.edu-dates').value || '').trim(),
-                    detail: (item.querySelector('.edu-detail').value || '').trim()
+                    degree: degree ? (degree.value || '').trim() : '',
+                    school: school ? (school.value || '').trim() : '',
+                    dates: dates ? (dates.value || '').trim() : '',
+                    detail: detail ? (detail.value || '').trim() : ''
                 };
             });
         }
+
+        function collectDraft() {
+            return {
+                fields: {
+                    name: value('name'),
+                    title: value('title'),
+                    email: value('email'),
+                    phone: value('phone'),
+                    location: value('location'),
+                    linkedin: value('linkedin'),
+                    summary: value('summary'),
+                    skills: value('skills')
+                },
+                experience: expData(),
+                education: eduData()
+            };
+        }
+
+        function hasContent(draft) {
+            if (!draft) return false;
+            const fields = draft.fields || {};
+            const filled = Object.keys(fields).some(function (key) { return (fields[key] || '').trim() !== ''; });
+            const rows = (draft.experience || []).concat(draft.education || []);
+            const rowData = rows.some(function (row) {
+                return Object.keys(row).some(function (key) { return (row[key] || '').trim() !== ''; });
+            });
+            return filled || rowData;
+        }
+
+        function persist() {
+            try {
+                window.localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft()));
+                if (saveStatus) saveStatus.textContent = 'Saved in this browser.';
+            } catch (error) {
+                if (saveStatus) saveStatus.textContent = 'Local saving is blocked here. Copy or download before you leave.';
+            }
+        }
+
+        function scheduleSave() {
+            window.clearTimeout(saveTimer);
+            saveTimer = window.setTimeout(persist, 400);
+        }
+
+        function readDraft() {
+            try {
+                const raw = window.localStorage.getItem(DRAFT_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function clearRows() {
+            if (expList) expList.innerHTML = '';
+            if (eduList) eduList.innerHTML = '';
+        }
+
+        function applyDraft(draft) {
+            if (!draft) return false;
+
+            const fields = draft.fields || {};
+            Object.keys(fields).forEach(function (name) {
+                const input = resumeForm.querySelector('[data-rp="' + name + '"]');
+                if (input) input.value = fields[name] || '';
+            });
+
+            clearRows();
+            (draft.experience || []).forEach(function (row) { addExp(row); });
+            (draft.education || []).forEach(function (row) { addEdu(row); });
+            if (!draft.experience || !draft.experience.length) addExp();
+            if (!draft.education || !draft.education.length) addEdu();
+            renderResume();
+
+            return true;
+        }
+
+        const EXAMPLE = {
+            fields: {
+                name: 'Ayesha Khan',
+                title: 'Data Analyst',
+                email: 'ayesha@example.com',
+                phone: '+92 300 1234567',
+                location: 'Karachi, Pakistan',
+                linkedin: 'linkedin.com/in/ayesha',
+                summary: 'Data analyst with hands on SQL, Excel, and Python work. I clean messy data, document the method, and turn findings into decisions a team can act on. Looking for an analyst role with clear ownership.',
+                skills: 'SQL, Python, Excel, Power BI, data cleaning, stakeholder communication'
+            },
+            experience: [
+                {
+                    role: 'Data Analyst Intern',
+                    company: 'Northline',
+                    dates: 'Jun 2025 to Aug 2025',
+                    bullets: "Built SQL reports for three teams, cutting manual reporting by 6 hours a week\nCleaned a 40,000 row dataset and wrote the data dictionary\nPresented weekly findings to two product managers"
+                }
+            ],
+            education: [
+                {
+                    degree: 'BS Computer Science',
+                    school: 'IBA Karachi',
+                    dates: '2022 to 2026',
+                    detail: 'Coursework: databases, statistics, information systems'
+                }
+            ]
+        };
 
         function renderResume() {
             const name = value('name') || 'Your Name';
@@ -672,7 +877,10 @@
             return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
         }
 
-        resumeForm.addEventListener('input', renderResume);
+        resumeForm.addEventListener('input', function () {
+            renderResume();
+            scheduleSave();
+        });
 
         const printBtn = el('resume-print');
         if (printBtn) {
@@ -707,9 +915,44 @@
             });
         }
 
-        addExp();
-        addEdu();
-        renderResume();
+        const exampleBtn = el('resume-example');
+        if (exampleBtn) {
+            exampleBtn.addEventListener('click', function () {
+                if (hasContent(collectDraft()) && !window.confirm('Replace the current draft with the example?')) return;
+                applyDraft(EXAMPLE);
+                persist();
+                toast('Example loaded. Swap in your own facts.');
+            });
+        }
+
+        const clearBtn = el('resume-clear');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                if (!window.confirm('Clear the saved draft and empty the form?')) return;
+                try {
+                    window.localStorage.removeItem(DRAFT_KEY);
+                } catch (error) {
+                    /* storage can be blocked; the form still clears */
+                }
+                resumeForm.querySelectorAll('[data-rp]').forEach(function (input) {
+                    input.value = '';
+                });
+                clearRows();
+                addExp();
+                addEdu();
+                renderResume();
+                if (saveStatus) saveStatus.textContent = 'Draft cleared.';
+                toast('Draft cleared from this browser.');
+            });
+        }
+
+        if (applyDraft(readDraft())) {
+            if (saveStatus) saveStatus.textContent = 'Draft restored from this browser.';
+        } else {
+            addExp();
+            addEdu();
+            renderResume();
+        }
     }
 
     // -----------------------------------------------------------------
@@ -719,6 +962,9 @@
     if (profileForm) {
         const status = el('profile-status');
         const resultPanel = el('profile-result');
+        const submitBtn = el('profile-submit');
+        const submitLabel = submitBtn && submitBtn.textContent.trim() ? submitBtn.textContent.trim() : 'Rewrite my profile';
+        let busy = false;
 
         function renderProfile(data) {
             const headlines = el('profile-headlines');
@@ -757,21 +1003,30 @@
 
         profileForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const headline = el('profile-headline').value.trim();
-            const summary = el('profile-summary').value.trim();
-            const bullets = el('profile-bullets').value.trim();
+            if (busy) return;
+            const headlineEl = el('profile-headline');
+            const summaryEl = el('profile-summary');
+            const bulletsEl = el('profile-bullets');
+            const targetEl = el('profile-target');
+            const headline = headlineEl ? headlineEl.value.trim() : '';
+            const summary = summaryEl ? summaryEl.value.trim() : '';
+            const bullets = bulletsEl ? bulletsEl.value.trim() : '';
+            const target = targetEl ? targetEl.value.trim() : '';
 
             if (!headline && !summary && !bullets) {
                 setStatus(status, 'Add a headline, a summary, or at least one bullet.', 'is-error');
-                el('profile-headline').focus();
+                if (headlineEl) headlineEl.focus();
                 return;
             }
 
-            const submitBtn = el('profile-submit');
-            submitBtn.disabled = true;
+            busy = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Rewriting…';
+            }
             setStatus(status, 'Rewriting…');
 
-            postJson(endpoints.profile, { headline: headline, summary: summary, bullets: bullets })
+            postJson(endpoints.profile, { target_role: target, headline: headline, summary: summary, bullets: bullets })
                 .then(function (result) {
                     if (!result.ok) {
                         setStatus(status, firstError(result.body) || 'Could not rewrite this profile.', 'is-error');
@@ -783,7 +1038,11 @@
                     setStatus(status, 'Network error while rewriting.', 'is-error');
                 })
                 .finally(function () {
-                    submitBtn.disabled = false;
+                    busy = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = submitLabel;
+                    }
                 });
         });
     }
@@ -794,6 +1053,9 @@
     const promptGrid = el('prompt-grid');
     if (promptGrid) {
         const search = el('prompt-search');
+        const searchBox = el('prompt-search-box');
+        const clearBtn = el('prompt-clear');
+        const copyVisibleBtn = el('prompt-copy-visible');
         const filters = el('prompt-filters');
         const empty = el('prompt-empty');
         const cards = Array.prototype.slice.call(promptGrid.querySelectorAll('[data-prompt]'));
@@ -814,9 +1076,49 @@
             });
 
             if (empty) empty.classList.toggle('is-visible', visible === 0);
+            if (searchBox) searchBox.classList.toggle('has-value', term !== '');
+            if (clearBtn) clearBtn.hidden = term === '';
         }
 
-        if (search) search.addEventListener('input', applyPrompts);
+        if (search) {
+            search.addEventListener('input', applyPrompts);
+
+            search.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && search.value !== '') {
+                    event.preventDefault();
+                    search.value = '';
+                    applyPrompts();
+                }
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                if (search) {
+                    search.value = '';
+                    search.focus();
+                }
+                applyPrompts();
+            });
+        }
+
+        if (copyVisibleBtn) {
+            copyVisibleBtn.addEventListener('click', function () {
+                const visible = cards.filter(function (card) { return !card.hidden; });
+                if (!visible.length) {
+                    toast('No prompts to copy. Clear the search first.');
+                    return;
+                }
+                const text = visible.map(function (card) {
+                    const title = card.querySelector('h3');
+                    const body = card.querySelector('.prompt-text');
+                    return (title ? title.textContent.trim() : 'Prompt') + '\n' + (body ? body.textContent.trim() : '');
+                }).join('\n\n');
+                copy(text).then(function (ok) {
+                    toast(ok ? 'Copied ' + visible.length + ' prompts.' : 'Could not copy. Select the prompts manually.');
+                });
+            });
+        }
 
         if (filters) {
             filters.addEventListener('click', function (event) {

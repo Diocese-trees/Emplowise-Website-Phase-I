@@ -43,13 +43,18 @@ return [
     | and plain HTTP hosts never receive it, so a local demo cannot poison the
     | browser with a permanent HTTPS requirement.
     |
+    | preload is on because the site is HTTPS only: every page, asset, form
+    | post, and redirect is served over TLS, so the preload token is safe to
+    | send. Submitting the domain to hstspreload.org is a separate, long lived
+    | decision. Do that only after every subdomain answers over HTTPS.
+    |
     */
 
     'hsts' => [
         'enabled' => (bool) env('SECURITY_HSTS', true),
         'max_age' => (int) env('SECURITY_HSTS_MAX_AGE', 63072000),
         'include_subdomains' => (bool) env('SECURITY_HSTS_INCLUDE_SUBDOMAINS', true),
-        'preload' => (bool) env('SECURITY_HSTS_PRELOAD', false),
+        'preload' => (bool) env('SECURITY_HSTS_PRELOAD', true),
     ],
 
 ];

@@ -10,7 +10,10 @@
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
     const sendBtn = document.getElementById('chat-send');
+    const sendLabel = sendBtn && sendBtn.textContent.trim() ? sendBtn.textContent.trim() : 'Send';
     const quick = document.getElementById('chat-quick');
+    const suggestionsEl = document.getElementById('chat-suggestions');
+    const resetBtn = document.getElementById('chat-reset');
 
     if (!root || !panel || !launcher || !log || !form || !input) return;
 
@@ -21,32 +24,30 @@
     // Local knowledge base mirrors the server-side rules. It keeps the widget
     // fully usable on static hosts, in the offline demo, or if the API is down.
     const KB = {
-        pricing: 'Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are Pending Input, so the audit scopes them.',
-        legacy: 'The 2025 Replit export listed Foundation at PKR 40,000, Growth at PKR 65,000, and Scale at PKR 100,000.\nThose tiers are not sold on this site.\nCurrent packages are Starter, Business, and Enterprise.',
+        pricing: 'Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.',
         audit: 'The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.',
         student: 'Student Hub is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /student-hub and pick a tool.',
         tools: 'The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub.',
-        payroll: 'Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are Pending Input.\nSo we confirm those in writing before work starts.',
-        performance: 'Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is Pending Input.\nThe review cycle stays yours, we run the structure.',
-        policy: 'Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is Pending Input.',
+        payroll: 'Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.',
+        performance: 'Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.',
+        policy: 'Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is confirmed in writing after the free HR audit.',
         services: 'Confirmed scope: recruitment, onboarding, records, leave and attendance, policies, payroll, compliance support, performance, employee relations, reporting, consultation, assessments, and a dedicated HR rep.\nAll of it is delivered remote.',
-        pending: 'Pending Input means not confirmed yet: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe publish them as open rather than guessing.\nThe audit pins each one down in writing.',
-        contact: 'The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are Pending Input.\nUse /free-hr-audit and we reply from there.',
-        careers: 'Open roles are Pending Input and nothing is published on this site yet.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.',
+        pending: 'Some details are confirmed in writing after the free HR audit: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe list them as open rather than guessing.\nThe audit pins each one down.',
+        contact: 'The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are confirmed in writing after the free HR audit.\nUse /free-hr-audit and we reply from there.',
+        careers: 'Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.',
         why: 'We sit between informal help and a full enterprise HR department.\nConfirmed structure, published prices, and a named HR representative.\nEvery process you get is documented, not improvised.\nWe do not promise legal outcomes or invented savings.',
         who: 'Emplowise HR Services does remote HR outsourcing for startups and SMEs in Pakistan.\nConsultants backed by specialist support, plus a dedicated HR representative.\nDirect access to your CEO or founder is part of the model.',
         where: 'We are based in Pakistan and deliver fully remote.\nThere is no walk-in office in this build.\nInternational expansion is planned long term, not live yet.',
-        when: 'The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are Pending Input.',
+        when: 'The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are confirmed in writing after the free HR audit.',
         greeting: 'hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the Student Hub.\nI keep it short and never invent numbers.',
         thanks: 'Anytime.\nIf you want a real scope, the audit at /free-hr-audit is the next step.',
-        general: 'Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I say Pending Input.'
+        general: 'Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I point you to the free audit.'
     };
 
     const RULES = [
         [/thanks|thank you|shukriya|bye|goodbye/, 'thanks'],
         [/price|cost|pkr|package|starter|business|enterprise|how much|budget|charge|quote|fee/, 'pricing'],
-        [/foundation|growth|scale|legacy|replit|old tier/, 'legacy'],
-        [/pending input|pending|tbd|not disclosed|unclear|not confirmed/, 'pending'],
+        [/pending|tbd|not disclosed|not published|unclear|not confirmed/, 'pending'],
         [/audit|free hr|book|meeting|talk to|sign up|onboard me|consultation|get started/, 'audit'],
         [/student|internship|graduate|fresh grad|prompt library|linkedin/, 'student'],
         [/resume|cv|ats|interview|cover letter/, 'tools'],
@@ -63,12 +64,43 @@
         [/\b(hi|hello|hey|salam|assalam|yo|sup)\b/, 'greeting']
     ];
 
-    function localReply(text) {
+    function localIntent(text) {
         const lower = String(text || '').toLowerCase();
         for (let i = 0; i < RULES.length; i += 1) {
-            if (RULES[i][0].test(lower)) return KB[RULES[i][1]];
+            if (RULES[i][0].test(lower)) return RULES[i][1];
         }
-        return KB.general;
+        return 'general';
+    }
+
+    function localReply(text) {
+        return KB[localIntent(text)] || KB.general;
+    }
+
+    const LOCAL_SUGGESTIONS = {
+        pricing: [
+            ['What is included', 'What is included in the packages?'],
+            ['Free audit', 'How does the free HR audit work?'],
+            ['Services', 'Which HR services do you run?']
+        ],
+        student: [
+            ['ATS score', 'How does the ATS score work?'],
+            ['Mock interview', 'How does the mock interview tool work?'],
+            ['Resume builder', 'Is the resume builder free?']
+        ],
+        tools: [
+            ['Student Hub', 'What is in the Student Hub?'],
+            ['Prompt library', 'What is in the prompt library?'],
+            ['Profile help', 'Can you help with my LinkedIn profile?']
+        ],
+        general: [
+            ['Pricing', 'What do the packages cost?'],
+            ['Services', 'Which HR services do you run?'],
+            ['Free audit', 'How does the free HR audit work?']
+        ]
+    };
+
+    function localSuggestions(intent) {
+        return LOCAL_SUGGESTIONS[intent] || LOCAL_SUGGESTIONS.general;
     }
 
     // Trailing newline-free trim plus a five line ceiling on any reply.
@@ -77,17 +109,46 @@
         return lines.slice(0, 5).join('\n');
     }
 
-    let sessionId = window.sessionStorage.getItem('emplowise_chat_session') || '';
+    // Session storage can throw in private modes and framed contexts; the
+    // widget must stay usable when it does.
+    function readSession() {
+        try {
+            return window.sessionStorage.getItem('emplowise_chat_session') || '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function writeSession(value) {
+        try {
+            window.sessionStorage.setItem('emplowise_chat_session', value);
+        } catch (error) {
+            /* not fatal */
+        }
+    }
+
+    const introNode = log.querySelector('.msg');
+    const introText = introNode ? introNode.textContent : '';
+
+    let sessionId = readSession();
     let history = [];
+    let previousIntent = '';
     let sending = false;
     let typingEl = null;
+
+    const compact = window.matchMedia('(max-width: 520px)');
 
     function setOpen(open) {
         panel.hidden = !open;
         launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
         if (open) {
+            if (compact.matches && window.Emplowise && window.Emplowise.lockScroll) {
+                window.Emplowise.lockScroll('chat');
+            }
             window.setTimeout(function () { input.focus(); }, 60);
             scrollDown();
+        } else if (window.Emplowise && window.Emplowise.unlockScroll) {
+            window.Emplowise.unlockScroll('chat');
         }
     }
 
@@ -98,35 +159,83 @@
     if (closeBtn) {
         closeBtn.addEventListener('click', function () {
             setOpen(false);
-            launcher.focus();
+            launcher.focus({ preventScroll: true });
         });
     }
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && !panel.hidden) {
             setOpen(false);
-            launcher.focus();
+            launcher.focus({ preventScroll: true });
         }
+    });
+
+    // Click away to dismiss the panel, returning focus to the launcher.
+    document.addEventListener('click', function (event) {
+        if (panel.hidden) return;
+        if (panel.contains(event.target) || launcher.contains(event.target)) return;
+        setOpen(false);
+        launcher.focus({ preventScroll: true });
     });
 
     function scrollDown() {
         log.scrollTop = log.scrollHeight;
     }
 
+    function linkify(text, node) {
+        const pattern = /(\/free-hr-audit|\/student-hub)/g;
+        let last = 0;
+        let match = pattern.exec(text);
+
+        while (match !== null) {
+            if (match.index > last) {
+                node.appendChild(document.createTextNode(text.slice(last, match.index)));
+            }
+            const link = document.createElement('a');
+            link.href = match[1];
+            link.textContent = match[1];
+            link.className = 'chat-link';
+            node.appendChild(link);
+            last = match.index + match[1].length;
+            match = pattern.exec(text);
+        }
+
+        if (last < text.length) {
+            node.appendChild(document.createTextNode(text.slice(last)));
+        }
+    }
+
     function append(role, text) {
         const bubble = document.createElement('div');
         bubble.className = 'msg' + (role === 'user' ? ' msg--user' : '');
-        bubble.textContent = text;
+        if (role === 'assistant') {
+            linkify(String(text || ''), bubble);
+        } else {
+            bubble.textContent = text;
+        }
         log.appendChild(bubble);
         scrollDown();
         return bubble;
+    }
+
+    function renderSuggestions(items) {
+        if (!suggestionsEl) return;
+        suggestionsEl.innerHTML = '';
+        (items || []).slice(0, 4).forEach(function (item) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quick-chip';
+            button.setAttribute('data-q', item.query);
+            button.textContent = item.label;
+            suggestionsEl.appendChild(button);
+        });
     }
 
     function showTyping() {
         if (typingEl) return;
         typingEl = document.createElement('div');
         typingEl.className = 'msg msg--typing';
-        typingEl.setAttribute('aria-label', 'Assistant is typing');
+        typingEl.setAttribute('aria-hidden', 'true');
         for (let i = 0; i < 3; i += 1) {
             typingEl.appendChild(document.createElement('i'));
         }
@@ -144,7 +253,7 @@
         sending = busy;
         if (sendBtn) {
             sendBtn.disabled = busy;
-            sendBtn.textContent = busy ? '…' : 'Send';
+            sendBtn.textContent = busy ? '…' : sendLabel;
         }
     }
 
@@ -168,6 +277,7 @@
         const payload = {
             message: message,
             session_id: sessionId || null,
+            previous_intent: previousIntent || null,
             history: history.slice(-8)
         };
 
@@ -193,8 +303,13 @@
                         append('assistant', 'Slow down a second. Too many messages at once. Try again in a minute.');
                     } else if (result.status === 422) {
                         append('assistant', 'That message did not pass validation. Keep it under 800 characters and try again.');
+                    } else if (result.status === 419) {
+                        append('assistant', 'Your session expired. Reload the page and send that again.');
                     } else if (result.status >= 500) {
+                        const intent = localIntent(message);
+                        previousIntent = intent;
                         append('assistant', clamp(localReply(message)));
+                        renderSuggestions(localSuggestions(intent));
                     } else {
                         append('assistant', 'That request did not go through. Try once more.');
                     }
@@ -203,17 +318,22 @@
 
                 if (result.body.session_id) {
                     sessionId = result.body.session_id;
-                    window.sessionStorage.setItem('emplowise_chat_session', sessionId);
+                    writeSession(sessionId);
                 }
 
+                previousIntent = result.body.intent || localIntent(message);
                 append('assistant', clamp(result.body.reply || localReply(message)));
+                renderSuggestions(result.body.suggestions || localSuggestions(previousIntent));
                 history.push({ role: 'user', content: message });
                 history.push({ role: 'assistant', content: result.body.reply || '' });
                 history = history.slice(-8);
             })
             .catch(function () {
                 hideTyping();
+                const intent = localIntent(message);
+                previousIntent = intent;
                 append('assistant', clamp(localReply(message)));
+                renderSuggestions(localSuggestions(intent));
             })
             .finally(function () {
                 setBusy(false);
@@ -231,6 +351,34 @@
             const chip = event.target.closest('[data-q]');
             if (!chip) return;
             sendMessage(chip.getAttribute('data-q'));
+        });
+    }
+
+    if (suggestionsEl) {
+        suggestionsEl.addEventListener('click', function (event) {
+            const chip = event.target.closest('[data-q]');
+            if (!chip) return;
+            sendMessage(chip.getAttribute('data-q'));
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            log.innerHTML = '';
+            if (introText) {
+                const intro = document.createElement('div');
+                intro.className = 'msg';
+                intro.textContent = introText;
+                log.appendChild(intro);
+            }
+            history = [];
+            previousIntent = '';
+            sessionId = '';
+            writeSession('');
+            renderSuggestions([]);
+            input.value = '';
+            input.focus();
+            scrollDown();
         });
     }
 })();

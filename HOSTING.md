@@ -54,6 +54,10 @@ DB_DATABASE=/var/www/html/database/database.sqlite
 SESSION_DRIVER=database
 CACHE_STORE=database
 QUEUE_CONNECTION=database
+SECURITY_HSTS=true
+SECURITY_HSTS_MAX_AGE=63072000
+SECURITY_HSTS_INCLUDE_SUBDOMAINS=true
+SECURITY_HSTS_PRELOAD=true
 ALIBABA_CLOUD_API_KEY=
 ALIBABA_CLOUD_BASE_URL=https://dashscope-intl.aliyuncs.com/compatible-mode/v1
 ALIBABA_CLOUD_PRIMARY_MODEL=qwen-max
@@ -63,6 +67,23 @@ ALIBABA_CLOUD_FALLBACK_MODEL=kimi
 > SQLite lives inside the container. Mount a volume at
 > `/var/www/html/database` (compose already does) or switch to managed MySQL by
 > changing `DB_CONNECTION` — otherwise submissions disappear on redeploy.
+
+### HTTPS and HSTS preload
+
+The app sends `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
+only when the request reaches PHP over HTTPS. The header is already correct, but
+the browser only trusts it after a real HTTPS response, so the host must do the
+rest:
+
+1. Terminate TLS on the host and serve the site over `https://your-domain`.
+2. Redirect every `http://` request to `https://` with a 308, at the proxy, not in PHP.
+3. Set `APP_URL=https://your-domain` and keep `trustProxies(at: '*')` so generated URLs stay HTTPS. On nginx with PHP-FPM, also pass `fastcgi_param HTTPS $https if_not_empty;`; `deploy/nginx.conf.example` already does, and it hides the app's duplicate frame and sniffing headers so each value is sent once.
+4. Confirm `https://your-domain`, `https://www.your-domain`, and every other subdomain answer over a valid certificate. `includeSubDomains` covers them all.
+5. Check the response has the full header: `curl -sI https://your-domain | grep -i strict-transport`.
+6. Only then submit the domain at <https://hstspreload.org>. Removal takes months, so treat this as a one-way step. Set `SECURITY_HSTS_PRELOAD=false` and redeploy if you need to stop sending the token first.
+
+Because the middleware skips plain HTTP, local `php artisan serve` and preview
+tunnels never receive the header and cannot pin a developer's browser.
 
 ---
 

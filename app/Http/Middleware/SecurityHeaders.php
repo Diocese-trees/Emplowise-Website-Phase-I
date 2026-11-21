@@ -80,11 +80,15 @@ class SecurityHeaders
 
         $value = 'max-age='.(int) config('security.hsts.max_age', 63072000);
 
-        if ((bool) config('security.hsts.include_subdomains', true)) {
+        $preload = (bool) config('security.hsts.preload', false);
+
+        // Browsers ignore the preload token unless includeSubDomains is also
+        // present, so preload always wins when the two settings disagree.
+        if ((bool) config('security.hsts.include_subdomains', true) || $preload) {
             $value .= '; includeSubDomains';
         }
 
-        if ((bool) config('security.hsts.preload', false)) {
+        if ($preload) {
             $value .= '; preload';
         }
 

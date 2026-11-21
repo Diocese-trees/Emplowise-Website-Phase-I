@@ -54,6 +54,18 @@ class ForcePublicUrl
             'http://127.0.0.1',
         ]));
 
+        // Canonical URLs, OpenGraph URLs, and JSON-LD must stay absolute.
+        $kept = [];
+        $html = preg_replace_callback(
+            '/<script type="application\/ld\+json">.*?<\/script>|<(?:link|meta)[^>]*(?:rel="canonical"|property="og:url")[^>]*>/is',
+            function (array $match) use (&$kept): string {
+                $kept[] = $match[0];
+
+                return '<!--keep-'.(count($kept) - 1).'-->';
+            },
+            $html
+        ) ?? $html;
+
         $rewritten = $html;
 
         foreach ($roots as $root) {
@@ -62,7 +74,13 @@ class ForcePublicUrl
             $rewritten = str_replace($root."'", "/'", $rewritten);
         }
 
-        if ($rewritten !== $html) {
+        $rewritten = preg_replace_callback(
+            '/<!--keep-(\d+)-->/',
+            fn (array $match): string => $kept[(int) $match[1]],
+            $rewritten
+        ) ?? $rewritten;
+
+        if ($rewritten !== $response->getContent()) {
             $response->setContent($rewritten);
             $response->headers->remove('Content-Length');
         }

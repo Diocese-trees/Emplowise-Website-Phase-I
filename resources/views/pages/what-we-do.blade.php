@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'What We Do | Emplowise')
-@section('meta_description', 'Payroll operations, performance management, and policy making run remotely by Emplowise, with a proposed AI automation layer and a four-stage diagnostic method.')
+@section('title', $seo['title'])
+@section('meta_description', $seo['description'])
 
 @section('content')
     <section class="page-head">
         <div class="shell shell--narrow">
             <nav class="breadcrumb" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('home') }}">{{ config('emplowise.copy.layout.breadcrumb_home') }}</a>
                 <span aria-hidden="true">/</span>
-                <span>What We Do</span>
+                <span>{{ $copy['breadcrumb'] }}</span>
             </nav>
-            <p class="kicker">Operations, systems, and outcomes</p>
-            <h1>We run the work, not the workshop.</h1>
+            <p class="kicker">{{ $copy['kicker'] }}</p>
+            @include('partials.seo-h1', ['seo' => $seo])
             <p class="lede">
-                Three operational pillars, fourteen confirmed services, and a diagnostic method that ends in
-                running processes. The automation layer is proposed, not shipped software.
+                {{ $seo['intro'] }}
             </p>
         </div>
     </section>
@@ -23,11 +22,9 @@
     <section class="section section--tight">
         <div class="shell">
             <div class="chip-row">
-                <span class="chip chip--teal">Remote delivery</span>
-                <span class="chip chip--teal">Dedicated HR representative</span>
-                <span class="chip">Specialist consultant backup</span>
-                <span class="chip">Monthly reporting</span>
-                <span class="chip">Free diagnostic audit</span>
+                @foreach ($copy['chips'] as $index => $chip)
+                    <span class="chip {{ $index === 0 ? 'chip--teal' : ($index === 1 ? 'chip--teal' : '') }}">{{ $chip }}</span>
+                @endforeach
             </div>
         </div>
     </section>
@@ -38,35 +35,35 @@
                 @php($pillarServices = $servicesByPillar->flatten(1)->whereIn('name', $pillar['services']))
                 <article class="pillar-deep" id="{{ $pillar['slug'] }}">
                     <div>
-                        <span class="pillar-deep-idx">Pillar {{ $pillar['number'] }}</span>
+                        <span class="pillar-deep-idx">{{ $copy['pillar_label'] }} {{ $pillar['number'] }}</span>
                         <h2>{{ $pillar['name'] }}</h2>
                         <p class="small muted s36">{{ $pillar['kicker'] }}</p>
                         <p class="s37">{{ $pillar['summary'] }}</p>
                         <p class="s38">
                             <span class="badge badge--pending">{{ $pillar['status'] }}</span>
                         </p>
-                        <a href="{{ route('free-hr-audit') }}" class="link-arrow s1">Audit this pillar</a>
+                        <a href="{{ route('free-hr-audit') }}" class="link-arrow s1">{{ $copy['pillar_link'] }}</a>
                     </div>
 
                     <div>
-                        <h4 class="s39">
-                            AI automation · proposed
-                        </h4>
+                        <h3 class="s39">
+                            {{ $copy['checks'] }}
+                        </h3>
                         <div class="auto-list">
                             @foreach ($pillar['automation'] as $item)
                                 <div class="auto-item"><span>{{ $item }}</span></div>
                             @endforeach
                         </div>
 
-                        <h4 class="s40">
-                            Confirmed services
-                        </h4>
+                        <h3 class="s40">
+                            {{ $copy['services'] }}
+                        </h3>
                         <div class="table-wrap">
                             <table class="data">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Service</th>
-                                        <th scope="col">Scope note</th>
+                                        <th scope="col">{{ $copy['pillar_table'][0] }}</th>
+                                        <th scope="col">{{ $copy['pillar_table'][1] }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,11 +85,10 @@
     <section class="section section--alt">
         <div class="shell">
             <div class="section-head">
-                <p class="kicker">The full service catalogue</p>
-                <h2>Fourteen services, grouped by operating family.</h2>
+                <p class="kicker">{{ $copy['catalogue']['kicker'] }}</p>
+                <h2>{{ $seo['h2'] }}</h2>
                 <p class="lede">
-                    The pillar showcase is how clients think about the work. These are the actual service
-                    families used to scope an engagement.
+                    {{ $copy['catalogue']['lede'] }}
                 </p>
             </div>
 
@@ -100,9 +96,9 @@
                 <table class="data">
                     <thead>
                         <tr>
-                            <th scope="col">Family</th>
-                            <th scope="col">Service</th>
-                            <th scope="col">Status and scope</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][0] }}</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][1] }}</th>
+                            <th scope="col">{{ $copy['catalogue']['table'][2] }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,7 +115,7 @@
                 </table>
             </div>
             <p class="service-table-note">
-                Every service above is confirmed in the 2026 brief. Package inclusion per tier is Pending Input.
+                {{ $copy['catalogue']['note'] }}
             </p>
         </div>
     </section>
@@ -127,11 +123,10 @@
     <section class="section">
         <div class="shell">
             <div class="section-head">
-                <p class="kicker">Diagnostic method</p>
-                <h2>A repeatable path from audit to review.</h2>
+                <p class="kicker">{{ $copy['method']['kicker'] }}</p>
+                <h2>{{ $copy['method']['heading'] }}</h2>
                 <p class="lede">
-                    This is the working method behind every pillar. It is also the structure of the free HR
-                    audit, minus the implementation.
+                    {{ $copy['method']['lede'] }}
                 </p>
             </div>
 
@@ -151,13 +146,12 @@
     <section class="section section--navy">
         <div class="shell split">
             <div>
-                <p class="kicker">Measurable outcomes</p>
-                <h2>What changes when the structure lands.</h2>
+                <p class="kicker">{{ $copy['outcomes']['kicker'] }}</p>
+                <h2>{{ $copy['outcomes']['heading'] }}</h2>
                 <p class="lede">
-                    These are operating outcomes Emplowise works toward. Baseline metrics and verified client
-                    results are Pending Input, so no percentages are published here.
+                    {{ $copy['outcomes']['lede'] }}
                 </p>
-                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal s1">Start with the audit</a>
+                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal s1">{{ $copy['outcomes']['cta'] }}</a>
             </div>
             <div>
                 <ul class="index-list">
@@ -172,10 +166,10 @@
 
     <section class="cta-band">
         <div class="shell cta-inner">
-            <h2>See where your HR stack actually breaks.</h2>
+            <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
-                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">Book the free audit</a>
-                <a href="{{ route('pricing') }}" class="btn btn--outline-light">Compare packages</a>
+                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
+                <a href="{{ route('pricing') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

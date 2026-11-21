@@ -17,6 +17,19 @@ Route::get('/student-hub', [SiteController::class, 'studentHub'])->name('student
 Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
 Route::get('/free-hr-audit', [SiteController::class, 'audit'])->name('free-hr-audit');
 
+Route::get('/sitemap.xml', function () {
+    $pages = ['home', 'what-we-are', 'what-we-do', 'pricing', 'student-hub', 'faq', 'free-hr-audit'];
+    $urls = '';
+    foreach ($pages as $name) {
+        $priority = $name === 'home' ? '1.0' : '0.8';
+        $urls .= '<url><loc>'.route($name).'</loc><changefreq>weekly</changefreq><priority>'.$priority.'</priority></url>';
+    }
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n"
+        .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.$urls.'</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
+
 Route::prefix('api')->name('api.')->group(function (): void {
     Route::post('/csp-report', CspReportController::class)
         ->middleware('throttle:120,1')

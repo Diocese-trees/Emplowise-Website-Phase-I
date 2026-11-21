@@ -16,13 +16,13 @@ final class SiteAndApiTest extends TestCase
     public function test_all_seven_pages_render(): void
     {
         $pages = [
-            '/' => 'Remote HR solutions',
-            '/what-we-are' => 'Empower people. Simplify work. Build momentum.',
-            '/what-we-do' => 'Fourteen services',
+            '/' => 'Remote HR services in Pakistan',
+            '/what-we-are' => 'HR outsourcing company in Pakistan',
+            '/what-we-do' => 'HR operations outsourcing',
             '/pricing' => 'PKR 40,000',
-            '/student-hub' => 'Mock interview simulator',
-            '/faq' => 'The questions clients and students actually ask',
-            '/free-hr-audit' => 'Tell us where HR hurts',
+            '/student-hub' => 'Free ATS resume checker',
+            '/faq' => 'HR outsourcing questions',
+            '/free-hr-audit' => 'free HR audit in Pakistan',
         ];
 
         foreach ($pages as $path => $needle) {
@@ -37,8 +37,156 @@ final class SiteAndApiTest extends TestCase
         $this->get('/pricing')
             ->assertOk()
             ->assertSee('PKR 75,000')
-            ->assertSee('Pending Input')
+            ->assertSee('Confirmed in writing after your Free HR Audit')
             ->assertDontSee('most popular', false);
+    }
+
+    public function test_student_assets_load_only_on_the_hub(): void
+    {
+        $hub = $this->get('/student-hub')->assertOk();
+        $hub->assertSee('css/student.css', false);
+        $hub->assertSee('js/student.js', false);
+
+        $home = $this->get('/')->assertOk();
+        $home->assertDontSee('css/student.css', false);
+        $home->assertDontSee('js/student.js', false);
+    }
+
+    public function test_resume_builder_offers_draft_recovery_controls(): void
+    {
+        $this->get('/student-hub')
+            ->assertOk()
+            ->assertSee('Load example')
+            ->assertSee('Clear draft')
+            ->assertSee('The draft saves in this browser only.');
+    }
+
+    public function test_prompt_library_shows_counts_and_bulk_actions(): void
+    {
+        $html = (string) $this->get('/student-hub')->assertOk()->getContent();
+
+        $this->assertStringContainsString('id="prompt-copy-visible"', $html);
+        $this->assertStringContainsString('Copy visible prompts', $html);
+        $this->assertStringContainsString('id="prompt-clear"', $html);
+        $this->assertStringContainsString('class="search-clear"', $html);
+        $this->assertMatchesRegularExpression('/data-prompt-filter="all">All <span class="filter-count">14<\/span>/', $html);
+        $this->assertMatchesRegularExpression('/data-prompt-filter="Job search">Job search <span class="filter-count">3<\/span>/', $html);
+    }
+
+    public function test_print_stylesheet_is_non_blocking_and_scripts_defer(): void
+    {
+        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/css\/print\.css\?v=\d+" media="print"/', $hub);
+        $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
+
+        $home = (string) $this->get('/')->assertOk()->getContent();
+        $this->assertMatchesRegularExpression('/<script src="\/js\/app\.js\?v=\d+" defer><\/script>/', $home);
+        $this->assertMatchesRegularExpression('/<script src="\/js\/chat\.js\?v=\d+" defer><\/script>/', $home);
+        $this->assertStringNotContainsString('media="print"', $home);
+    }
+
+    public function test_pages_render_without_php_diagnostics(): void
+    {
+        $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+        $markers = ['Warning:', 'Notice:', 'Deprecated:', 'Fatal error', 'Undefined variable', 'Undefined array key'];
+
+        foreach ($pages as $path) {
+            $html = (string) $this->get($path)->assertOk()->getContent();
+            foreach ($markers as $marker) {
+                $this->assertStringNotContainsString($marker, $html, $path.' rendered '.$marker);
+            }
+        }
+    }
+
+    public function test_favicon_is_a_real_icon_not_an_empty_placeholder(): void
+    {
+        $path = public_path('favicon.ico');
+
+        $this->assertFileExists($path);
+        $this->assertGreaterThan(0, (int) filesize($path));
+        $this->assertSame("\x00\x00\x01\x00", (string) file_get_contents($path, false, null, 0, 4));
+    }
+
+    public function test_seo_metadata_and_structured_data_render(): void
+    {
+        $home = $this->get('/')->assertOk();
+        $home->assertSee('<link rel="canonical" href="http', false);
+        $home->assertSee('property="og:title"', false);
+        $home->assertSee('name="twitter:card"', false);
+        $home->assertSee('application/ld+json', false);
+        $home->assertSee('ProfessionalService', false);
+        $home->assertSee('PKR', false);
+
+        $this->get('/faq')->assertOk()->assertSee('FAQPage', false);
+    }
+
+    public function test_each_route_uses_its_configured_seo_snippet(): void
+    {
+        $routes = [
+            '/' => 'home',
+            '/what-we-are' => 'what-we-are',
+            '/what-we-do' => 'what-we-do',
+            '/pricing' => 'pricing',
+            '/student-hub' => 'student-hub',
+            '/faq' => 'faq',
+            '/free-hr-audit' => 'free-hr-audit',
+        ];
+
+        $titles = [];
+        $descriptions = [];
+
+        foreach ($routes as $path => $key) {
+            $seo = config('emplowise.seo.'.$key);
+            $html = (string) $this->get($path)->assertOk()->getContent();
+
+            $this->assertStringContainsString('<title>'.e($seo['title']).'</title>', $html, $path);
+            $this->assertStringContainsString('name="description" content="'.e($seo['description']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:title" content="'.e($seo['title']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:description" content="'.e($seo['description']).'"', $html, $path);
+            $this->assertStringContainsString('property="og:url" content="'.url($path).'"', $html, $path);
+            $this->assertStringContainsString('name="twitter:title" content="'.e($seo['title']).'"', $html, $path);
+            $this->assertStringContainsString('rel="canonical" href="'.url($path).'"', $html, $path);
+            $this->assertStringContainsString('<h1', $html, $path);
+
+            $titles[] = $seo['title'];
+            $descriptions[] = $seo['description'];
+        }
+
+        $this->assertCount(count($routes), array_unique($titles));
+        $this->assertCount(count($routes), array_unique($descriptions));
+    }
+
+    public function test_seo_audit_command_passes_for_the_shipped_config(): void
+    {
+        $this->artisan('emplowise:seo-audit')->assertSuccessful();
+    }
+
+    public function test_sitemap_lists_every_public_page(): void
+    {
+        $response = $this->get('/sitemap.xml')->assertOk();
+        $response->assertHeader('Content-Type', 'application/xml');
+
+        $xml = simplexml_load_string((string) $response->getContent());
+        $this->assertNotFalse($xml);
+
+        $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
+        $this->assertCount(7, $locations);
+
+        foreach (['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'] as $path) {
+            $this->assertTrue(
+                collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),
+                'Missing sitemap entry for '.$path
+            );
+        }
+    }
+
+    public function test_home_headings_follow_a_strict_order(): void
+    {
+        $html = (string) $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, '<h1'));
+        $this->assertSame(0, substr_count($html, '<h4'));
     }
 
     public function test_faq_page_lists_all_verified_answers(): void
@@ -101,13 +249,43 @@ final class SiteAndApiTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['session_id', 'reply', 'intent', 'model', 'source'])
+            ->assertJsonStructure(['session_id', 'reply', 'intent', 'model', 'source', 'suggestions'])
             ->assertJsonPath('intent', 'pricing')
             ->assertJsonPath('source', 'fallback');
 
+        $this->assertCount(3, $response->json('suggestions'));
         $this->assertStringContainsString('PKR 40,000', (string) $response->json('reply'));
         $this->assertDatabaseCount('chat_messages', 2);
         $this->assertSame(2, ChatMessage::query()->count());
+    }
+
+    public function test_chat_scores_mixed_intents_and_keeps_follow_up_context(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $this->postJson('/api/chat', ['message' => 'How much is the free audit?'])
+            ->assertOk()
+            ->assertJsonPath('intent', 'audit');
+
+        $this->postJson('/api/chat', [
+            'message' => 'and for 20 people?',
+            'previous_intent' => 'pricing',
+        ])->assertOk()
+            ->assertJsonPath('intent', 'pricing')
+            ->assertJsonStructure(['suggestions' => [['label', 'query']]]);
+
+        $this->postJson('/api/chat', ['message' => 'Hi'])
+            ->assertOk()
+            ->assertJsonPath('intent', 'greeting');
+    }
+
+    public function test_browser_chat_knowledge_base_matches_the_server_facts(): void
+    {
+        $js = (string) file_get_contents(public_path('js/chat.js'));
+
+        foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/student-hub'] as $fact) {
+            $this->assertStringContainsString($fact, $js, 'Browser KB missing: '.$fact);
+        }
     }
 
     public function test_interview_questions_come_from_the_local_bank_without_an_api_key(): void
@@ -140,6 +318,34 @@ final class SiteAndApiTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $first->json('score'));
         $this->assertLessThanOrEqual(100, $first->json('score'));
         $first->assertJsonStructure(['score', 'verdict', 'strengths', 'fixes', 'model_answer', 'source']);
+    }
+
+    public function test_interview_feedback_explains_its_score_and_offers_a_probe(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $response = $this->postJson('/api/student/interview/feedback', [
+            'role' => 'Data and Analytics',
+            'level' => 'Entry level',
+            'question' => 'Describe a dataset you cleaned. What was messy?',
+            'answer' => 'At my university lab we had a survey dataset with duplicate rows and missing income values. I removed duplicates, standardised city names, and filled missing values with the median. As a result the analysis error dropped and the team could trust the report.',
+        ])->assertOk();
+
+        $breakdown = $response->json('breakdown');
+        $this->assertCount(4, $breakdown);
+        $this->assertSame([35, 25, 25, 15], array_column($breakdown, 'max'));
+        $this->assertSame($response->json('score'), array_sum(array_column($breakdown, 'score')));
+        $this->assertNotEmpty($response->json('next_probe'));
+
+        $this->postJson('/api/student/interview/feedback', [
+            'role' => 'Data and Analytics',
+            'level' => 'Entry level',
+            'question' => 'Describe a dataset you cleaned. What was messy?',
+            'answer' => 'I cleaned data.',
+        ])->assertOk()
+            ->assertJsonCount(4, 'breakdown')
+            ->assertJsonPath('score', 18)
+            ->assertJsonStructure(['next_probe']);
     }
 
     public function test_ats_score_is_explainable_and_bounded(): void
@@ -185,6 +391,29 @@ RESUME;
         $this->assertSame('local', $response->json('source'));
     }
 
+    public function test_ats_matches_synonyms_and_checks_the_target_title(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        $resume = "Senior Data Analyst\nKarachi | analyst@example.com | +92 300 1234567\n\nSummary\nAnalyst who communicates clearly and builds dashboards with JS.\n\nExperience\nSenior Data Analyst — Northline\n- Built dashboards in JS for three teams.\n- Communicated findings to two managers every week.\n\nEducation\nBS Computer Science\n\nSkills\nJS, SQL, communication";
+
+        $jd = "Senior Data Analyst\nWe need strong communication and JavaScript skills for reporting work.";
+
+        $response = $this->postJson('/api/student/ats', [
+            'resume' => $resume,
+            'job_description' => $jd,
+        ])->assertOk();
+
+        $this->assertSame('Senior Data Analyst', $response->json('title'));
+        $this->assertTrue($response->json('title_match'));
+        $this->assertContains('communication', $response->json('matched'));
+        $this->assertContains('javascript', $response->json('matched'));
+
+        $titleCheck = collect($response->json('structure'))->firstWhere('label', 'Target title present');
+        $this->assertTrue($titleCheck['ok']);
+        $this->assertSame(0, $titleCheck['weight']);
+    }
+
     public function test_profile_optimizer_rejects_empty_input_and_rewrites_weak_copy(): void
     {
         config(['ai.alibaba.api_key' => null]);
@@ -201,5 +430,13 @@ RESUME;
         $this->assertStringNotContainsString('passionate', strtolower((string) $response->json('headlines.0')));
         $this->assertStringContainsString('[add one number]', implode(' ', $response->json('bullets')));
         $response->assertJsonPath('source', 'local');
+
+        $aimed = $this->postJson('/api/student/profile', [
+            'target_role' => 'Cybersecurity Analyst',
+            'headline' => 'Final year CS student passionate about data',
+            'summary' => 'I am a hardworking student looking for internship opportunities.',
+        ])->assertOk();
+
+        $this->assertStringStartsWith('Cybersecurity Analyst |', (string) $aimed->json('headlines.0'));
     }
 }

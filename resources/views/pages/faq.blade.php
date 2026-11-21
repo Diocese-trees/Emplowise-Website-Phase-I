@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'FAQ | Emplowise')
-@section('meta_description', 'Answers about Emplowise services, pricing, the free HR audit, and the free student hub. Confirmed data only, with unresolved details labelled Pending Input.')
+@section('title', $seo['title'])
+@section('meta_description', $seo['description'])
 
 @section('content')
     <section class="page-head">
         <div class="shell shell--narrow">
             <nav class="breadcrumb" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('home') }}">{{ config('emplowise.copy.layout.breadcrumb_home') }}</a>
                 <span aria-hidden="true">/</span>
-                <span>FAQ</span>
+                <span>{{ $copy['breadcrumb'] }}</span>
             </nav>
-            <p class="kicker">{{ $total }} questions, four categories</p>
-            <h1>The questions clients and students actually ask.</h1>
+            <p class="kicker">{{ str_replace([':count', ':groups'], [$total, count($groups)], $copy['kicker']) }}</p>
+            @include('partials.seo-h1', ['seo' => $seo])
             <p class="lede">
-                Search it, filter it, or open the assistant. Every answer uses confirmed business data. Anything
-                unresolved is dated and labelled Pending Input.
+                {{ $seo['intro'] }}
             </p>
         </div>
     </section>
@@ -23,13 +22,14 @@
     <section class="section section--tight">
         <div class="shell shell--narrow">
             <div class="faq-toolbar">
-                <div class="search-box">
+                <div class="search-box" id="faq-search-box">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-                    <label class="sr-only" for="faq-search">Search frequently asked questions</label>
-                    <input id="faq-search" type="search" placeholder="Search pricing, audit, ATS, payroll..." autocomplete="off">
+                    <label class="sr-only" for="faq-search">{{ $copy['search_label'] }}</label>
+                    <input id="faq-search" type="search" placeholder="{{ $copy['search_placeholder'] }}" autocomplete="off">
+                    <button type="button" class="search-clear" id="faq-clear" aria-label="{{ $copy['clear_search'] }}" hidden>&times;</button>
                 </div>
                 <div class="filter-row" id="faq-filters">
-                    <button type="button" class="filter-btn is-active" data-faq-filter="all">All</button>
+                    <button type="button" class="filter-btn is-active" data-faq-filter="all">{{ $copy['filter_all'] }}</button>
                     @foreach ($groups as $group)
                         <button type="button" class="filter-btn" data-faq-filter="{{ $group['category'] }}">{{ $group['category'] }}</button>
                     @endforeach
@@ -41,7 +41,7 @@
                     <section class="faq-group" data-faq-group data-cat="{{ $group['category'] }}">
                         <div class="faq-group-head">
                             <h2>{{ $group['category'] }}</h2>
-                            <span>{{ count($group['items']) }} answers</span>
+                            <span>{{ count($group['items']) }} {{ $copy['answers_suffix'] }}</span>
                         </div>
 
                         <div class="accordion">
@@ -65,21 +65,20 @@
                 @endforeach
             </div>
 
-            <p class="faq-empty" id="faq-empty">No answer matches that search. Try one broader word, or ask the assistant.</p>
+            <p class="faq-empty" id="faq-empty">{{ $copy['empty'] }}</p>
 
             <div class="card card--flat s3">
                 <div class="panel-head s4">
                     <div>
-                        <p class="kicker s5">Still stuck</p>
-                        <h2 class="s6">Ask the Emplowise assistant</h2>
+                        <p class="kicker s5">{{ $copy['assistant']['kicker'] }}</p>
+                        <h2 class="s6">{{ $copy['assistant']['heading'] }}</h2>
                     </div>
-                    <span class="badge">Grounded answers</span>
+                    <span class="badge">{{ $copy['assistant']['badge'] }}</span>
                 </div>
                 <p class="small s7">
-                    The assistant answers from the same verified data as this page. It does not guess prices,
-                    client names, or legal outcomes.
+                    {{ $copy['assistant']['body'] }}
                 </p>
-                <button type="button" class="btn btn--primary btn--sm" data-open-chat>Open the assistant</button>
+                <button type="button" class="btn btn--primary btn--sm" data-open-chat>{{ $copy['assistant']['button'] }}</button>
             </div>
 
             <p class="small muted s1">{{ $note }}</p>
@@ -88,10 +87,10 @@
 
     <section class="cta-band">
         <div class="shell cta-inner">
-            <h2>Ready for a real answer about your HR stack?</h2>
+            <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
-                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">Book the free audit</a>
-                <a href="{{ route('student-hub') }}" class="btn btn--outline-light">Try the student tools</a>
+                <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
+                <a href="{{ route('student-hub') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

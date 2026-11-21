@@ -511,6 +511,11 @@
     color: var(--slate-500);
 }
 
+/* Detail line under each score bar. */
+.bar-row .bar-detail {
+    margin: 0.35rem 0 0;
+}
+
 .bar {
     height: 8px;
     border-radius: var(--radius-pill);
@@ -561,6 +566,13 @@
 }
 
 .resume-form { display: grid; gap: var(--s-4); }
+
+.resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+}
 
 .repeat-list { display: grid; gap: var(--s-3); }
 
@@ -724,7 +736,7 @@
 
 .result-block + .result-block { margin-top: var(--s-3); }
 
-.result-block h4 {
+.result-block h3, .result-block h4 {
     font-family: var(--font-mono);
     font-size: 0.64rem;
     letter-spacing: 0.12em;

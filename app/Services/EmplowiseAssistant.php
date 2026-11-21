@@ -21,11 +21,12 @@ final class EmplowiseAssistant
 
     /**
      * @param  array<int, array{role: string, content: string}>  $history
-     * @return array{reply: string, intent: string, model: string, source: string}
+     * @return array{reply: string, intent: string, model: string, source: string, suggestions: array<int, array{label: string, query: string}>}
      */
-    public function reply(string $message, array $history = []): array
+    public function reply(string $message, array $history = [], string $previousIntent = ''): array
     {
-        $intent = $this->detectIntent($message);
+        $intent = $this->detectIntent($message, $previousIntent);
+        $suggestions = $this->suggestions($intent);
 
         if (! $this->client->configured()) {
             return [
@@ -33,6 +34,7 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => 'local-rules',
                 'source' => 'fallback',
+                'suggestions' => $suggestions,
             ];
         }
 
@@ -50,6 +52,7 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => $result['model'],
                 'source' => 'model',
+                'suggestions' => $suggestions,
             ];
         } catch (RuntimeException) {
             return [
@@ -57,35 +60,131 @@ final class EmplowiseAssistant
                 'intent' => $intent,
                 'model' => 'local-rules',
                 'source' => 'fallback',
+                'suggestions' => $suggestions,
             ];
         }
     }
 
-    public function detectIntent(string $message): string
+    /**
+     * Score every intent and take the best match. First-match rules lose
+     * mixed messages such as "how much is the free audit", so phrases count
+     * double and the previous turn acts as a weak prior for follow-ups.
+     */
+    public function detectIntent(string $message, string $previousIntent = ''): string
     {
         $text = Str::lower(trim($message));
+        $words = preg_split('/\s+/', $text) ?: [];
+        $wordCount = count(array_filter($words));
 
-        return match (true) {
-            Str::contains($text, ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye']) => 'thanks',
-            Str::contains($text, ['price', 'cost', 'pkr', 'package', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee']) => 'pricing',
-            Str::contains($text, ['foundation', 'growth', 'scale', 'legacy', 'replit', 'old tier']) => 'legacy',
-            Str::contains($text, ['pending input', 'pending', 'tbd', 'not disclosed', 'unclear', 'not confirmed']) => 'pending',
-            Str::contains($text, ['audit', 'free hr', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started']) => 'audit',
-            Str::contains($text, ['student', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin']) => 'student',
-            Str::contains($text, ['resume', 'cv', 'ats', 'interview', 'cover letter']) => 'tools',
-            Str::contains($text, ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document']) => 'payroll',
-            Str::contains($text, ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr']) => 'performance',
-            Str::contains($text, ['policy', 'policies', 'sop', 'compliance', 'legal', 'contract', 'labour', 'labor']) => 'policy',
-            Str::contains($text, ['service', 'services', 'what do you do', 'what you do', 'recruit', 'hr support', 'offer']) => 'services',
-            Str::contains($text, ['contact', 'email', 'phone', 'whatsapp', 'reach you', 'number', 'inbox', 'address', 'office']) => 'contact',
-            Str::contains($text, ['job', 'career', 'hiring me', 'apply', 'vacancy', 'open role']) => 'careers',
-            Str::contains($text, ['why', 'different', 'better than', 'vs ', 'instead of', 'in-house', 'in house', 'whey']) => 'why',
-            Str::contains($text, ['who are you', 'who is', 'about you', 'about emplowise', 'what is emplowise', 'your team', 'founder', 'ceo', 'company']) => 'who',
-            Str::contains($text, ['where', 'location', 'based', 'city', 'onsite', 'on-site', 'pakistan', 'remote', 'international']) => 'where',
-            Str::contains($text, ['when', 'timeline', 'how soon', 'start date', 'how long', 'duration', 'notice period']) => 'when',
-            preg_match('/\b(hi|hello|hey|salam|assalam|yo|sup)\b/', $text) === 1 && Str::wordCount($text) <= 5 => 'greeting',
-            default => 'general',
-        };
+        $rules = [
+            'thanks' => ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye'],
+            'pricing' => ['price', 'pricing', 'cost', 'pkr', 'package', 'packages', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee', 'per month'],
+            'pending' => ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed'],
+            'audit' => ['audit', 'free hr', 'free audit', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started'],
+            'student' => ['student', 'student hub', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
+            'tools' => ['resume', 'cv', 'ats', 'interview', 'cover letter'],
+            'payroll' => ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document'],
+            'performance' => ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr'],
+            'policy' => ['policy', 'policies', 'sop', 'compliance', 'legal', 'contract', 'labour', 'labor'],
+            'services' => ['service', 'services', 'what do you do', 'what you do', 'recruit', 'hr support', 'offer'],
+            'contact' => ['contact', 'email', 'phone', 'whatsapp', 'reach you', 'number', 'inbox', 'address', 'office'],
+            'careers' => ['job', 'career', 'hiring me', 'apply', 'vacancy', 'open role'],
+            'why' => ['why', 'different', 'better than', 'vs', 'instead of', 'in-house', 'in house'],
+            'who' => ['who are you', 'who is', 'about you', 'about emplowise', 'what is emplowise', 'your team', 'founder', 'ceo', 'company'],
+            'where' => ['where', 'location', 'based', 'city', 'onsite', 'on-site', 'pakistan', 'remote', 'international'],
+            'when' => ['when', 'timeline', 'how soon', 'start date', 'how long', 'duration', 'notice period'],
+        ];
+
+        if ($wordCount <= 5) {
+            $rules['greeting'] = ['hi', 'hello', 'hey', 'salam', 'assalam', 'yo', 'sup'];
+        }
+
+        $scores = [];
+
+        foreach ($rules as $intent => $phrases) {
+            $score = 0.0;
+
+            foreach ($phrases as $phrase) {
+                $pattern = str_contains($phrase, ' ')
+                    ? '/'.preg_quote($phrase, '/').'/'
+                    : '/\b'.preg_quote($phrase, '/').'\b/';
+
+                if (preg_match($pattern, $text) === 1) {
+                    $score += str_contains($phrase, ' ') ? 2.0 : 1.0;
+                }
+            }
+
+            if ($score > 0) {
+                $scores[$intent] = $score;
+            }
+        }
+
+        if ($previousIntent !== '' && isset($rules[$previousIntent])) {
+            $scores[$previousIntent] = ($scores[$previousIntent] ?? 0) + ($wordCount <= 8 ? 0.9 : 0.4);
+        }
+
+        if ($scores === []) {
+            return 'general';
+        }
+
+        arsort($scores);
+        $intents = array_keys($scores);
+        $top = $scores[$intents[0]];
+        $second = count($intents) > 1 ? $scores[$intents[1]] : 0.0;
+
+        // A near tie means the message could belong to either intent, so ask
+        // rather than guessing. The previous turn breaks the tie when it can.
+        if ($second > 0 && ($top - $second) < 0.5) {
+            if ($previousIntent !== '' && isset($scores[$previousIntent]) && $scores[$previousIntent] === $top) {
+                return $previousIntent;
+            }
+
+            return 'general';
+        }
+
+        return $intents[0];
+    }
+
+    /**
+     * @return array<int, array{label: string, query: string}>
+     */
+    private function suggestions(string $intent): array
+    {
+        $groups = [
+            'pricing' => [
+                ['label' => 'What is included', 'query' => 'What is included in the packages?'],
+                ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+                ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+            ],
+            'student' => [
+                ['label' => 'ATS score', 'query' => 'How does the ATS score work?'],
+                ['label' => 'Mock interview', 'query' => 'How does the mock interview tool work?'],
+                ['label' => 'Resume builder', 'query' => 'Is the resume builder free?'],
+            ],
+            'tools' => [
+                ['label' => 'Student Hub', 'query' => 'What is in the Student Hub?'],
+                ['label' => 'Prompt library', 'query' => 'What is in the prompt library?'],
+                ['label' => 'Profile help', 'query' => 'Can you help with my LinkedIn profile?'],
+            ],
+            'contact' => [
+                ['label' => 'Free audit', 'query' => 'How do I book the free HR audit?'],
+                ['label' => 'Where you are', 'query' => 'Where is Emplowise based?'],
+                ['label' => 'Who you are', 'query' => 'Who is Emplowise?'],
+            ],
+            'careers' => [
+                ['label' => 'Student Hub', 'query' => 'What free help do you offer students?'],
+                ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+                ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+            ],
+        ];
+
+        $fallback = [
+            ['label' => 'Pricing', 'query' => 'What do the packages cost?'],
+            ['label' => 'Services', 'query' => 'Which HR services do you run?'],
+            ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
+        ];
+
+        return $groups[$intent] ?? $fallback;
     }
 
     private function systemPrompt(): string
@@ -106,7 +205,7 @@ You are a Gen Z HR bestie: warm, quick, a little playful. Short sentences. Lower
 HARD RULES
 1. Use only the verified facts below. Never invent prices, clients, results, savings, package inclusions, or timelines.
 2. Pricing is exact. Starter is PKR 40,000 per month for up to 20 employees. Business is PKR 75,000 per month for up to 50 employees. Enterprise is custom for 50 or more employees.
-3. Package inclusions, recruitment fee terms, payroll tax and disbursement scope, legal qualifications, and representative allocation are Pending Input. Say so plainly. Never guess.
+3. Package inclusions, recruitment fee terms, payroll tax and disbursement scope, legal qualifications, and representative allocation are confirmed in writing after the free HR audit. Say so plainly. Never guess.
 4. Never promise legal compliance, guaranteed productivity, conflict elimination, or board authority.
 5. Never call Emplowise the cheapest. Never describe the platform as proprietary AI software.
 6. If the question needs a real scoping conversation, point to the Free HR Audit at /free-hr-audit.
@@ -119,7 +218,7 @@ Packages: {$packages}.
 Confirmed services: {$services}.
 Method: Assess, Identify, Improve, Review.
 Student hub: five free tools. Interview prep, ATS score, resume builder, profile optimizer, prompt library. No account needed.
-Pending Input: {$pending}.
+Confirmed in writing after the free HR audit: {$pending}.
 Guardrails: no invented metrics, no client names, no guarantees, no board authority.
 PROMPT;
     }
@@ -179,25 +278,24 @@ PROMPT;
     private function fallbackReply(string $intent): string
     {
         return match ($intent) {
-            'pricing' => "Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are Pending Input, so the audit scopes them.",
-            'legacy' => "The 2025 Replit export listed Foundation at PKR 40,000, Growth at PKR 65,000, and Scale at PKR 100,000.\nThose three tiers are not sold on this site.\nCurrent packages are Starter, Business, and Enterprise.",
+            'pricing' => "Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.",
             'audit' => "The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.",
             'student' => "Student Hub is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /student-hub and pick a tool.",
             'tools' => "The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub.",
-            'payroll' => "Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are Pending Input.\nSo we confirm those in writing before work starts.",
-            'performance' => "Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is Pending Input.\nThe review cycle stays yours, we run the structure.",
-            'policy' => "Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is Pending Input.",
+            'payroll' => "Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.",
+            'performance' => "Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.",
+            'policy' => "Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is confirmed in writing after the free HR audit.",
             'services' => "Confirmed scope: recruitment, onboarding, records, leave and attendance, policies, payroll, compliance support, performance, employee relations, reporting, consultation, assessments, and a dedicated HR rep.\nAll of it is delivered remote.",
-            'pending' => "Pending Input means not confirmed yet: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe publish them as open rather than guessing.\nThe audit pins each one down in writing.",
-            'contact' => "The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are Pending Input.\nUse /free-hr-audit and we reply from there.",
-            'careers' => "Open roles are Pending Input and nothing is published on this site yet.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.",
+            'pending' => "Some details are confirmed in writing after the free HR audit: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe list them as open rather than guessing.\nThe audit pins each one down.",
+            'contact' => "The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are confirmed in writing after the free HR audit.\nUse /free-hr-audit and we reply from there.",
+            'careers' => "Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.",
             'why' => "We sit between informal help and a full enterprise HR department.\nConfirmed structure, published prices, and a named HR representative.\nEvery process you get is documented, not improvised.\nWe do not promise legal outcomes or invented savings.",
             'who' => "Emplowise HR Services does remote HR outsourcing for startups and SMEs in Pakistan.\nConsultants backed by specialist support, plus a dedicated HR representative.\nDirect access to your CEO or founder is part of the model.",
             'where' => "We are based in Pakistan and deliver fully remote.\nThere is no walk-in office in this build.\nInternational expansion is planned long term, not live yet.",
-            'when' => "The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are Pending Input.",
+            'when' => "The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are confirmed in writing after the free HR audit.",
             'greeting' => "hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the Student Hub.\nI keep it short and never invent numbers.",
             'thanks' => "Anytime.\nIf you want a real scope, the audit at /free-hr-audit is the next step.",
-            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I say Pending Input.",
+            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I point you to the free audit.",
         };
     }
 }

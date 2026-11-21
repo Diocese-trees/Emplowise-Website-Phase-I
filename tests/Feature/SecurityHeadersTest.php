@@ -48,6 +48,42 @@ class SecurityHeadersTest extends TestCase
         $secure->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     }
 
+    public function test_shipped_config_sends_the_full_preload_header_over_https(): void
+    {
+        $this->get('https://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
+    public function test_preload_keeps_include_subdomains_when_it_is_switched_off(): void
+    {
+        config([
+            'security.hsts.include_subdomains' => false,
+            'security.hsts.preload' => true,
+        ]);
+
+        $this->get('https://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
+    public function test_hsts_is_sent_when_a_trusted_proxy_terminates_https(): void
+    {
+        $this->withHeaders(['X-Forwarded-Proto' => 'https'])
+            ->get('http://localhost/')
+            ->assertHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+
+    public function test_strict_policy_has_no_inline_escapes(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $response = $this->get('/')->assertOk();
+        $policy = (string) $response->headers->get('Content-Security-Policy');
+
+        $this->assertStringNotContainsString("'unsafe-inline'", $policy);
+        $this->assertStringNotContainsString("'unsafe-eval'", $policy);
+        $this->assertStringNotContainsString('style=', (string) $response->getContent());
+    }
+
     public function test_baseline_headers_are_present(): void
     {
         $response = $this->get('/');
@@ -56,5 +92,34 @@ class SecurityHeadersTest extends TestCase
         $response->assertHeader('X-Frame-Options', 'DENY');
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->assertHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    }
+
+    public function test_frame_headers_do_not_contradict_the_csp_directive(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $response = $this->get('/')->assertOk();
+        $policy = (string) $response->headers->get('Content-Security-Policy');
+
+        $this->assertStringContainsString("frame-ancestors 'none'", $policy);
+        $this->assertSame('DENY', $response->headers->get('X-Frame-Options'));
+    }
+
+    public function test_every_public_page_denies_framing(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $paths = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+
+        foreach ($paths as $path) {
+            $response = $this->get($path)->assertOk();
+
+            $response->assertHeader('X-Frame-Options', 'DENY');
+            $this->assertStringContainsString(
+                "frame-ancestors 'none'",
+                (string) $response->headers->get('Content-Security-Policy'),
+                $path.' is missing frame-ancestors'
+            );
+        }
     }
 }

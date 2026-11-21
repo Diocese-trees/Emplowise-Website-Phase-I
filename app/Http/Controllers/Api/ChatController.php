@@ -18,6 +18,7 @@ final class ChatController extends Controller
         $validated = $request->validate([
             'message' => ['required', 'string', 'min:2', 'max:800'],
             'session_id' => ['nullable', 'string', 'max:64'],
+            'previous_intent' => ['nullable', 'string', 'max:32'],
             'history' => ['nullable', 'array', 'max:8'],
             'history.*.role' => ['required_with:history', 'string', 'in:user,assistant'],
             'history.*.content' => ['required_with:history', 'string', 'max:800'],
@@ -31,7 +32,7 @@ final class ChatController extends Controller
             $validated['history'] ?? [],
         );
 
-        $result = $assistant->reply($message, $history);
+        $result = $assistant->reply($message, $history, (string) ($validated['previous_intent'] ?? ''));
 
         ChatMessage::query()->create([
             'session_id' => $sessionId,
@@ -55,6 +56,7 @@ final class ChatController extends Controller
             'intent' => $result['intent'],
             'model' => $result['model'],
             'source' => $result['source'],
+            'suggestions' => $result['suggestions'],
         ]);
     }
 }

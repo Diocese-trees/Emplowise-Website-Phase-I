@@ -11,6 +11,8 @@ final class SiteController extends Controller
     public function home(): View
     {
         return view('pages.home', [
+            'seo' => config('emplowise.seo.home'),
+            'copy' => config('emplowise.copy.home'),
             'brand' => config('emplowise.brand'),
             'pillars' => config('emplowise.pillars'),
             'methodology' => config('emplowise.methodology'),
@@ -22,6 +24,8 @@ final class SiteController extends Controller
     public function whatWeAre(): View
     {
         return view('pages.what-we-are', [
+            'seo' => config('emplowise.seo.what-we-are'),
+            'copy' => config('emplowise.copy.what-we-are'),
             'brand' => config('emplowise.brand'),
             'mission' => config('emplowise.mission'),
             'values' => config('emplowise.values'),
@@ -35,6 +39,8 @@ final class SiteController extends Controller
         $services = collect(config('emplowise.services'))->groupBy('pillar');
 
         return view('pages.what-we-do', [
+            'seo' => config('emplowise.seo.what-we-do'),
+            'copy' => config('emplowise.copy.what-we-do'),
             'pillars' => config('emplowise.pillars'),
             'servicesByPillar' => $services,
             'methodology' => config('emplowise.methodology'),
@@ -46,9 +52,10 @@ final class SiteController extends Controller
     public function pricing(): View
     {
         return view('pages.pricing', [
+            'seo' => config('emplowise.seo.pricing'),
+            'copy' => config('emplowise.copy.pricing'),
             'packages' => config('emplowise.packages'),
             'notes' => config('emplowise.pricing_notes'),
-            'legacy' => config('emplowise.legacy_pricing'),
             'services' => config('emplowise.services'),
         ]);
     }
@@ -56,6 +63,8 @@ final class SiteController extends Controller
     public function studentHub(): View
     {
         return view('pages.student-hub', [
+            'seo' => config('emplowise.seo.student-hub'),
+            'copy' => config('emplowise.copy.student-hub'),
             'student' => config('emplowise.student'),
             'brand' => config('emplowise.brand'),
         ]);
@@ -66,6 +75,8 @@ final class SiteController extends Controller
         $groups = config('emplowise.faqs');
 
         return view('pages.faq', [
+            'seo' => config('emplowise.seo.faq'),
+            'copy' => config('emplowise.copy.faq'),
             'groups' => $groups,
             'total' => collect($groups)->sum(fn (array $group): int => count($group['items'])),
             'note' => config('emplowise.faq_note'),
@@ -75,6 +86,8 @@ final class SiteController extends Controller
     public function audit(): View
     {
         return view('pages.audit', [
+            'seo' => config('emplowise.seo.free-hr-audit'),
+            'copy' => config('emplowise.copy.free-hr-audit'),
             'packages' => config('emplowise.packages'),
             'headcountBands' => [
                 '1-10' => '1 to 10 people',
