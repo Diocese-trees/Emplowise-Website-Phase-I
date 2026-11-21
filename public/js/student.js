@@ -513,6 +513,9 @@
     if (resumeForm) {
         const expList = el('exp-list');
         const eduList = el('edu-list');
+        const saveStatus = el('resume-save');
+        const DRAFT_KEY = 'emplowise_resume_draft_v1';
+        let saveTimer = null;
 
         function expTemplate() {
             const item = document.createElement('div');
@@ -542,22 +545,36 @@
             return item;
         }
 
-        function addExp() {
+        function addExp(row) {
             if (!expList) return;
-            expList.appendChild(expTemplate());
+            const item = expTemplate();
+            const data = row || {};
+            const fields = { '.exp-role': data.role, '.exp-company': data.company, '.exp-dates': data.dates, '.exp-bullets': data.bullets };
+            Object.keys(fields).forEach(function (selector) {
+                const input = item.querySelector(selector);
+                if (input && fields[selector]) input.value = fields[selector];
+            });
+            expList.appendChild(item);
             renderResume();
         }
 
-        function addEdu() {
+        function addEdu(row) {
             if (!eduList) return;
-            eduList.appendChild(eduTemplate());
+            const item = eduTemplate();
+            const data = row || {};
+            const fields = { '.edu-degree': data.degree, '.edu-school': data.school, '.edu-dates': data.dates, '.edu-detail': data.detail };
+            Object.keys(fields).forEach(function (selector) {
+                const input = item.querySelector(selector);
+                if (input && fields[selector]) input.value = fields[selector];
+            });
+            eduList.appendChild(item);
             renderResume();
         }
 
         const addExpBtn = el('add-exp');
         const addEduBtn = el('add-edu');
-        if (addExpBtn) addExpBtn.addEventListener('click', addExp);
-        if (addEduBtn) addEduBtn.addEventListener('click', addEdu);
+        if (addExpBtn) addExpBtn.addEventListener('click', function () { addExp(); scheduleSave(); });
+        if (addEduBtn) addEduBtn.addEventListener('click', function () { addEdu(); scheduleSave(); });
 
         [expList, eduList].forEach(function (list) {
             if (!list) return;
@@ -567,6 +584,7 @@
                 const item = remove.closest('.repeat-item');
                 if (item) item.remove();
                 renderResume();
+                scheduleSave();
             });
         });
 
@@ -612,6 +630,110 @@
                 };
             });
         }
+
+        function collectDraft() {
+            return {
+                fields: {
+                    name: value('name'),
+                    title: value('title'),
+                    email: value('email'),
+                    phone: value('phone'),
+                    location: value('location'),
+                    linkedin: value('linkedin'),
+                    summary: value('summary'),
+                    skills: value('skills')
+                },
+                experience: expData(),
+                education: eduData()
+            };
+        }
+
+        function hasContent(draft) {
+            if (!draft) return false;
+            const fields = draft.fields || {};
+            const filled = Object.keys(fields).some(function (key) { return (fields[key] || '').trim() !== ''; });
+            const rows = (draft.experience || []).concat(draft.education || []);
+            const rowData = rows.some(function (row) {
+                return Object.keys(row).some(function (key) { return (row[key] || '').trim() !== ''; });
+            });
+            return filled || rowData;
+        }
+
+        function persist() {
+            try {
+                window.localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft()));
+                if (saveStatus) saveStatus.textContent = 'Saved in this browser.';
+            } catch (error) {
+                if (saveStatus) saveStatus.textContent = 'Local saving is blocked here. Copy or download before you leave.';
+            }
+        }
+
+        function scheduleSave() {
+            window.clearTimeout(saveTimer);
+            saveTimer = window.setTimeout(persist, 400);
+        }
+
+        function readDraft() {
+            try {
+                const raw = window.localStorage.getItem(DRAFT_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function clearRows() {
+            if (expList) expList.innerHTML = '';
+            if (eduList) eduList.innerHTML = '';
+        }
+
+        function applyDraft(draft) {
+            if (!draft) return false;
+
+            const fields = draft.fields || {};
+            Object.keys(fields).forEach(function (name) {
+                const input = resumeForm.querySelector('[data-rp="' + name + '"]');
+                if (input) input.value = fields[name] || '';
+            });
+
+            clearRows();
+            (draft.experience || []).forEach(function (row) { addExp(row); });
+            (draft.education || []).forEach(function (row) { addEdu(row); });
+            if (!draft.experience || !draft.experience.length) addExp();
+            if (!draft.education || !draft.education.length) addEdu();
+            renderResume();
+
+            return true;
+        }
+
+        const EXAMPLE = {
+            fields: {
+                name: 'Ayesha Khan',
+                title: 'Data Analyst',
+                email: 'ayesha@example.com',
+                phone: '+92 300 1234567',
+                location: 'Karachi, Pakistan',
+                linkedin: 'linkedin.com/in/ayesha',
+                summary: 'Data analyst with hands on SQL, Excel, and Python work. I clean messy data, document the method, and turn findings into decisions a team can act on. Looking for an analyst role with clear ownership.',
+                skills: 'SQL, Python, Excel, Power BI, data cleaning, stakeholder communication'
+            },
+            experience: [
+                {
+                    role: 'Data Analyst Intern',
+                    company: 'Northline',
+                    dates: 'Jun 2025 to Aug 2025',
+                    bullets: "Built SQL reports for three teams, cutting manual reporting by 6 hours a week\nCleaned a 40,000 row dataset and wrote the data dictionary\nPresented weekly findings to two product managers"
+                }
+            ],
+            education: [
+                {
+                    degree: 'BS Computer Science',
+                    school: 'IBA Karachi',
+                    dates: '2022 to 2026',
+                    detail: 'Coursework: databases, statistics, information systems'
+                }
+            ]
+        };
 
         function renderResume() {
             const name = value('name') || 'Your Name';
@@ -755,7 +877,10 @@
             return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
         }
 
-        resumeForm.addEventListener('input', renderResume);
+        resumeForm.addEventListener('input', function () {
+            renderResume();
+            scheduleSave();
+        });
 
         const printBtn = el('resume-print');
         if (printBtn) {
@@ -790,9 +915,44 @@
             });
         }
 
-        addExp();
-        addEdu();
-        renderResume();
+        const exampleBtn = el('resume-example');
+        if (exampleBtn) {
+            exampleBtn.addEventListener('click', function () {
+                if (hasContent(collectDraft()) && !window.confirm('Replace the current draft with the example?')) return;
+                applyDraft(EXAMPLE);
+                persist();
+                toast('Example loaded. Swap in your own facts.');
+            });
+        }
+
+        const clearBtn = el('resume-clear');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                if (!window.confirm('Clear the saved draft and empty the form?')) return;
+                try {
+                    window.localStorage.removeItem(DRAFT_KEY);
+                } catch (error) {
+                    /* storage can be blocked; the form still clears */
+                }
+                resumeForm.querySelectorAll('[data-rp]').forEach(function (input) {
+                    input.value = '';
+                });
+                clearRows();
+                addExp();
+                addEdu();
+                renderResume();
+                if (saveStatus) saveStatus.textContent = 'Draft cleared.';
+                toast('Draft cleared from this browser.');
+            });
+        }
+
+        if (applyDraft(readDraft())) {
+            if (saveStatus) saveStatus.textContent = 'Draft restored from this browser.';
+        } else {
+            addExp();
+            addEdu();
+            renderResume();
+        }
     }
 
     // -----------------------------------------------------------------

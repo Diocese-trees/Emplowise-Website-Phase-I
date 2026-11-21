@@ -567,6 +567,13 @@
 
 .resume-form { display: grid; gap: var(--s-4); }
 
+.resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+}
+
 .repeat-list { display: grid; gap: var(--s-3); }
 
 .repeat-item {

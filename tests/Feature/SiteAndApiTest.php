@@ -52,6 +52,15 @@ final class SiteAndApiTest extends TestCase
         $home->assertDontSee('js/student.js', false);
     }
 
+    public function test_resume_builder_offers_draft_recovery_controls(): void
+    {
+        $this->get('/student-hub')
+            ->assertOk()
+            ->assertSee('Load example')
+            ->assertSee('Clear draft')
+            ->assertSee('The draft saves in this browser only.');
+    }
+
     public function test_print_stylesheet_is_non_blocking_and_scripts_defer(): void
     {
         $hub = (string) $this->get('/student-hub')->assertOk()->getContent();

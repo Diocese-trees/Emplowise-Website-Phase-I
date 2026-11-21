@@ -316,6 +316,13 @@
                             <textarea class="s26" id="res-skills" data-rp="skills" autocomplete="off" enterkeyhint="done" placeholder="Excel, SQL, Python, stakeholder communication" maxlength="400"></textarea>
                             <span class="hint">{{ $copy['resume']['skills_hint'] }}</span>
                         </div>
+
+                        <div class="resume-actions">
+                            <button type="button" class="btn btn--ghost btn--sm" id="resume-example">{{ $copy['resume']['example'] }}</button>
+                            <button type="button" class="btn btn--ghost btn--sm" id="resume-clear">{{ $copy['resume']['clear'] }}</button>
+                            <span class="small muted" id="resume-save" role="status"></span>
+                        </div>
+                        <p class="hint">{{ $copy['resume']['save_note'] }}</p>
                     </form>
 
                     <div class="resume-preview-wrap">

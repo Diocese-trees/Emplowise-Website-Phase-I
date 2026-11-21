@@ -884,6 +884,9 @@ return [
                 'preview_note' => 'Print it, save it as PDF, or copy the plain text into any application form.',
                 'add_role' => 'Add role',
                 'add_education' => 'Add education',
+                'example' => 'Load example',
+                'clear' => 'Clear draft',
+                'save_note' => 'The draft saves in this browser only. Clear it any time, and nothing is sent to a server.',
                 'skills_hint' => 'Comma separated. Use the exact tool names from the job posting.',
                 'form' => [
                     'name' => 'Full name',
