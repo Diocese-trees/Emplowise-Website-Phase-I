@@ -5,8 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#081B3E">
-    <title>@yield('title', 'Emplowise | Remote HR Solutions for Growing Businesses')</title>
-    <meta name="description" content="@yield('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free student career toolkit.')">
+    @php
+        $pageTitle = trim($__env->yieldContent('title', 'Emplowise | Remote HR Solutions for Growing Businesses'));
+        $pageDescription = trim($__env->yieldContent('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free student career toolkit.'));
+        $pageUrl = url()->current();
+        $offers = collect(config('emplowise.packages'))->map(fn ($package) => [
+            '@type' => 'Offer',
+            'name' => $package['name'],
+            'description' => $package['capacity'].'. '.$package['summary'],
+            'priceCurrency' => 'PKR',
+            'price' => $package['price_pkr'] ?? 'Custom',
+            'url' => route('pricing'),
+        ])->values()->all();
+        $schema = [
+            '@type' => ['Organization', 'ProfessionalService'],
+            'name' => config('emplowise.brand.legal_name'),
+            'url' => url('/'),
+            'description' => config('emplowise.mission.statement'),
+            'areaServed' => ['@type' => 'Country', 'name' => config('emplowise.brand.market')],
+            'knowsAbout' => array_column(config('emplowise.services'), 'name'),
+            'hasOfferCatalog' => [
+                '@type' => 'OfferCatalog',
+                'name' => 'Emplowise monthly retainers',
+                'itemListElement' => $offers,
+            ],
+        ];
+        $graph = [$schema];
+        if (request()->routeIs('faq')) {
+            $graph[] = [
+                '@type' => 'FAQPage',
+                'mainEntity' => collect(config('emplowise.faqs'))->flatMap(fn ($group) => $group['items'])
+                    ->map(fn ($item) => [
+                        '@type' => 'Question',
+                        'name' => $item['q'],
+                        'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['a']],
+                    ])->values()->all(),
+            ];
+        }
+        $document = ['@context' => 'https://schema.org', '@graph' => $graph];
+    @endphp
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
+    <link rel="canonical" href="{{ $pageUrl }}">
+
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $pageUrl }}">
+    <meta property="og:site_name" content="Emplowise">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
 
     <link rel="icon" type="image/png" href="{{ asset_v('favicon.png') }}">
     <link rel="preload" href="/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,6 +70,9 @@
     @stack('styles')
     <link rel="stylesheet" href="{{ asset_v('css/chat.css') }}">
     <link rel="stylesheet" href="{{ asset_v('css/inline.css') }}">
+    <script type="application/ld+json">
+        {!! json_encode($document, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -37,7 +89,7 @@
 <header class="site-header" id="site-header">
     <div class="shell header-inner">
         <a href="{{ route('home') }}" class="brand" aria-label="Emplowise home">
-            <img src="{{ asset_v('img/logo-primary.png') }}" alt="Emplowise" width="1056" height="270">
+            <img src="{{ asset_v('img/logo-primary.png') }}" alt="Emplowise" width="1056" height="270" fetchpriority="high">
         </a>
 
         <nav class="main-nav" id="main-nav" aria-label="Primary">
@@ -68,7 +120,7 @@
     <div class="shell">
         <div class="footer-top">
             <div class="footer-brand">
-                <img src="{{ asset_v('img/logo-reverse.png') }}" alt="Emplowise" width="1056" height="270">
+                <img src="{{ asset_v('img/logo-reverse.png') }}" alt="Emplowise" width="1056" height="270" loading="lazy">
                 <p class="footer-note">Remote HR solutions for growing businesses. Built on clarity, structure, and plain language.</p>
             </div>
 
@@ -105,7 +157,7 @@
 
         <div class="footer-bottom">
             <span>&copy; {{ date('Y') }} Emplowise HR Services. All rights reserved.</span>
-            <span>Unconfirmed commercial details are marked Pending Input. Nothing on this site is a legal or compliance guarantee.</span>
+            <span>Scope details are confirmed in writing after your Free HR Audit. Nothing on this site is a legal or compliance guarantee.</span>
         </div>
     </div>
 </footer>
