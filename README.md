@@ -3,10 +3,10 @@
 **Remote HR services website, grounded AI assistant and a free student career toolkit.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — static snapshot of all seven pages. The Laravel app adds the audit intake, AI-backed replies and CSP/HSTS headers.
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all seven pages are static HTML on GitHub Pages. The Student Hub scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
-[![Tests](https://img.shields.io/badge/tests-16%20passing-16a34a?style=flat-square)](#testing)
+[![Tests](https://img.shields.io/badge/tests-passing-16a34a?style=flat-square)](#testing)
 [![PHP](https://img.shields.io/badge/PHP-8.3-777bb4?style=flat-square)](composer.json)
 
 ![Emplowise home page](docs/screenshots/home.jpg)
@@ -21,7 +21,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | Student Hub | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
-| Delivery | 16 feature tests (102 assertions), Docker + Nginx + Apache configs, static export, single-file offline demo |
+| Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
 
 ### Screens
 
@@ -215,7 +215,7 @@ The Netlify bundle ships a `_headers` file with the same CSP and HSTS values, be
 4. **Profile optimizer** — optional target role, headline options, summary rewrite, bullet rewrites, quick fixes.
 5. **Prompt library** — searchable, category-filtered prompt cards with counts, clear search, copy one, and copy all visible.
 
-The resume builder and prompt library are entirely client-side. Resume drafts autosave to `localStorage` only, with a visible save state and a one-click clear; no draft text is sent to the server. Interview, ATS, and profile call the API and fall back locally, and answers are not stored in the database.
+The resume builder and prompt library are entirely client-side. Resume drafts autosave to `localStorage` only, with a visible save state and a one-click clear; no draft text is sent to the server. Interview, ATS, and profile call the API when it exists and otherwise run the bundled browser engines in `public/js/toolkit/`, which are ported from `StudentToolkit` and checked against committed PHP fixtures. Answers are not stored in the database, and on the static GitHub Pages build no answer ever leaves the browser.
 
 ---
 
@@ -292,18 +292,24 @@ app/
     AlibabaCloudClient.php      # primary → fallback → error
     EmplowiseAssistant.php      # system prompt, intent, local replies
     StudentToolkit.php          # local interview, ATS, profile algorithms
+  Console/Commands/
+    ExportStatic.php            # renders the public pages to static HTML
 config/
   ai.php                        # Alibaba Cloud connection settings
   emplowise.php                 # all business content
+  static.php                    # static base URL + Web3Forms key
 public/
   css/  tokens, base, layout, components, pages, chat, student, print
   js/   app.js (site + audit wizard), chat.js, student.js
+  js/toolkit/  interview.js, ats.js, profile.js (browser ports of StudentToolkit)
 resources/views/
   layouts/app.blade.php
   partials/chat.blade.php
   pages/*.blade.php
 routes/web.php
-tests/Feature/SiteAndApiTest.php
+tools/parity/                   # PHP-generated fixtures + Node parity harnesses
+tests/Feature/                  # page, API, header and static-export tests
+.github/workflows/              # publish-static.yml renders and pushes gh-pages
 ```
 
 Front-end conventions: design tokens in `tokens.css`; teal `#0D9488`, teal-deep `#0F766E`, navy `#081B3E`, aqua `#5EEAD4`, ice `#F0F9F9`, off-white `#F7F7F7`; Montserrat 700/800 for headings, Plus Jakarta Sans 400/500/600 for body; flat geometry, no gradients or drop shadows. All interactive components degrade gracefully without JavaScript.
@@ -316,7 +322,7 @@ Front-end conventions: design tokens in `tokens.css`; teal `#0D9488`, teal-deep 
 php artisan test
 ```
 
-Coverage in `tests/Feature/SiteAndApiTest.php`:
+Coverage in `tests/Feature/`:
 
 - every public page returns `200`
 - pricing shows Pending Input guardrails and the correct confirmed tiers
@@ -326,6 +332,16 @@ Coverage in `tests/Feature/SiteAndApiTest.php`:
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned
+- static export: seven pages, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+
+Browser-engine parity is checked separately, outside PHPUnit:
+
+```bash
+php tools/parity/generate.php          # regenerate fixtures from the PHP engines
+node tools/parity/check-interview.mjs
+node tools/parity/check-ats.mjs
+node tools/parity/check-profile.mjs
+```
 
 ---
 
@@ -349,6 +365,6 @@ port 8080 with migrations, config caches, and permissions handled at start-up.
 ## Known limitations
 
 - No authentication or admin UI. Audit submissions and chat transcripts are read directly from the database.
-- No email delivery: the audit reference is displayed on screen. Wire a notification job if email confirmation is required.
+- On the static build the booking form sends through Web3Forms (free tier: 250 submissions a month) instead of the database, so nothing is stored and the reference number is generated in the browser. Set `WEB3FORMS_ACCESS_KEY` before publishing, or the workflow refuses to deploy.
 - The AI path was exercised against the local fallback in this environment; supply a key and confirm the primary/fallback chain in staging before launch.
 - Client results and package inclusions stay Pending Input until the business supplies verified data.

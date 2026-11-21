@@ -1436,3 +1436,12 @@ mark {
 .faq-group {
     scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
+
+.not-found {
+    padding-block: var(--s-8);
+    max-width: 44rem;
+}
+
+.not-found h1 {
+    margin-bottom: var(--s-3);
+}

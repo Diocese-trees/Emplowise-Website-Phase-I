@@ -305,11 +305,15 @@
                         append('assistant', 'That message did not pass validation. Keep it under 800 characters and try again.');
                     } else if (result.status === 419) {
                         append('assistant', 'Your session expired. Reload the page and send that again.');
-                    } else if (result.status >= 500) {
+                    } else if (result.status >= 500 || result.status === 404 || result.status === 405 || result.status === 501) {
                         const intent = localIntent(message);
+                        const reply = clamp(localReply(message));
                         previousIntent = intent;
-                        append('assistant', clamp(localReply(message)));
+                        append('assistant', reply);
                         renderSuggestions(localSuggestions(intent));
+                        history.push({ role: 'user', content: message });
+                        history.push({ role: 'assistant', content: reply });
+                        history = history.slice(-8);
                     } else {
                         append('assistant', 'That request did not go through. Try once more.');
                     }
@@ -331,9 +335,13 @@
             .catch(function () {
                 hideTyping();
                 const intent = localIntent(message);
+                const reply = clamp(localReply(message));
                 previousIntent = intent;
-                append('assistant', clamp(localReply(message)));
+                append('assistant', reply);
                 renderSuggestions(localSuggestions(intent));
+                history.push({ role: 'user', content: message });
+                history.push({ role: 'assistant', content: reply });
+                history = history.slice(-8);
             })
             .finally(function () {
                 setBusy(false);

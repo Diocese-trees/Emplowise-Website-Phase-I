@@ -508,6 +508,7 @@
 
         const csrfMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+        const staticMode = form.getAttribute('data-audit-mode') === 'web3forms';
         const DRAFT_KEY = 'emplowise_audit_draft';
         const DRAFT_FIELDS = ['contact_name', 'company_name', 'email', 'phone', 'headcount_band', 'notes', 'preferred_date', 'preferred_slot'];
 
@@ -791,6 +792,16 @@
                 }
             }
 
+            // A preview build without a Web3Forms key cannot send anywhere, so
+            // stop before firing a request that is guaranteed to fail.
+            if (staticMode && auditForm.getAttribute('data-audit-nokey') === '1') {
+                if (status) {
+                    status.classList.add('is-error');
+                    status.textContent = 'Booking is not connected in this preview build.';
+                }
+                return;
+            }
+
             if (status) {
                 status.classList.remove('is-error', 'is-ok');
                 status.textContent = 'Sending your request…';
@@ -803,15 +814,17 @@
             }
 
             const data = new FormData(auditForm);
+            const headers = { 'Accept': 'application/json' };
+
+            if (!staticMode) {
+                headers['X-CSRF-TOKEN'] = csrfToken;
+            }
 
             fetch(auditForm.getAttribute('data-endpoint') || window.location.pathname.replace(/\/free-hr-audit\/?$/, '/api/audit'), {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
+                headers: headers,
                 body: data,
-                credentials: 'same-origin'
+                credentials: staticMode ? 'omit' : 'same-origin'
             })
                 .then(function (response) {
                     return response.json().catch(function () { return {}; }).then(function (body) {
@@ -819,16 +832,46 @@
                     });
                 })
                 .then(function (result) {
+                    if (result.body && result.body.success === false) {
+                        if (status) {
+                            status.classList.add('is-error');
+                            status.textContent = result.body.message || 'The form service rejected this request.';
+                        }
+                        return;
+                    }
+
                     if (result.ok) {
+                        let reference = result.body.reference;
+                        let preferredDate = result.body.preferred_date;
+                        let preferredSlot = result.body.preferred_slot;
+
+                        if (staticMode) {
+                            const dateField = auditForm.querySelector('[name="preferred_date"]');
+                            const slotField = auditForm.querySelector('[name="preferred_slot"]');
+                            const stamp = new Date();
+                            const ymd = String(stamp.getFullYear()).slice(-2)
+                                + String(stamp.getMonth() + 1).padStart(2, '0')
+                                + String(stamp.getDate()).padStart(2, '0');
+                            const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+                            reference = reference || ('EMP-' + ymd + '-' + suffix);
+                            preferredSlot = preferredSlot || (slotField ? slotField.value : '');
+                            if (!preferredDate && dateField && dateField.value) {
+                                const parsed = new Date(dateField.value + 'T00:00:00');
+                                preferredDate = isNaN(parsed.getTime())
+                                    ? dateField.value
+                                    : parsed.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                            }
+                        }
+
                         clearDraft();
                         if (document.getElementById('success-ref')) {
-                            document.getElementById('success-ref').textContent = result.body.reference || 'Reference pending';
+                            document.getElementById('success-ref').textContent = reference || 'Reference pending';
                         }
                         if (document.getElementById('success-date')) {
-                            document.getElementById('success-date').textContent = result.body.preferred_date || 'Pending';
+                            document.getElementById('success-date').textContent = preferredDate || 'Pending';
                         }
                         if (document.getElementById('success-slot')) {
-                            document.getElementById('success-slot').textContent = result.body.preferred_slot || 'Pending';
+                            document.getElementById('success-slot').textContent = preferredSlot || 'Pending';
                         }
                         auditForm.hidden = true;
                         if (success) {

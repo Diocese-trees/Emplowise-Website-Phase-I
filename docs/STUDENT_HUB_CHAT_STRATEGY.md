@@ -146,6 +146,23 @@ All eight commits are on `feat/student-hub-chat-upgrade` in the order above.
 C1–C7 are committed; C8 is the docs refresh that carries this status note.
 The test suite stood at 37 tests / 344 assertions when C7 landed.
 
+### Static-first follow-up
+
+The GitHub Pages build no longer depends on a backend:
+
+- `public/js/toolkit/interview.js`, `ats.js`, and `profile.js` are browser ports
+  of `StudentToolkit`, loaded only on the hub. Their output is checked against
+  PHP-generated fixtures with `tools/parity/check-*.mjs`.
+- `php artisan emplowise:export-static` renders the seven pages with the base
+  path applied, injects a CSP meta policy, strips the `#student-config` endpoint
+  URLs, and points the booking form at Web3Forms.
+- `.github/workflows/publish-static.yml` republishes `gh-pages` on every push to
+  `main`, so the demo cannot drift from the source again.
+- `student.js` and `chat.js` treat 404/405/5xx as "use the local engine", so an
+  accidental API call on a static host degrades instead of showing an error.
+
+Suite after the follow-up: 44 tests / 402 assertions.
+
 ## 5. Acceptance checks
 
 - `grep -R "style=" resources/views` returns nothing new.

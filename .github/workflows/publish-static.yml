@@ -1,0 +1,67 @@
+name: Publish static site
+
+# GitHub Pages can only serve static files, so this workflow renders the
+# Laravel pages to HTML and force-publishes them to the gh-pages branch.
+# Everything runs on free public-repo Actions minutes.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, curl, openssl, tokenizer, xml, ctype, json
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Prepare the environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          mkdir -p storage/framework/cache storage/framework/views bootstrap/cache
+
+      - name: Render the static site
+        env:
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          if [ -z "${WEB3FORMS_ACCESS_KEY}" ]; then
+            echo "::error::Add a WEB3FORMS_ACCESS_KEY repository secret so the booking form can send. Create a free key at https://web3forms.com and add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          OWNER_LOWER=$(printf '%s' "${OWNER}" | tr '[:upper:]' '[:lower:]')
+          php artisan emplowise:export-static build/static \
+            --base="https://${OWNER_LOWER}.github.io/${REPO}" \
+            --audit-key="${WEB3FORMS_ACCESS_KEY}"
+
+      - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd build/static
+          git init -q
+          git config user.name "Emplowise publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish static site from ${GITHUB_SHA}"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
