@@ -18,8 +18,19 @@
     const copy = (window.Emplowise && window.Emplowise.copy) ? window.Emplowise.copy : function () { return Promise.resolve(false); };
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const RING = 2 * Math.PI * 64;
+    const toolkit = window.EmplowiseToolkit || null;
 
     function el(id) { return document.getElementById(id); }
+
+    function localEngine(name) {
+        return toolkit && toolkit[name] ? toolkit[name] : null;
+    }
+
+    // A static host answers with 404 HTML, not JSON. Treat that, network
+    // failures, and any 5xx as "use the browser engine" rather than an error.
+    function useFallback(result) {
+        return !result || result.status === 0 || result.status === 404 || result.status >= 500;
+    }
 
     function setStatus(node, message, type) {
         if (!node) return;
@@ -261,6 +272,24 @@
             }
         }
 
+        function applyQuestions(data) {
+            state.questions = (data && data.questions) || [];
+            state.index = 0;
+            if (!state.questions.length) {
+                setStatus(status, 'No questions came back. Try a different role.', 'is-error');
+                return;
+            }
+            buildProgress();
+            renderQuestion();
+            setStatus(status, '');
+            if (sourceEl) sourceEl.textContent = sourceLabel(data.source);
+        }
+
+        function localQuestions() {
+            const engine = localEngine('interview');
+            return engine && engine.questions ? engine.questions(state.role, state.level) : null;
+        }
+
         function startSet() {
             if (state.busy) return;
             state.busy = true;
@@ -269,24 +298,36 @@
             setStatus(status, 'Preparing questions…');
             interviewStart.disabled = true;
 
+            const local = localQuestions();
+
+            if (!endpoints.questions) {
+                state.busy = false;
+                interviewStart.disabled = false;
+                if (local) {
+                    applyQuestions(local);
+                } else {
+                    setStatus(status, 'The question engine did not load. Reload the page and try again.', 'is-error');
+                }
+                return;
+            }
+
             postJson(endpoints.questions, { role: state.role, level: state.level })
                 .then(function (result) {
                     if (!result.ok) {
+                        if (local && useFallback(result)) {
+                            applyQuestions(local);
+                            return;
+                        }
                         setStatus(status, firstError(result.body) || 'Could not prepare questions. Try again.', 'is-error');
                         return;
                     }
-                    state.questions = result.body.questions || [];
-                    state.index = 0;
-                    if (!state.questions.length) {
-                        setStatus(status, 'No questions came back. Try a different role.', 'is-error');
-                        return;
-                    }
-                    buildProgress();
-                    renderQuestion();
-                    setStatus(status, '');
-                    if (sourceEl) sourceEl.textContent = sourceLabel(result.body.source);
+                    applyQuestions(result.body);
                 })
                 .catch(function () {
+                    if (local) {
+                        applyQuestions(local);
+                        return;
+                    }
                     setStatus(status, 'Network error while preparing questions.', 'is-error');
                 })
                 .finally(function () {
@@ -317,6 +358,22 @@
                     return;
                 }
 
+                const currentQuestion = state.questions[state.index];
+                const engine = localEngine('interview');
+                const local = engine && engine.feedback
+                    ? engine.feedback(state.role, state.level, currentQuestion, answer)
+                    : null;
+
+                if (!endpoints.feedback) {
+                    if (local) {
+                        setStatus(status, '');
+                        renderFeedback(local);
+                    } else {
+                        setStatus(status, 'The scoring engine did not load. Reload the page and try again.', 'is-error');
+                    }
+                    return;
+                }
+
                 state.busy = true;
                 submitBtn.disabled = true;
                 setStatus(status, 'Scoring your answer…');
@@ -324,11 +381,16 @@
                 postJson(endpoints.feedback, {
                     role: state.role,
                     level: state.level,
-                    question: state.questions[state.index],
+                    question: currentQuestion,
                     answer: answer
                 })
                     .then(function (result) {
                         if (!result.ok) {
+                            if (local && useFallback(result)) {
+                                setStatus(status, '');
+                                renderFeedback(local);
+                                return;
+                            }
                             setStatus(status, firstError(result.body) || 'Could not score that answer.', 'is-error');
                             return;
                         }
@@ -336,6 +398,11 @@
                         renderFeedback(result.body);
                     })
                     .catch(function () {
+                        if (local) {
+                            setStatus(status, '');
+                            renderFeedback(local);
+                            return;
+                        }
                         setStatus(status, 'Network error while scoring.', 'is-error');
                     })
                     .finally(function () {
@@ -484,9 +551,30 @@
             }
             setStatus(status, 'Scoring the match…');
 
+            function scoreLocally() {
+                const engine = localEngine('ats');
+                if (!engine || !engine.score) return false;
+                setStatus(status, '');
+                renderAts(engine.score(resume, jd));
+                return true;
+            }
+
+            if (!endpoints.ats) {
+                if (!scoreLocally()) {
+                    setStatus(status, 'The scoring engine did not load. Reload the page and try again.', 'is-error');
+                }
+                busy = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitLabel;
+                }
+                return;
+            }
+
             postJson(endpoints.ats, { resume: resume, job_description: jd })
                 .then(function (result) {
                     if (!result.ok) {
+                        if (useFallback(result) && scoreLocally()) return;
                         setStatus(status, firstError(result.body) || 'Could not score this resume.', 'is-error');
                         return;
                     }
@@ -494,6 +582,7 @@
                     renderAts(result.body);
                 })
                 .catch(function () {
+                    if (scoreLocally()) return;
                     setStatus(status, 'Network error while scoring.', 'is-error');
                 })
                 .finally(function () {
@@ -1026,15 +1115,37 @@
             }
             setStatus(status, 'Rewriting…');
 
+            function rewriteLocally() {
+                const engine = localEngine('profile');
+                if (!engine || !engine.optimize) return false;
+                setStatus(status, '');
+                renderProfile(engine.optimize(headline, summary, bullets, target));
+                return true;
+            }
+
+            if (!endpoints.profile) {
+                if (!rewriteLocally()) {
+                    setStatus(status, 'The rewriting engine did not load. Reload the page and try again.', 'is-error');
+                }
+                busy = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitLabel;
+                }
+                return;
+            }
+
             postJson(endpoints.profile, { target_role: target, headline: headline, summary: summary, bullets: bullets })
                 .then(function (result) {
                     if (!result.ok) {
+                        if (useFallback(result) && rewriteLocally()) return;
                         setStatus(status, firstError(result.body) || 'Could not rewrite this profile.', 'is-error');
                         return;
                     }
                     renderProfile(result.body);
                 })
                 .catch(function () {
+                    if (rewriteLocally()) return;
                     setStatus(status, 'Network error while rewriting.', 'is-error');
                 })
                 .finally(function () {

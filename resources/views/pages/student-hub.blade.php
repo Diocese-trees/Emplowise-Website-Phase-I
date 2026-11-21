@@ -480,5 +480,8 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset_v('js/toolkit/interview.js') }}" defer></script>
+    <script src="{{ asset_v('js/toolkit/ats.js') }}" defer></script>
+    <script src="{{ asset_v('js/toolkit/profile.js') }}" defer></script>
     <script src="{{ asset_v('js/student.js') }}" defer></script>
 @endpush
