@@ -8,7 +8,7 @@
     @php
         $ui = config('emplowise.copy.layout');
         $pageTitle = trim($__env->yieldContent('title', 'Emplowise | Remote HR Solutions for Growing Businesses'));
-        $pageDescription = trim($__env->yieldContent('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free student career toolkit.'));
+        $pageDescription = trim($__env->yieldContent('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free career toolkit for early career candidates.'));
         $pageUrl = url()->current();
         $offers = collect(config('emplowise.packages'))->map(fn ($package) => [
             '@type' => 'Offer',
@@ -16,7 +16,7 @@
             'description' => $package['capacity'].'. '.$package['summary'],
             'priceCurrency' => 'PKR',
             'price' => $package['price_pkr'] ?? 'Custom',
-            'url' => route('pricing'),
+            'url' => route('why-emplowise'),
         ])->values()->all();
         $schema = [
             '@type' => ['Organization', 'ProfessionalService'],
@@ -71,8 +71,8 @@
     $bodyClass = match (true) {
         request()->routeIs('home') => 'page-home',
         request()->routeIs('contact') => 'page-contact',
-        request()->routeIs('team') => 'page-team',
-        request()->routeIs('ai-automation') => 'page-ai',
+        request()->routeIs('what-we-are') => 'page-team',
+        request()->routeIs('what-we-are-building') => 'page-ai',
         default => '',
     };
 @endphp
@@ -96,13 +96,13 @@
 
         <nav class="main-nav" id="main-nav" aria-label="Primary">
             @foreach (config('emplowise.nav') as $item)
-                <a href="{{ route($item['route']) }}"
-                   class="nav-link {{ request()->routeIs($item['route']) ? 'is-current' : '' }}"
-                   @if (request()->routeIs($item['route'])) aria-current="page" @endif>
+                @php($hasHash = isset($item['hash']))
+                <a href="{{ route($item['route']) }}{{ $hasHash ? '#'.$item['hash'] : '' }}"
+                   class="nav-link {{ ! $hasHash && request()->routeIs($item['route']) ? 'is-current' : '' }}"
+                   @if (! $hasHash && request()->routeIs($item['route'])) aria-current="page" @endif>
                     {{ $item['label'] }}
                 </a>
             @endforeach
-            <a href="{{ route('free-hr-audit') }}" class="nav-link nav-link--cta">{{ $ui['nav_audit_label'] }}</a>
         </nav>
 
         <div class="header-actions">
@@ -124,39 +124,38 @@
             <div class="footer-brand">
                 <img src="{{ asset_v('img/logo-reverse.png') }}" alt="Emplowise" width="1056" height="270" loading="lazy">
                 <p class="footer-note">{{ $ui['footer_note'] }}</p>
+                <a href="{{ route('free-hr-audit') }}" class="footer-cta">{{ $ui['nav_audit_label'] }}</a>
             </div>
 
-            <div>
+            <nav class="footer-col" aria-label="{{ $ui['footer_company_title'] }}">
                 <p class="footer-title">{{ $ui['footer_company_title'] }}</p>
                 <div class="footer-links">
                     @foreach (config('emplowise.footer_company') as $item)
                         <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
                     @endforeach
                 </div>
-            </div>
+            </nav>
 
-            <div>
-                <p class="footer-title">{{ $ui['footer_student_title'] }}</p>
+            <nav class="footer-col" aria-label="{{ $ui['footer_resources_title'] }}">
+                <p class="footer-title">{{ $ui['footer_resources_title'] }}</p>
                 <div class="footer-links">
-                    @foreach ($ui['student_links'] as $link)
-                        <a href="{{ route('student-hub') }}#{{ $link['hash'] }}">{{ $link['label'] }}</a>
+                    @foreach (config('emplowise.footer_resources') as $item)
+                        <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
                     @endforeach
                 </div>
-            </div>
+            </nav>
 
-            <div>
+            <div class="footer-col footer-col--meta">
                 <p class="footer-title">{{ $ui['footer_start_title'] }}</p>
-                <div class="footer-links">
-                    <a href="{{ route('free-hr-audit') }}">{{ $ui['nav_audit_label'] }}</a>
-                    <span>{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</span>
-                    <span>{{ config('emplowise.brand.expansion') }}</span>
-                </div>
+                <p class="footer-meta">{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</p>
+                <p class="footer-meta">{{ config('emplowise.brand.expansion') }}</p>
+                <a class="footer-meta footer-mail" href="mailto:{{ config('emplowise.copy.contact.email') }}">{{ config('emplowise.copy.contact.email') }}</a>
             </div>
         </div>
 
         <div class="footer-bottom">
             <span>&copy; {{ date('Y') }} {{ config('emplowise.brand.legal_name') }}. {{ $ui['footer_rights'] }}</span>
-            <span>{{ $ui['footer_legal'] }}</span>
+            <span class="footer-legal">{{ $ui['footer_legal'] }}</span>
         </div>
     </div>
 </footer>

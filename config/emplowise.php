@@ -55,7 +55,7 @@ return [
             'h1' => 'An HR outsourcing company in Pakistan that answers directly.',
             'h1_accent' => 'that answers directly',
             'h2' => 'How an HR outsourcing company in Pakistan delivers.',
-            'intro' => 'Emplowise is an HR outsourcing company in Pakistan serving startups, SMEs, and early career candidates. We install the structure behind people operations and then run it, so founders stop acting as the HR helpdesk.',
+            'intro' => 'Emplowise is an HR outsourcing company in Pakistan and the remote HR team for startups and SMEs. We install the payroll, performance, and policy structure behind your people operations, then run it, so founders stop acting as the HR helpdesk.',
         ],
 
         // === PAGE: WHAT WE DO ===
@@ -67,31 +67,31 @@ return [
             'h1' => 'HR operations outsourcing across three confirmed pillars.',
             'h1_accent' => 'three confirmed pillars',
             'h2' => 'Fourteen services inside HR operations outsourcing.',
-            'intro' => 'Emplowise runs HR operations outsourcing for startups and SMEs in Pakistan, fully remote. Three pillars hold fourteen confirmed services, and every engagement follows the same four-stage method.',
+            'intro' => 'Emplowise runs HR operations outsourcing for startups and SMEs in Pakistan, fully remote. Fourteen confirmed services sit across three pillars, and every engagement follows the same four-stage method. Retainers start at PKR 40,000 a month.',
         ],
 
-        // === PAGE: PRICING ===
-        'pricing' => [
-            'primary_keyword' => 'HR outsourcing pricing in Pakistan',
-            'secondary_keywords' => ['HR retainer packages', 'headcount based pricing'],
-            'title' => 'HR Outsourcing Pricing in Pakistan: PKR 40,000 | Emplowise',
-            'description' => 'Emplowise pricing in Pakistan: Starter PKR 40,000 a month for up to 20 staff, Business PKR 75,000 for up to 50, Enterprise quoted above 50.',
-            'h1' => 'HR outsourcing pricing in Pakistan, published by headcount.',
-            'h1_accent' => 'published by headcount',
-            'h2' => 'HR outsourcing pricing in Pakistan, side by side.',
-            'intro' => 'Emplowise publishes HR outsourcing pricing in Pakistan for startups and SMEs, delivered remotely. Starter is PKR 40,000 for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is quoted above 50.',
+        // === PAGE: WHY EMPLOWISE ===
+        'why-emplowise' => [
+            'primary_keyword' => 'why Emplowise',
+            'secondary_keywords' => ['remote HR partner in Pakistan', 'HR outsourcing pricing in Pakistan'],
+            'title' => 'Why Emplowise for Remote HR in Pakistan | Emplowise',
+            'description' => 'See why Emplowise is the remote HR partner for growing teams in Pakistan, with published pricing from PKR 40,000, clear scope, and a free HR audit.',
+            'h1' => 'Why Emplowise is the remote HR partner for growing teams.',
+            'h1_accent' => 'the remote HR partner',
+            'h2' => 'Why Emplowise publishes HR pricing by headcount.',
+            'intro' => 'Why Emplowise? Because remote HR should come with published pricing, a named team, and a scope you can read before you commit. Starter is PKR 40,000 for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is quoted above 50.',
         ],
 
-        // === PAGE: STUDENT HUB ===
-        'student-hub' => [
+        // === PAGE: EMPLOSTART ===
+        'emplostart' => [
             'primary_keyword' => 'free ATS resume checker',
             'secondary_keywords' => ['mock interview practice', 'free resume builder'],
             'title' => 'Free ATS Resume Checker and 5 Career Tools | Emplowise',
-            'description' => 'A free ATS resume checker, mock interview practice, resume builder, profile optimizer, and 14 prompts for Pakistani students. No account needed.',
-            'h1' => 'A free ATS resume checker built for Pakistani students.',
+            'description' => 'Five free career tools from EmploStart: an ATS resume checker, mock interview practice, resume builder, profile optimizer, and 14 prompts. No account.',
+            'h1' => 'A free ATS resume checker built for early career candidates.',
             'h1_accent' => 'free ATS resume checker',
             'h2' => 'Free ATS resume checker and JD analyzer.',
-            'intro' => 'Emplowise Student Hub offers a free ATS resume checker and four more free tools for students and early career candidates across Pakistan. It holds mock interviews, the ATS checker, a resume builder, a profile optimizer, and a prompt library.',
+            'intro' => 'EmploStart gives early career candidates five free tools: a free ATS resume checker, mock interviews, a resume builder, a profile optimizer, and 14 prompts. No account, no cost, no invented feedback.',
         ],
 
         // === PAGE: FAQ ===
@@ -99,11 +99,11 @@ return [
             'primary_keyword' => 'HR outsourcing questions',
             'secondary_keywords' => ['Emplowise pricing answers', 'HR scope questions'],
             'title' => 'HR Outsourcing Questions Answered Clearly | Emplowise',
-            'description' => 'Answers to HR outsourcing questions about Emplowise services, pricing from PKR 40,000, the free HR audit, and the free Student Hub. Confirmed facts only.',
+            'description' => 'Answers to HR outsourcing questions about Emplowise services, pricing from PKR 40,000, the free HR audit, and EmploStart. Confirmed facts only.',
             'h1' => 'HR outsourcing questions answered with confirmed facts.',
             'h1_accent' => 'with confirmed facts',
             'h2' => 'HR outsourcing questions',
-            'intro' => 'Emplowise answers HR outsourcing questions for startups and SMEs in Pakistan, and for students through the free Student Hub. Every answer on this page uses confirmed business data.',
+            'intro' => 'Emplowise answers HR outsourcing questions for startups and SMEs in Pakistan. EmploStart answers career questions with the same rule: confirmed facts only.',
         ],
 
         // === PAGE: FREE HR AUDIT ===
@@ -114,7 +114,7 @@ return [
             'description' => 'Book a free HR audit in Pakistan. Share headcount, payroll, performance, and policy pain points in about four minutes and get a prioritised gap list.',
             'h1' => 'A free HR audit in Pakistan, booked in four minutes.',
             'h1_accent' => 'booked in four minutes',
-            'h2' => 'Your free HR audit in Pakistan is in the queue.',
+            'h2' => 'Your free HR audit in Pakistan: next steps.',
             'intro' => 'Emplowise runs a free HR audit in Pakistan for startups and SMEs, delivered remotely. You get a structured review of payroll inputs, performance practice, and policy coverage, plus a prioritised gap list.',
         ],
 
@@ -142,14 +142,14 @@ return [
             'intro' => 'The Emplowise team runs remote HR for startups and SMEs in Pakistan. Three people own strategy, marketing, and people operations, and they answer directly.',
         ],
 
-        // === PAGE: AI AUTOMATION ===
-        'ai-automation' => [
+        // === PAGE: WHAT WE ARE BUILDING ===
+        'what-we-are-building' => [
             'primary_keyword' => 'AI automation for HR',
             'secondary_keywords' => ['HR payroll automation', 'HR policy co-pilot'],
-            'title' => 'AI Automation for HR, Building Soon | Emplowise',
+            'title' => 'What We Are Building: AI Automation for HR | Emplowise',
             'description' => 'Emplowise is building AI automation for HR: a payroll engine, a performance insight layer, and a policy co-pilot. The division is pre-launch.',
-            'h1' => 'AI automation for HR, built in the open.',
-            'h1_accent' => 'built in the open',
+            'h1' => 'What we are building: AI automation for HR, in the open.',
+            'h1_accent' => 'AI automation for HR',
             'h2' => 'Where AI automation for HR will plug in.',
             'intro' => 'Emplowise is building AI automation for HR. A payroll engine, a performance insight layer, and a policy co-pilot are in pre-launch, and this page shows the shape of the division.',
         ],
@@ -459,10 +459,10 @@ return [
             ],
         ],
         [
-            'category' => 'Student hub',
+            'category' => 'EmploStart',
             'items' => [
                 [
-                    'q' => 'Is the student hub actually free?',
+                    'q' => 'Is the EmploStart actually free?',
                     'a' => 'Yes. All five tools are free, with no account required. They exist so early career candidates get structured feedback instead of guesswork.',
                 ],
                 [
@@ -616,28 +616,21 @@ return [
             'breadcrumb_home' => 'Home',
             'nav_audit_label' => 'Free HR Audit',
             'menu_open' => 'Open menu',
-            'footer_note' => 'Remote HR solutions for growing businesses. Built on clarity, structure, and plain language.',
+            'footer_note' => 'Remote HR for growing businesses in Pakistan. One accountable team, published pricing, and scope you can read before you commit.',
             'footer_company_title' => 'Company',
-            'footer_student_title' => 'Student Hub',
+            'footer_resources_title' => 'Resources',
             'footer_start_title' => 'Start here',
             'footer_legal' => 'Scope details are confirmed in writing after your Free HR Audit. Nothing on this site is a legal or compliance guarantee.',
             'footer_market' => 'Market:',
             'footer_rights' => 'All rights reserved.',
             'back_to_top' => 'Back to top',
-            'student_links' => [
-                ['label' => 'Interview Prep', 'hash' => 'interview'],
-                ['label' => 'ATS Score', 'hash' => 'ats'],
-                ['label' => 'Resume Builder', 'hash' => 'resume'],
-                ['label' => 'Profile Optimizer', 'hash' => 'profile'],
-                ['label' => 'Prompt Library', 'hash' => 'prompts'],
-            ],
         ],
 
         'contact' => [
             'breadcrumb' => 'Contact',
             'kicker' => 'Reach the team',
-            'ai_heading' => 'Ask your favorite AI what Emplowise is',
-            'ai_body' => 'Each pill opens a new tab with a ready-made question. It is the fastest second opinion before you talk to us.',
+            'ai_heading' => 'Ask an AI you already use about Emplowise',
+            'ai_body' => 'Each button opens a new tab with a ready-made question. Use it for a second opinion before you talk to us.',
             'ai_query' => 'What is Emplowise, what remote HR services does it offer in Pakistan, and what are its package prices?',
             'ai_links' => [
                 ['label' => 'ChatGPT', 'href' => 'https://chatgpt.com/?q='],
@@ -646,7 +639,7 @@ return [
                 ['label' => 'Perplexity', 'href' => 'https://www.perplexity.ai/search?q='],
             ],
             'email_heading' => 'Email us',
-            'email_body' => 'Scope questions, hiring support, or anything the audit form does not cover.',
+            'email_body' => 'Scope questions, hiring support, or anything the audit form does not cover. Email the team directly.',
             'email' => 'hello@emplowise.com',
             'copy_label' => 'Copy email',
             'copy_done' => 'Email copied.',
@@ -661,15 +654,15 @@ return [
             ],
             'resources_heading' => 'Resources',
             'resources' => [
+                ['label' => 'What We Are', 'route' => 'what-we-are'],
                 ['label' => 'What We Do', 'route' => 'what-we-do'],
-                ['label' => 'Pricing', 'route' => 'pricing'],
-                ['label' => 'Student Hub', 'route' => 'student-hub'],
+                ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
+                ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
+                ['label' => 'EmploStart', 'route' => 'emplostart'],
                 ['label' => 'FAQ', 'route' => 'faq'],
-                ['label' => 'Team', 'route' => 'team'],
-                ['label' => 'AI Automation', 'route' => 'ai-automation'],
                 ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],
             ],
-            'micro_copyright' => 'Copyright Pending © 2026 Emplowise.',
+            'micro_copyright' => '© 2026 Emplowise.',
             'micro_status' => 'Website is actively being built in the background.',
         ],
 
@@ -680,7 +673,8 @@ return [
             'window_title' => 'team.emplowise',
             'window_meta' => 'people operations',
             'tablist_label' => 'Emplowise team members',
-            'showcase_lede' => 'Three windows, three owners, one operating rhythm. Switch tabs to meet each person.',
+            'showcase_lede' => 'Three people, three owners, one operating rhythm. Switch tabs to meet the team.',
+            'kicker' => 'The people behind the work',
             'focus_label' => 'Focus',
             'panel_note' => 'Profiles are confirmed. Portraits are placeholders until the official shoot.',
             'photo_todo' => 'TODO: replace this placeholder portrait with the confirmed team photo at the same 4:5 ratio.',
@@ -723,15 +717,15 @@ return [
             'cta_body' => 'Bring a people problem, a payroll question, or a policy gap. The first conversation is a free HR audit, not a pitch.',
         ],
 
-        'ai-automation' => [
-            'breadcrumb' => 'AI Automation',
+        'what-we-are-building' => [
+            'breadcrumb' => 'What We Are Building',
             'kicker' => 'Pre-launch division',
-            'banner' => 'Emplowise AI Automation Division — Building Soon',
-            'hero_sub' => 'A built division waiting on launch. The interfaces are real, the data is frozen, and nothing here pretends to be live yet.',
+            'banner' => 'Emplowise AI Automation Division. Building soon.',
+            'hero_sub' => 'Three modules are built and waiting on launch. The interfaces are real, the data is frozen, and nothing here pretends to be live.',
             'cta' => 'Building Soon',
             'cta_note' => 'No waitlist and no intake form yet. The confirmed HR services stay live while this division finishes its build.',
             'modules_heading' => 'Three modules already in the build.',
-            'modules_lede' => 'Each module is scoped, designed, and waiting on launch approval. The dashboard below shows how they sit together.',
+            'modules_lede' => 'Each module is scoped, designed, and waiting on launch approval. The dashboard shows how they fit together.',
             'module_status' => 'In build',
             'modules' => [
                 [
@@ -781,7 +775,7 @@ return [
                 ['label' => 'Pricing', 'query' => 'What do the packages cost?'],
                 ['label' => 'Services', 'query' => 'What HR services do you run?'],
                 ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
-                ['label' => 'Student hub', 'query' => 'What is in the student hub?'],
+                ['label' => 'EmploStart', 'query' => 'What is in the EmploStart?'],
             ],
             'input_label' => 'Your message',
             'send' => 'Send',
@@ -792,20 +786,20 @@ return [
         // === PAGE: HOME ===
         'home' => [
             'kicker' => 'Remote HR, built on structure',
-            'hero_sub' => 'Emplowise runs the people operations behind your team, remote, so founders keep momentum and employees get clarity. Payroll, performance, and policy on one operating rhythm.',
+            'hero_sub' => 'Get payroll, performance, and policy off your desk. One remote HR team, a dedicated representative, and retainers from PKR 40,000 a month.',
             'rotator_prefix' => 'Currently running',
             'cta_primary' => 'Book a free HR audit',
-            'cta_secondary' => 'Open the Student Hub',
+            'cta_secondary' => 'Open the EmploStart',
             'proof' => [
-                ['label' => 'Delivery', 'value' => 'Remote HR team with specialist consultant backup.'],
-                ['label' => 'Focus', 'value' => 'Payroll, performance management, and policy making.'],
-                ['label' => 'First step', 'value' => 'A free diagnostic audit and a prioritised gap list.'],
+                ['label' => 'Delivery', 'value' => 'One remote HR team, backed by specialist consultants.'],
+                ['label' => 'Focus', 'value' => 'Payroll, performance, and policy on one monthly rhythm.'],
+                ['label' => 'First step', 'value' => 'A free audit and a prioritised gap list in one conversation.'],
             ],
             'scroll_cue' => 'Scroll to the operating model',
             'panel' => [
                 'aria' => 'Emplowise operating stack',
                 'float_a' => 'Remote delivery',
-                'float_b' => 'Free student tools',
+                'float_b' => 'Free career tools',
                 'title' => 'The operating stack',
                 'live' => 'One calendar',
                 'rows' => [
@@ -817,40 +811,40 @@ return [
                 'stats' => [
                     'services' => 'Confirmed services in scope',
                     'stages' => 'Method stages per engagement',
-                    'tools' => 'Free tools in the Student Hub',
+                    'tools' => 'Free tools in the EmploStart',
                 ],
             ],
             'strip_label' => 'Confirmed services',
             'pillars' => [
                 'kicker' => 'What we run',
-                'lede' => 'Each pillar opens the confirmed services, workflow checks, and templates that sit behind it.',
+                'lede' => 'Every pillar opens the confirmed services, workflow checks, and templates behind it. Nothing is listed that the team does not deliver.',
                 'card_link' => 'See the confirmed services',
             ],
             'method' => [
                 'kicker' => 'The method',
                 'heading' => 'Assess. Identify. Improve. Review.',
-                'lede' => 'The same four-stage method runs every engagement, from a first audit conversation to the monthly review pack leadership actually reads.',
+                'lede' => 'One four-stage method runs every engagement, from the first audit conversation to the monthly review pack your leadership reads.',
             ],
             'pricing' => [
                 'kicker' => 'Monthly retainers',
                 'heading' => 'Pricing by headcount, not by guesswork.',
-                'lede' => 'Three confirmed tiers from the 2026 business brief. Package inclusions are confirmed in writing after your Free HR Audit.',
+                'lede' => 'Three confirmed tiers. Starter is PKR 40,000 for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is quoted above 50.',
                 'tag' => 'Core tier',
                 'inclusions_line' => 'Inclusions: confirmed in writing after your Free HR Audit.',
                 'link' => 'See HR outsourcing pricing in Pakistan',
                 'note' => 'Prices are monthly retainers in PKR. Recruitment fees, payroll tax scope, and legal advice qualifications are confirmed in writing after your Free HR Audit.',
             ],
             'student' => [
-                'kicker' => 'Free student resources',
-                'heading' => 'Same structure. Zero cost. Built for emerging talent.',
-                'lede' => 'Five working tools for students and early career candidates. No account, no upsell, no invented feedback. Powered by Alibaba Cloud AI with a local fallback that always works.',
+                'kicker' => 'Free career tools',
+                'heading' => 'Five free career tools. No account. No cost.',
+                'lede' => 'EmploStart gives early career candidates ATS scoring, mock interviews, a resume builder, profile rewrites, and 14 prompts. The local engine runs even without an AI key.',
                 'cta_prompts' => 'Explore the :count prompts',
                 'cta_ats' => 'Score your resume',
             ],
             'cta_band' => [
                 'heading' => 'Start with a free HR audit. Leave with a gap list.',
                 'primary' => 'Book the free audit',
-                'secondary' => 'See our HR operations outsourcing method',
+                'secondary' => 'See how the four-stage method works',
             ],
         ],
 
@@ -863,18 +857,18 @@ return [
             'values' => [
                 'kicker' => 'Core values',
                 'heading' => 'Four rules that decide how we work.',
-                'lede' => 'These are operating commitments, not wall posters. Each one changes what we deliver and what we refuse to promise.',
+                'lede' => 'Four operating commitments. Each one changes what we deliver and what we refuse to promise.',
             ],
             'audiences' => [
                 'kicker' => 'Who we sit with',
                 'heading' => 'Three audiences. One standard of clarity.',
-                'lede' => 'Startups, SMEs, and emerging talent get the same structured thinking. Two are commercial engagements. The third is free, on purpose.',
-                'link_talent' => 'Open the free Student Hub',
+                'lede' => 'Startups, SMEs, and early career candidates get the same structured thinking. Two are paid engagements. The third is free, on purpose.',
+                'link_talent' => 'Open the free EmploStart',
                 'link_client' => 'See our HR outsourcing pricing in Pakistan',
             ],
             'delivery' => [
                 'kicker' => 'How we deliver',
-                'lede' => 'Delivery is remote. A dedicated HR representative gives the client CEO or founder direct access, backed by specialist HR consultants on defined problems.',
+                'lede' => 'Delivery is remote. A dedicated HR representative gives your CEO or founder direct access, backed by specialist consultants on defined problems.',
                 'note' => 'Full time versus shared allocation of the dedicated representative is confirmed in writing after your Free HR Audit.',
             ],
             'scope' => [
@@ -886,14 +880,14 @@ return [
             'cta_band' => [
                 'heading' => 'Bring us your current HR reality.',
                 'primary' => 'Book the free audit',
-                'secondary' => 'See our HR operations outsourcing services',
+                'secondary' => 'See the confirmed HR services',
             ],
         ],
 
         // === PAGE: WHAT WE DO ===
         'what-we-do' => [
             'breadcrumb' => 'What We Do',
-            'kicker' => 'Operations, systems, and outcomes',
+            'kicker' => 'Confirmed services, one method',
             'chips' => [
                 'Remote delivery',
                 'Dedicated HR representative',
@@ -908,17 +902,17 @@ return [
             'pillar_table' => ['Service', 'Scope note'],
             'catalogue' => [
                 'kicker' => 'The full service catalogue',
-                'lede' => 'The pillar showcase is how clients think about the work. These are the actual service families used to scope an engagement.',
+                'lede' => 'The pillar showcase explains how the work fits together. This catalogue lists the actual service families used to scope an engagement.',
                 'table' => ['Family', 'Service', 'Status and scope'],
                 'note' => 'Every service above is confirmed in the 2026 brief. Package inclusion per tier is confirmed in writing after your Free HR Audit.',
             ],
             'method' => [
                 'kicker' => 'Diagnostic method',
                 'heading' => 'A repeatable path from audit to review.',
-                'lede' => 'This is the working method behind every pillar. It is also the structure of the free HR audit, minus the implementation.',
+                'lede' => 'The same four-stage method sits behind every pillar and shapes the free HR audit, minus the implementation.',
             ],
             'outcomes' => [
-                'kicker' => 'Measurable outcomes',
+                'kicker' => 'Operating outcomes',
                 'heading' => 'What changes when the structure lands.',
                 'lede' => 'These are operating outcomes Emplowise works toward. Baseline metrics and verified client results are confirmed in writing after your Free HR Audit, so no percentages are published here.',
                 'cta' => 'Start with the audit',
@@ -926,14 +920,24 @@ return [
             'cta_band' => [
                 'heading' => 'See where your HR stack actually breaks.',
                 'primary' => 'Book the free audit',
-                'secondary' => 'Compare HR outsourcing pricing in Pakistan',
+                'secondary' => 'See HR outsourcing pricing',
             ],
         ],
 
-        // === PAGE: PRICING ===
-        'pricing' => [
-            'breadcrumb' => 'Pricing',
-            'kicker' => 'Monthly retainers',
+        // === PAGE: WHY EMPLOWISE ===
+        'why-emplowise' => [
+            'breadcrumb' => 'Why Emplowise',
+            'kicker' => 'Published pricing and scope',
+            'why' => [
+                'kicker' => 'The case for Emplowise',
+                'heading' => 'One remote HR partner, with the price on the page.',
+                'lede' => 'Three facts decide whether an HR partner is worth the retainer: what the work covers, who owns it, and what it costs. Emplowise publishes all three before the first call.',
+                'cards' => [
+                    ['title' => 'Remote by design', 'text' => 'Payroll, performance, and policy run remotely, so the cost goes into the work rather than an office.'],
+                    ['title' => 'One accountable team', 'text' => 'A dedicated HR representative works with your founder or CEO, backed by specialist support.'],
+                    ['title' => 'Published headcount pricing', 'text' => 'Starter, Business, and Enterprise are priced by headcount, with inclusions confirmed in writing.'],
+                ],
+            ],
             'tag' => 'Core tier',
             'bullets' => [
                 'Services drawn from the confirmed catalogue.',
@@ -947,12 +951,12 @@ return [
             'guardrail' => [
                 'kicker' => 'Scope guardrail',
                 'heading' => 'No invented deliverables',
-                'body' => 'A pricing page that invents inclusions is worse than one that admits the gap. The audit conversation fixes which confirmed services apply to your headcount, risk profile, and current documentation.',
+                'body' => 'A pricing page that invents inclusions is worse than one that admits the gap. The audit confirms which of the fourteen services apply to your headcount, risk profile, and current documentation.',
                 'link' => 'Book the free audit',
             ],
             'compare' => [
                 'kicker' => 'Side by side',
-                'lede' => 'Headcount capacity and price are confirmed. Inclusion rows are confirmed in writing after your Free HR Audit.',
+                'lede' => 'Headcount and price are confirmed. Inclusion rows are confirmed in writing after your Free HR Audit.',
                 'table' => ['Package', 'Headcount', 'Monthly price', 'Best for', 'Inclusions'],
                 'scoped' => 'scoped monthly',
                 'per_month' => '/ month',
@@ -962,19 +966,19 @@ return [
             'catalogue' => [
                 'kicker' => 'Confirmed catalogue',
                 'heading' => 'Every service that can sit inside a retainer.',
-                'lede' => 'Packages are priced by headcount. Which of these fourteen services are active in your retainer is confirmed in scope.',
+                'lede' => 'Packages are priced by headcount. Which of the fourteen services sit inside your retainer is confirmed in scope.',
                 'table' => ['Service', 'Operating family', 'Scope note'],
             ],
             'cta_band' => [
                 'heading' => 'Pick a package after the audit, not before.',
                 'primary' => 'Book the free audit',
-                'secondary' => 'Read HR outsourcing questions about pricing',
+                'secondary' => 'Read pricing questions',
             ],
         ],
 
-        // === PAGE: STUDENT HUB ===
-        'student-hub' => [
-            'kicker' => 'Free student resources',
+        // === PAGE: EMPLOSTART ===
+        'emplostart' => [
+            'kicker' => 'Free career tools',
             'filter_all' => 'All',
             'stats' => ['Working tools', 'Cost, forever', 'Accounts required', 'Ready prompts'],
             'tabs' => [
@@ -1101,9 +1105,9 @@ return [
                 'copy_visible' => 'Copy visible prompts',
             ],
             'cta_band' => [
-                'heading' => 'Hiring soon? The audit works for teams too.',
+                'heading' => 'Hiring soon? Run the free HR audit before the first start date.',
                 'primary' => 'Book the free HR audit',
-                'secondary' => 'Read free ATS resume checker questions',
+                'secondary' => 'Read ATS resume questions',
             ],
         ],
 
@@ -1127,7 +1131,7 @@ return [
             'cta_band' => [
                 'heading' => 'Ready for a real answer about your HR stack?',
                 'primary' => 'Book the free audit',
-                'secondary' => 'Open the free ATS resume checker and student tools',
+                'secondary' => 'Open EmploStart free career tools',
             ],
         ],
 
@@ -1178,7 +1182,7 @@ return [
             ],
             'success' => [
                 'kicker' => 'Request received',
-                'body' => 'Keep the reference below. We review your intake, prepare a gap map, and confirm the window.',
+                'body' => 'Keep the reference below. We review your intake, prepare a gap map, and confirm your window.',
                 'date_label' => 'Preferred date',
                 'slot_label' => 'Preferred window',
                 'pending' => 'To be confirmed',
@@ -1214,20 +1218,27 @@ return [
     ],
 
     'nav' => [
-        ['label' => 'Home', 'route' => 'home'],
+        ['label' => 'What We Are', 'route' => 'what-we-are'],
         ['label' => 'What We Do', 'route' => 'what-we-do'],
-        ['label' => 'Pricing', 'route' => 'pricing'],
-        ['label' => 'Student Hub', 'route' => 'student-hub'],
+        ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
+        ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
+        ['label' => 'Team', 'route' => 'what-we-are', 'hash' => 'team'],
+        ['label' => 'EmploStart', 'route' => 'emplostart'],
+        ['label' => 'Contact Us', 'route' => 'contact'],
     ],
 
-    // Secondary pages live in the footer so the header stays on one line.
+    // The footer repeats the primary links plus the action pages.
     'footer_company' => [
         ['label' => 'What We Are', 'route' => 'what-we-are'],
         ['label' => 'What We Do', 'route' => 'what-we-do'],
-        ['label' => 'Team', 'route' => 'team'],
-        ['label' => 'AI Automation', 'route' => 'ai-automation'],
-        ['label' => 'Pricing', 'route' => 'pricing'],
+        ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
+        ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
+    ],
+
+    'footer_resources' => [
+        ['label' => 'EmploStart', 'route' => 'emplostart'],
         ['label' => 'FAQ', 'route' => 'faq'],
-        ['label' => 'Contact', 'route' => 'contact'],
+        ['label' => 'Contact Us', 'route' => 'contact'],
+        ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],
     ],
 ];

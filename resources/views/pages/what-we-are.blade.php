@@ -63,6 +63,18 @@
         </div>
     </section>
 
+    <section class="section team-section" id="team">
+        <div class="shell">
+            <div class="section-head">
+                <p class="kicker">{{ $team['kicker'] }}</p>
+                <h2>{{ $teamSeo['h2'] }}</h2>
+                <p class="lede">{{ $team['showcase_lede'] }}</p>
+            </div>
+
+            @include('partials.team-showcase')
+        </div>
+    </section>
+
     <section class="section">
         <div class="shell">
             <div class="section-head">
@@ -82,9 +94,9 @@
                         <h3>{{ $position['title'] }}</h3>
                         <p>{{ $position['text'] }}</p>
                         @if ($key === 'talent')
-                            <a href="{{ route('student-hub') }}" class="link-arrow s8">{{ $copy['audiences']['link_talent'] }}</a>
+                            <a href="{{ route('emplostart') }}" class="link-arrow s8">{{ $copy['audiences']['link_talent'] }}</a>
                         @else
-                            <a href="{{ route('pricing') }}" class="link-arrow s8">{{ $copy['audiences']['link_client'] }}</a>
+                            <a href="{{ route('why-emplowise') }}" class="link-arrow s8">{{ $copy['audiences']['link_client'] }}</a>
                         @endif
                     </article>
                 @endforeach

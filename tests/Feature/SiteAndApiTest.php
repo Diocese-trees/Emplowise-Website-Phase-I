@@ -21,12 +21,11 @@ final class SiteAndApiTest extends TestCase
             '/' => 'Remote HR services in Pakistan',
             '/what-we-are' => 'HR outsourcing company in Pakistan',
             '/what-we-do' => 'HR operations outsourcing',
-            '/pricing' => 'PKR 40,000',
-            '/student-hub' => 'Free ATS resume checker',
+            '/why-emplowise' => 'PKR 40,000',
+            '/emplostart' => 'Free ATS resume checker',
             '/faq' => 'HR outsourcing questions',
             '/contact' => 'Contact Emplowise',
-            '/team' => 'Emplowise team',
-            '/ai-automation' => 'AI automation for HR',
+            '/what-we-are-building' => 'AI automation for HR',
             '/free-hr-audit' => 'free HR audit in Pakistan',
         ];
 
@@ -37,18 +36,32 @@ final class SiteAndApiTest extends TestCase
         }
     }
 
-    public function test_pricing_page_marks_unresolved_inclusions_as_pending(): void
+    public function test_legacy_routes_redirect_to_the_new_information_architecture(): void
     {
-        $this->get('/pricing')
+        foreach ([
+            '/pricing' => '/why-emplowise',
+            '/career-hub' => '/emplostart',
+            '/student-hub' => '/emplostart',
+            '/ai-automation' => '/what-we-are-building',
+        ] as $from => $to) {
+            $this->get($from)->assertStatus(301)->assertRedirect($to);
+        }
+
+        $this->get('/team')->assertStatus(301)->assertRedirect('/what-we-are#team');
+    }
+
+    public function test_why_page_marks_unresolved_inclusions_as_pending(): void
+    {
+        $this->get('/why-emplowise')
             ->assertOk()
             ->assertSee('PKR 75,000')
             ->assertSee('Confirmed in writing after your Free HR Audit')
             ->assertDontSee('most popular', false);
     }
 
-    public function test_student_assets_load_only_on_the_hub(): void
+    public function test_career_assets_load_only_on_the_hub(): void
     {
-        $hub = $this->get('/student-hub')->assertOk();
+        $hub = $this->get('/emplostart')->assertOk();
         $hub->assertSee('css/site.css', false);
         $hub->assertSee('css/hub.css', false);
         $hub->assertSee('js/student.js', false);
@@ -60,7 +73,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_stylesheets_ship_as_two_bundles(): void
     {
-        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $hub = (string) $this->get('/emplostart')->assertOk()->getContent();
         $home = (string) $this->get('/')->assertOk()->getContent();
 
         $this->assertSame(2, preg_match_all('/<link rel="stylesheet"/', $hub), 'The hub should load two bundles');
@@ -93,19 +106,22 @@ final class SiteAndApiTest extends TestCase
         $html = (string) $this->get('/')->assertOk()->getContent();
 
         $this->assertSame(1, preg_match('/<nav class="main-nav".*?<\/nav>/s', $html, $nav));
-        $this->assertLessThanOrEqual(6, substr_count($nav[0], '<a '), 'Header nav must fit on one laptop line');
-        $this->assertStringContainsString('Free HR Audit', $nav[0]);
-        $this->assertStringNotContainsString('>FAQ<', $nav[0]);
-        $this->assertStringNotContainsString('>What We Are<', $nav[0]);
+        $this->assertLessThanOrEqual(7, substr_count($nav[0], '<a '), 'Header nav must fit on one laptop line');
+        $this->assertStringNotContainsString('FAQ', $nav[0]);
+        $this->assertStringContainsString('What We Are', $nav[0]);
+        $this->assertStringContainsString('Team', $nav[0]);
+        $this->assertStringContainsString('EmploStart', $nav[0]);
+        $this->assertStringContainsString('what-we-are#team', $nav[0]);
 
         $this->assertSame(1, preg_match('/<footer class="site-footer">.*?<\/footer>/s', $html, $footer));
-        $this->assertStringContainsString('>FAQ<', $footer[0]);
-        $this->assertStringContainsString('>What We Are<', $footer[0]);
+        $this->assertStringContainsString('FAQ', $footer[0]);
+        $this->assertStringContainsString('EmploStart', $footer[0]);
+        $this->assertStringContainsString('Free HR Audit', $footer[0]);
     }
 
     public function test_resume_builder_offers_draft_recovery_controls(): void
     {
-        $this->get('/student-hub')
+        $this->get('/emplostart')
             ->assertOk()
             ->assertSee('Load example')
             ->assertSee('Clear draft')
@@ -114,7 +130,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_prompt_library_shows_counts_and_bulk_actions(): void
     {
-        $html = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
 
         $this->assertStringContainsString('id="prompt-copy-visible"', $html);
         $this->assertStringContainsString('Copy visible prompts', $html);
@@ -131,7 +147,7 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringContainsString('@media print', $bundle);
         $this->assertStringContainsString('.resume-paper', $bundle);
 
-        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $hub = (string) $this->get('/emplostart')->assertOk()->getContent();
         $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
 
         $home = (string) $this->get('/')->assertOk()->getContent();
@@ -141,7 +157,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_the_hub_loads_every_browser_engine_before_student_js(): void
     {
-        $html = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
 
         $student = strpos($html, '/js/student.js');
         $this->assertNotFalse($student);
@@ -155,7 +171,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_pages_render_without_php_diagnostics(): void
     {
-        $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/contact', '/team', '/ai-automation', '/free-hr-audit'];
+        $pages = ['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit'];
         $markers = ['Warning:', 'Notice:', 'Deprecated:', 'Fatal error', 'Undefined variable', 'Undefined array key'];
 
         foreach ($pages as $path) {
@@ -194,12 +210,11 @@ final class SiteAndApiTest extends TestCase
             '/' => 'home',
             '/what-we-are' => 'what-we-are',
             '/what-we-do' => 'what-we-do',
-            '/pricing' => 'pricing',
-            '/student-hub' => 'student-hub',
+            '/why-emplowise' => 'why-emplowise',
+            '/emplostart' => 'emplostart',
             '/faq' => 'faq',
             '/contact' => 'contact',
-            '/team' => 'team',
-            '/ai-automation' => 'ai-automation',
+            '/what-we-are-building' => 'what-we-are-building',
             '/free-hr-audit' => 'free-hr-audit',
         ];
 
@@ -241,9 +256,9 @@ final class SiteAndApiTest extends TestCase
         $this->assertNotFalse($xml);
 
         $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
-        $this->assertCount(10, $locations);
+        $this->assertCount(9, $locations);
 
-        foreach (['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/contact', '/team', '/ai-automation', '/free-hr-audit'] as $path) {
+        foreach (['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit'] as $path) {
             $this->assertTrue(
                 collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),
                 'Missing sitemap entry for '.$path
@@ -277,9 +292,9 @@ final class SiteAndApiTest extends TestCase
         }
     }
 
-    public function test_team_page_uses_a_tabbed_window_showcase_with_portraits(): void
+    public function test_what_we_are_page_includes_the_team_showcase(): void
     {
-        $html = (string) $this->get('/team')->assertOk()->getContent();
+        $html = (string) $this->get('/what-we-are')->assertOk()->getContent();
 
         $this->assertSame(1, substr_count($html, 'role="tablist"'));
         $this->assertSame(3, substr_count($html, 'role="tab"'));
@@ -300,17 +315,17 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringContainsString('aspect-ratio: 4 / 5', $css);
     }
 
-    public function test_ai_automation_page_is_monochrome_and_prelaunch(): void
+    public function test_what_we_are_building_page_is_monochrome_and_prelaunch(): void
     {
-        $copy = config('emplowise.copy.ai-automation');
-        $html = (string) $this->get('/ai-automation')->assertOk()->getContent();
+        $copy = config('emplowise.copy.what-we-are-building');
+        $html = (string) $this->get('/what-we-are-building')->assertOk()->getContent();
 
         $this->assertStringContainsString('class="page-ai"', $html);
         $this->assertStringContainsString($copy['banner'], $html);
         $this->assertStringContainsString('disabled aria-disabled="true"', $html);
         $this->assertStringContainsString($copy['cta'], $html);
         $this->assertStringContainsString(route('what-we-do', [], false), $html);
-        $this->assertStringContainsString('<h2>'.e(config('emplowise.seo.ai-automation.h2')).'</h2>', $html);
+        $this->assertStringContainsString('<h2>'.e(config('emplowise.seo.what-we-are-building.h2')).'</h2>', $html);
 
         foreach ($copy['modules'] as $module) {
             $this->assertStringContainsString($module['name'], $html);
@@ -437,7 +452,7 @@ final class SiteAndApiTest extends TestCase
     {
         $js = (string) file_get_contents(public_path('js/chat.js'));
 
-        foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/student-hub'] as $fact) {
+        foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/emplostart'] as $fact) {
             $this->assertStringContainsString($fact, $js, 'Browser KB missing: '.$fact);
         }
 

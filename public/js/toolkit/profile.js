@@ -3,7 +3,7 @@
  * Browser port of the local, deterministic path of
  * App\Services\StudentToolkit::optimizeProfile() (headlines, summary, bullets and
  * fixes). The model branch is intentionally not ported: this file never touches
- * the network, so the Student Hub profile tool works on a static build.
+ * the network, so the EmploStart profile tool works on a static build.
  *
  * Loaded with <script src="/js/toolkit/profile.js" defer> before student.js.
  */

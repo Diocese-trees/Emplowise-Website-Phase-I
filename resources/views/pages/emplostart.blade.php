@@ -8,7 +8,7 @@
 @endpush
 
 @section('content')
-    <div id="student-config"
+    <div id="emplostart-config"
          data-interview-questions="{{ route('api.student.interview.questions') }}"
          data-interview-feedback="{{ route('api.student.interview.feedback') }}"
          data-ats="{{ route('api.student.ats') }}"
@@ -30,7 +30,7 @@
     </section>
 
     <div class="shell hub-shell">
-        <div class="hub-rail" role="tablist" aria-label="Student tools">
+        <div class="hub-rail" role="tablist" aria-label="EmploStart tools">
             @php($tabs = $copy['tabs'])
             @foreach ($tabs as $tab)
                 <button type="button"

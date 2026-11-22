@@ -1,5 +1,5 @@
 /*
- * Emplowise Student Hub: the local ATS scoring engine.
+ * Emplowise EmploStart: the local ATS scoring engine.
  *
  * A byte-for-byte port of the deterministic path in
  * app/Services/StudentToolkit.php (atsScore and its helpers). No backend, no

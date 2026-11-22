@@ -19,6 +19,24 @@
         </div>
     </section>
 
+    <section class="section section--tight">
+        <div class="shell">
+            <div class="section-head">
+                <p class="kicker">{{ $copy['why']['kicker'] }}</p>
+                <h2>{{ $copy['why']['heading'] }}</h2>
+                <p class="lede">{{ $copy['why']['lede'] }}</p>
+            </div>
+            <div class="grid-3">
+                @foreach ($copy['why']['cards'] as $card)
+                    <article class="pos-card">
+                        <h3>{{ $card['title'] }}</h3>
+                        <p>{{ $card['text'] }}</p>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <section class="section">
         <div class="shell">
             <div class="price-grid">

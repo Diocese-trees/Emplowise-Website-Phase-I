@@ -1,4 +1,4 @@
-/* Emplowise Student Hub: browser port of the deterministic interview engine in app/Services/StudentToolkit.php. */
+/* Emplowise EmploStart: browser port of the deterministic interview engine in app/Services/StudentToolkit.php. */
 (function () {
     'use strict';
 

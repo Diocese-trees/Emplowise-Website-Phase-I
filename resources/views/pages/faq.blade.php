@@ -90,7 +90,7 @@
             <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
                 <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
-                <a href="{{ route('student-hub') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
+                <a href="{{ route('emplostart') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

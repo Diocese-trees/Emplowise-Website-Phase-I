@@ -35,7 +35,7 @@
                         {{ $copy['cta_primary'] }}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </a>
-                    <a href="{{ route('student-hub') }}" class="btn btn--outline-light">{{ $copy['cta_secondary'] }}</a>
+                    <a href="{{ route('emplostart') }}" class="btn btn--outline-light">{{ $copy['cta_secondary'] }}</a>
                 </div>
 
                 <dl class="hero-proof">
@@ -204,7 +204,7 @@
 
             <div class="price-grid price-grid--compact">
                 @foreach ($packages as $index => $package)
-                    <a href="{{ route('pricing') }}" class="price-card price-card--compact {{ $package['featured'] ? 'price-card--featured' : '' }} reveal" data-delay="{{ $index + 1 }}">
+                    <a href="{{ route('why-emplowise') }}" class="price-card price-card--compact {{ $package['featured'] ? 'price-card--featured' : '' }} reveal" data-delay="{{ $index + 1 }}">
                         @if ($package['featured'])
                             <span class="price-tag">{{ $copy['pricing']['tag'] }}</span>
                         @endif
@@ -235,8 +235,8 @@
                     {{ $copy['student']['lede'] }}
                 </p>
                 <div class="hero-actions s2">
-                    <a href="{{ route('student-hub') }}#prompts" class="btn btn--student">{{ str_replace(':count', $promptCount, $copy['student']['cta_prompts']) }}</a>
-                    <a href="{{ route('student-hub') }}#ats" class="btn btn--outline-light">{{ $copy['student']['cta_ats'] }}</a>
+                    <a href="{{ route('emplostart') }}#prompts" class="btn btn--student">{{ str_replace(':count', $promptCount, $copy['student']['cta_prompts']) }}</a>
+                    <a href="{{ route('emplostart') }}#ats" class="btn btn--outline-light">{{ $copy['student']['cta_ats'] }}</a>
                 </div>
             </div>
 

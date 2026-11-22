@@ -109,7 +109,7 @@ class SecurityHeadersTest extends TestCase
     {
         config(['security.csp.mode' => 'enforce']);
 
-        $paths = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+        $paths = ['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/free-hr-audit'];
 
         foreach ($paths as $path) {
             $response = $this->get($path)->assertOk();

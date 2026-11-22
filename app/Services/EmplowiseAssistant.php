@@ -15,9 +15,7 @@ use RuntimeException;
  */
 final class EmplowiseAssistant
 {
-    public function __construct(private readonly AlibabaCloudClient $client)
-    {
-    }
+    public function __construct(private readonly AlibabaCloudClient $client) {}
 
     /**
      * @param  array<int, array{role: string, content: string}>  $history
@@ -81,7 +79,7 @@ final class EmplowiseAssistant
             'pricing' => ['price', 'pricing', 'cost', 'pkr', 'package', 'packages', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee', 'per month'],
             'pending' => ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed'],
             'audit' => ['audit', 'free hr', 'free audit', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started'],
-            'student' => ['student', 'student hub', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
+            'student' => ['student', 'student hub', 'career hub', 'emplostart', 'emplo start', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
             'tools' => ['resume', 'cv', 'ats', 'interview', 'cover letter'],
             'payroll' => ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document'],
             'performance' => ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr'],
@@ -162,7 +160,7 @@ final class EmplowiseAssistant
                 ['label' => 'Resume builder', 'query' => 'Is the resume builder free?'],
             ],
             'tools' => [
-                ['label' => 'Student Hub', 'query' => 'What is in the Student Hub?'],
+                ['label' => 'EmploStart', 'query' => 'What is in the EmploStart?'],
                 ['label' => 'Prompt library', 'query' => 'What is in the prompt library?'],
                 ['label' => 'Profile help', 'query' => 'Can you help with my LinkedIn profile?'],
             ],
@@ -172,7 +170,7 @@ final class EmplowiseAssistant
                 ['label' => 'Who you are', 'query' => 'Who is Emplowise?'],
             ],
             'careers' => [
-                ['label' => 'Student Hub', 'query' => 'What free help do you offer students?'],
+                ['label' => 'EmploStart', 'query' => 'What free help do you offer students?'],
                 ['label' => 'Services', 'query' => 'Which HR services do you run?'],
                 ['label' => 'Free audit', 'query' => 'How does the free HR audit work?'],
             ],
@@ -217,7 +215,7 @@ Delivery: remote HR support, consultants with specialist support, a dedicated HR
 Packages: {$packages}.
 Confirmed services: {$services}.
 Method: Assess, Identify, Improve, Review.
-Student hub: five free tools. Interview prep, ATS score, resume builder, profile optimizer, prompt library. No account needed.
+EmploStart: five free career tools. Interview prep, ATS score, resume builder, profile optimizer, prompt library. No account needed.
 Confirmed in writing after the free HR audit: {$pending}.
 Guardrails: no invented metrics, no client names, no guarantees, no board authority.
 PROMPT;
@@ -241,7 +239,7 @@ PROMPT;
         $reply = str_replace(['*', '`'], '', $reply);
 
         if ($reply === '') {
-            return 'Ask me about pricing, services, the free audit, or the Student Hub.';
+            return 'Ask me about pricing, services, the free audit, or the EmploStart.';
         }
 
         preg_match_all('/[^.!?]+[.!?]+|[^.!?]+$/', $reply, $matches);
@@ -280,22 +278,22 @@ PROMPT;
         return match ($intent) {
             'pricing' => "Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.",
             'audit' => "The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.",
-            'student' => "Student Hub is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /student-hub and pick a tool.",
-            'tools' => "The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub, and nothing you paste is stored.",
+            'student' => "EmploStart is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /emplostart and pick a tool.",
+            'tools' => "The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /emplostart, and nothing you paste is stored.",
             'payroll' => "Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.",
             'performance' => "Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.",
             'policy' => "Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is confirmed in writing after the free HR audit.",
             'services' => "Three pillars hold fourteen confirmed services: Payroll, Performance Management, and Policy Making.\nScope runs from recruitment and onboarding to payroll, compliance, performance, records, reporting, and a dedicated HR rep.\nAll of it is delivered remote.",
             'pending' => "Some details are confirmed in writing after the free HR audit: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe list them as open rather than guessing.\nThe audit pins each one down.",
             'contact' => "The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are confirmed in writing after the free HR audit.\nUse /free-hr-audit and we reply from there.",
-            'careers' => "Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.",
+            'careers' => "Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the EmploStart tools are free at /emplostart.",
             'why' => "We sit between informal help and a full enterprise HR department.\nConfirmed structure, published prices, and a named HR representative.\nEvery process you get is documented, not improvised.\nWe do not promise legal outcomes or invented savings.",
             'who' => "Emplowise HR Services does remote HR outsourcing for startups and SMEs in Pakistan.\nConsultants backed by specialist support, plus a dedicated HR representative.\nDirect access to your CEO or founder is part of the model.",
             'where' => "We are based in Pakistan and deliver fully remote.\nThere is no walk-in office in this build.\nInternational expansion is planned long term, not live yet.",
             'when' => "The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are confirmed in writing after the free HR audit.",
-            'greeting' => "hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the Student Hub.\nI keep it short and never invent numbers.",
+            'greeting' => "hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the EmploStart.\nI keep it short and never invent numbers.",
             'thanks' => "Anytime.\nIf you want a real scope, the audit at /free-hr-audit is the next step.",
-            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I point you to the free audit.",
+            default => "Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the EmploStart.\nIf it is not in our verified data, I point you to the free audit.",
         };
     }
 }

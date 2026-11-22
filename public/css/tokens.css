@@ -86,7 +86,7 @@
     /* Layout */
     --shell: 1220px;
     --gutter: clamp(1.15rem, 4vw, 2.5rem);
-    --header-h: 78px;
+    --header-h: 68px;
 
     /* Geometry */
     --radius-xs: 8px;

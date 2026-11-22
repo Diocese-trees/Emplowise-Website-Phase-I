@@ -1,9 +1,9 @@
 # Emplowise - Live demo - abdul hadi - kodar - cega buildathon
 
-**Remote HR services website, grounded AI assistant and a free student career toolkit.**
+**Remote HR services website, grounded AI assistant and EmploStart, a free career toolkit for early career candidates.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all ten pages are static HTML on GitHub Pages. The Student Hub scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md).
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all nine pages are static HTML on GitHub Pages. The EmploStart scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![Tests](https://img.shields.io/badge/tests-passing-16a34a?style=flat-square)](#testing)
@@ -15,19 +15,19 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 10 pages: Home, What We Are, What We Do, Pricing, Student Hub, FAQ, Contact, Team, AI Automation, Free HR Audit |
+| Public site | 9 pages: Home, What We Are, What We Do, What We Are Building, Why Emplowise, EmploStart, FAQ, Contact, Free HR Audit |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
-| Student Hub | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
+| EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
 | Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
 
 ### Screens
 
-| Pricing | Student Hub |
+| Why Emplowise | EmploStart |
 | --- | --- |
-| ![Pricing](docs/screenshots/pricing.jpg) | ![Student Hub](docs/screenshots/student-hub.jpg) |
+| ![Why Emplowise](docs/screenshots/pricing.jpg) | ![EmploStart](docs/screenshots/student-hub.jpg) |
 
 | Free HR Audit | FAQ |
 | --- | --- |
@@ -40,10 +40,10 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 10 pages, chat partial
+resources/views          Layout, 9 pages, chat partial
 public/css|js            Modular CSS (10 files) and vanilla JS (3 files)
 database/migrations      audit_requests, chat_messages
-tests/Feature            55 tests covering pages, APIs, exports and headers
+tests/Feature            56 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
 docs/screenshots         README imagery
 ```
@@ -52,7 +52,7 @@ docs/screenshots         README imagery
 
 ## About the project
 
-Production-ready Laravel 13 application built for Emplowise HR Services. Ten public pages, a Gen Z–voiced HR assistant, five free student career tools, and a multi-step Free HR Audit intake that persists to the database.
+Production-ready Laravel 13 application built for Emplowise HR Services. Nine public pages, a Gen Z–voiced HR assistant, five free career tools, and a multi-step Free HR Audit intake that persists to the database.
 
 All business content lives in `config/emplowise.php`. Nothing commercial is hard-coded in Blade or JavaScript, and claims that lack supplied evidence are left out rather than invented.
 
@@ -202,12 +202,14 @@ The Netlify bundle ships a `_headers` file with the same CSP and HSTS values, be
 | `/` | `home` | `pages/home.blade.php` |
 | `/what-we-are` | `what-we-are` | `pages/what-we-are.blade.php` |
 | `/what-we-do` | `what-we-do` | `pages/what-we-do.blade.php` |
-| `/pricing` | `pricing` | `pages/pricing.blade.php` |
-| `/student-hub` | `student-hub` | `pages/student-hub.blade.php` |
+| `/what-we-are-building` | `what-we-are-building` | `pages/what-we-are-building.blade.php` |
+| `/why-emplowise` | `why-emplowise` | `pages/why-emplowise.blade.php` |
+| `/emplostart` | `emplostart` | `pages/emplostart.blade.php` |
 | `/faq` | `faq` | `pages/faq.blade.php` |
+| `/contact` | `contact` | `pages/contact.blade.php` |
 | `/free-hr-audit` | `free-hr-audit` | `pages/audit.blade.php` |
 
-### Student hub modules
+### EmploStart modules
 
 1. **Mock interview simulator** — role and level selection, one question at a time, structured STAR feedback, per-dimension score breakdown, next-practice probe, score ring, model answer.
 2. **ATS resume/JD analyzer** — 0–100 score, keyword match with synonyms and stems, target-title check, structure checklist, formatting checks, prioritised fixes.
@@ -281,7 +283,7 @@ The Free HR Audit form is the only verified contact channel in this build.
 ```
 app/
   Http/Controllers/
-    SiteController.php          # renders all ten pages with config data
+    SiteController.php          # renders all nine pages with config data
     AuditRequestController.php  # validates + persists audit intake
     Api/ChatController.php      # chat endpoint + transcript logging
     Api/StudentController.php   # interview / ATS / profile endpoints
@@ -332,7 +334,7 @@ Coverage in `tests/Feature/`:
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned
-- static export: ten pages, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+- static export: nine pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
 
 Browser-engine parity is checked separately, outside PHPUnit:
 

@@ -31,6 +31,8 @@ final class SiteController extends Controller
             'values' => config('emplowise.values'),
             'positioning' => config('emplowise.positioning'),
             'pending' => config('emplowise.pending_inputs'),
+            'team' => config('emplowise.copy.team'),
+            'teamSeo' => config('emplowise.seo.team'),
         ]);
     }
 
@@ -49,22 +51,22 @@ final class SiteController extends Controller
         ]);
     }
 
-    public function pricing(): View
+    public function whyEmplowise(): View
     {
-        return view('pages.pricing', [
-            'seo' => config('emplowise.seo.pricing'),
-            'copy' => config('emplowise.copy.pricing'),
+        return view('pages.why-emplowise', [
+            'seo' => config('emplowise.seo.why-emplowise'),
+            'copy' => config('emplowise.copy.why-emplowise'),
             'packages' => config('emplowise.packages'),
             'notes' => config('emplowise.pricing_notes'),
             'services' => config('emplowise.services'),
         ]);
     }
 
-    public function studentHub(): View
+    public function emploStart(): View
     {
-        return view('pages.student-hub', [
-            'seo' => config('emplowise.seo.student-hub'),
-            'copy' => config('emplowise.copy.student-hub'),
+        return view('pages.emplostart', [
+            'seo' => config('emplowise.seo.emplostart'),
+            'copy' => config('emplowise.copy.emplostart'),
             'student' => config('emplowise.student'),
             'brand' => config('emplowise.brand'),
         ]);
@@ -91,19 +93,11 @@ final class SiteController extends Controller
         ]);
     }
 
-    public function team(): View
+    public function whatWeAreBuilding(): View
     {
-        return view('pages.team', [
-            'seo' => config('emplowise.seo.team'),
-            'copy' => config('emplowise.copy.team'),
-        ]);
-    }
-
-    public function aiAutomation(): View
-    {
-        return view('pages.ai-automation', [
-            'seo' => config('emplowise.seo.ai-automation'),
-            'copy' => config('emplowise.copy.ai-automation'),
+        return view('pages.what-we-are-building', [
+            'seo' => config('emplowise.seo.what-we-are-building'),
+            'copy' => config('emplowise.copy.what-we-are-building'),
         ]);
     }
 

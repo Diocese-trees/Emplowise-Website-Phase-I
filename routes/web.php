@@ -12,16 +12,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/what-we-are', [SiteController::class, 'whatWeAre'])->name('what-we-are');
 Route::get('/what-we-do', [SiteController::class, 'whatWeDo'])->name('what-we-do');
-Route::get('/pricing', [SiteController::class, 'pricing'])->name('pricing');
-Route::get('/student-hub', [SiteController::class, 'studentHub'])->name('student-hub');
+Route::get('/why-emplowise', [SiteController::class, 'whyEmplowise'])->name('why-emplowise');
+Route::get('/emplostart', [SiteController::class, 'emploStart'])->name('emplostart');
 Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
 Route::get('/contact', [SiteController::class, 'contact'])->name('contact');
-Route::get('/team', [SiteController::class, 'team'])->name('team');
-Route::get('/ai-automation', [SiteController::class, 'aiAutomation'])->name('ai-automation');
+Route::get('/what-we-are-building', [SiteController::class, 'whatWeAreBuilding'])->name('what-we-are-building');
 Route::get('/free-hr-audit', [SiteController::class, 'audit'])->name('free-hr-audit');
 
+// Legacy URLs stay reachable after the information architecture change.
+Route::redirect('/pricing', '/why-emplowise', 301);
+Route::redirect('/career-hub', '/emplostart', 301);
+Route::redirect('/student-hub', '/emplostart', 301);
+Route::redirect('/ai-automation', '/what-we-are-building', 301);
+Route::get('/team', fn () => redirect('/what-we-are#team', 301));
+
 Route::get('/sitemap.xml', function () {
-    $pages = ['home', 'what-we-are', 'what-we-do', 'pricing', 'student-hub', 'faq', 'contact', 'team', 'ai-automation', 'free-hr-audit'];
+    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit'];
     $urls = '';
     foreach ($pages as $name) {
         $priority = $name === 'home' ? '1.0' : '0.8';

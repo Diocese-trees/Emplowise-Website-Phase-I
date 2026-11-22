@@ -76,7 +76,7 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
 
 - Removes the CSRF meta tag and injects a CSP meta policy that allows
   `https://api.web3forms.com` for `connect-src` and `form-action`.
-- Replaces the Student Hub endpoint attributes, so the page never fires calls
+- Replaces the EmploStart endpoint attributes, so the page never fires calls
   to `/api/...` that can only fail.
 - Rewrites the booking form to `https://api.web3forms.com/submit`, adds the
   `access_key`, `subject`, `from_name` and honeypot fields, and switches the

@@ -1,4 +1,4 @@
-/* Emplowise Student Hub: five free tools powered by local engines and optional Alibaba Cloud AI. */
+/* Emplowise EmploStart: five free tools powered by local engines and optional Alibaba Cloud AI. */
 (function () {
     'use strict';
 

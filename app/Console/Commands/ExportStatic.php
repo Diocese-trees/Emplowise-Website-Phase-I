@@ -30,13 +30,26 @@ final class ExportStatic extends Command
         '/' => 'index.html',
         '/what-we-are' => 'what-we-are/index.html',
         '/what-we-do' => 'what-we-do/index.html',
-        '/pricing' => 'pricing/index.html',
-        '/student-hub' => 'student-hub/index.html',
+        '/what-we-are-building' => 'what-we-are-building/index.html',
+        '/why-emplowise' => 'why-emplowise/index.html',
+        '/emplostart' => 'emplostart/index.html',
         '/faq' => 'faq/index.html',
         '/contact' => 'contact/index.html',
-        '/team' => 'team/index.html',
-        '/ai-automation' => 'ai-automation/index.html',
         '/free-hr-audit' => 'free-hr-audit/index.html',
+    ];
+
+    /**
+     * Old URLs that remain linked or bookmarked. A static host cannot issue a
+     * 301, so each one becomes a small redirect document.
+     *
+     * @var array<string, string>
+     */
+    private array $redirects = [
+        '/pricing' => '/why-emplowise',
+        '/career-hub' => '/emplostart',
+        '/student-hub' => '/emplostart',
+        '/ai-automation' => '/what-we-are-building',
+        '/team' => '/what-we-are#team',
     ];
 
     public function handle(): int
@@ -92,6 +105,13 @@ final class ExportStatic extends Command
             $html = $this->decorate($html, $base, $key, $uri);
             $this->write($target.'/'.$file, $html);
             $written++;
+        }
+
+        foreach ($this->redirects as $uri => $destination) {
+            $this->write(
+                $target.'/'.ltrim($uri, '/').'/index.html',
+                $this->redirectPage($base, $destination),
+            );
         }
 
         foreach (['css', 'js', 'img', 'fonts'] as $directory) {
@@ -153,11 +173,11 @@ final class ExportStatic extends Command
         ) ?? $html;
 
         // With no server there is no API to call. Drop the endpoint URLs so the
-        // Student Hub goes straight to the bundled browser engines instead of
+        // EmploStart goes straight to the bundled browser engines instead of
         // firing four requests that can only fail.
         $html = preg_replace(
-            '#<div id="student-config"[^>]*>\s*</div>#i',
-            '<div id="student-config" hidden></div>',
+            '#<div id="emplostart-config"[^>]*>\s*</div>#i',
+            '<div id="emplostart-config" hidden></div>',
             $html,
             1,
         ) ?? $html;
@@ -200,6 +220,26 @@ final class ExportStatic extends Command
             .'<input type="checkbox" name="botcheck" hidden>';
 
         return preg_replace('/(<form[^>]*id="audit-form"[^>]*>)/', '$1'.$hidden, $html, 1) ?? $html;
+    }
+
+    private function redirectPage(string $base, string $destination): string
+    {
+        $target = $base.$destination;
+        $canonical = strtok($target, '#');
+
+        return '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            .'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            .'<meta name="robots" content="noindex, follow">'
+            .'<title>Redirecting | Emplowise</title>'
+            .'<link rel="canonical" href="'.e($canonical).'">'
+            .'<meta http-equiv="refresh" content="0; url='.e($target).'">'
+            .'<link rel="stylesheet" href="'.$base.'/css/site.css">'
+            .'</head><body>'
+            .'<main id="main" class="shell not-found">'
+            .'<h1>This page has moved</h1>'
+            .'<p><a href="'.e($target).'">Continue to the new page</a>.</p>'
+            .'</main>'
+            .'</body></html>'."\n";
     }
 
     private function robots(string $base): string
