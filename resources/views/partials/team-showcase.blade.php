@@ -1,14 +1,5 @@
 <div class="team-stage">
-    <div class="team-window" role="group" aria-label="{{ $team['window_label'] }}">
-        <div class="team-window-bar">
-            <span class="team-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="team-window-url">
-                <x-icon name="lock" :size="13" />
-                {{ $team['window_title'] }}
-            </span>
-            <span class="team-window-meta">{{ $team['window_meta'] }}</span>
-        </div>
-
+    <div class="team-window">
         <div class="team-tabs" role="tablist" aria-label="{{ $team['tablist_label'] }}">
             @foreach ($team['profiles'] as $profile)
                 <button type="button"

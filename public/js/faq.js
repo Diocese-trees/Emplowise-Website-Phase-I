@@ -5,12 +5,30 @@
     // -----------------------------------------------------------------
     // Generic accordions (FAQ)
     // -----------------------------------------------------------------
+    function panelFor(trigger) {
+        return document.getElementById(trigger.getAttribute('aria-controls') || '');
+    }
+
+    function setOpen(trigger, open) {
+        const item = trigger.closest('.acc-item');
+        const panel = panelFor(trigger);
+        if (!item || !panel) return;
+        item.classList.toggle('is-open', open);
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        panel.hidden = !open;
+    }
+
     document.querySelectorAll('.acc-trigger').forEach(function (trigger) {
         trigger.addEventListener('click', function () {
-            const item = trigger.closest('.acc-item');
-            if (!item) return;
-            const open = item.classList.toggle('is-open');
-            trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+            setOpen(trigger, !trigger.closest('.acc-item').classList.contains('is-open'));
+        });
+
+        // Escape collapses the open item; focus stays on its trigger.
+        trigger.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            if (!trigger.closest('.acc-item').classList.contains('is-open')) return;
+            event.preventDefault();
+            setOpen(trigger, false);
         });
     });
 
@@ -94,7 +112,11 @@
                 if (!visible) {
                     row.item.classList.remove('is-open');
                     const trigger = row.item.querySelector('.acc-trigger');
-                    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+                    if (trigger) {
+                        trigger.setAttribute('aria-expanded', 'false');
+                        const panel = panelFor(trigger);
+                        if (panel) panel.hidden = true;
+                    }
                 }
             });
 

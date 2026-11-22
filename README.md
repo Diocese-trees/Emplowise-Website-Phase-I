@@ -65,7 +65,7 @@ resources/views          Layout, 11 pages, chat partial
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 database/migrations      audit_requests, chat_messages
-tests/Feature            60 tests covering pages, APIs, exports and headers
+tests/Feature            61 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
 docs/                    hosting, static export, theme/motion, repo topology, screenshots
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history

@@ -220,10 +220,18 @@ html[data-theme="dark"] .price-card--featured {
 }
 
 html[data-theme="dark"] .team-window {
-    background: linear-gradient(180deg, rgba(12, 12, 14, 0.97), rgba(6, 6, 7, 0.97));
+    background: var(--d-surface);
+    border-color: var(--d-line);
 }
 
-html[data-theme="dark"] .team-tabs { background: rgba(255, 255, 255, 0.04); }
+html[data-theme="dark"] .team-tabs { background: var(--d-surface-3); }
+
+html[data-theme="dark"] .team-tab-num,
+html[data-theme="dark"] .team-role { color: var(--d-accent); }
+
+html[data-theme="dark"] .team-tab-role { color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .team-tab:hover:not(.is-active) { background: rgba(94, 234, 212, 0.08); }
 
 html[data-theme="dark"] .team-photo { background: var(--d-surface-3); }
 

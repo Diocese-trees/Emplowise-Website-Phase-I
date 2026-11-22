@@ -879,12 +879,8 @@ return [
         'team' => [
             'breadcrumb' => 'Meet The Team',
             'kicker' => 'The people behind the work',
-            'window_label' => 'Emplowise team showcase',
-            'window_title' => 'team.emplowise',
-            'window_meta' => 'people operations',
             'tablist_label' => 'Emplowise team members',
             'showcase_lede' => 'Three people, three owners, one operating rhythm. Switch tabs to meet the team.',
-            'kicker' => 'The people behind the work',
             'focus_label' => 'Focus',
             'panel_note' => 'Profiles are confirmed. Portraits are placeholders until the official shoot.',
             'photo_todo' => 'TODO: replace this placeholder portrait with the confirmed team photo at the same 4:5 ratio.',

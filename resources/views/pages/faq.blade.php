@@ -52,12 +52,16 @@
                                 <div class="acc-item" data-cat="{{ $group['category'] }}">
                                     <button type="button"
                                             class="acc-trigger"
+                                            id="{{ $panelId }}-trigger"
                                             aria-expanded="false"
                                             aria-controls="{{ $panelId }}">
                                         <span class="acc-q">{{ $item['q'] }}</span>
                                         <span class="acc-icon" aria-hidden="true"></span>
                                     </button>
-                                    <div class="acc-panel" id="{{ $panelId }}">
+                                    <div class="acc-panel" id="{{ $panelId }}"
+                                         role="region"
+                                         aria-labelledby="{{ $panelId }}-trigger"
+                                         hidden>
                                         <p class="acc-a">{{ $item['a'] }}</p>
                                     </div>
                                 </div>

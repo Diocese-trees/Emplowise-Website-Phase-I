@@ -6,6 +6,23 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Rebuilt the team showcase as an honest card. The simulated macOS window bar
+  (traffic-light dots, fake `team.emplowise` URL, meta label) and the two
+  rotated stacked-card layers behind it are gone, along with their CSS and the
+  three now-unused `copy.team.window_*` keys and the duplicate `kicker` key.
+  Tabs, window and photo frame now use `--surface*`, `--border-subtle` and
+  `--ink-*`, so tab names are readable in dark mode (measured
+  `rgb(233,239,248)` on `rgb(8,24,47)`); the number and role accents switch to
+  `--d-accent`/`--d-ink-dim`. The FAQ accordion gained `id`-linked triggers,
+  `role="region"` panels with `aria-labelledby`, a real `hidden` state that the
+  filter keeps in sync, and Escape-to-collapse. Contact keeps email as the only
+  verified channel (no invented `tel:`), and `.btn--sm`, contact chips, the
+  email link, `.filter-btn` and the search clear button are now 44px targets.
+  Above-the-fold check on a local export: the home h1 and hero CTA sit inside
+  the fold at 1366x768 (CTA bottom 545), 1440x900 (546) and 375x667 (591); the
+  page-head on `/what-we-are` ends at 466/589 for those viewports. 61 tests,
+  814 assertions; headless Chromium shows zero console errors at all six
+  light/dark viewport runs.
 - Made the theme pre-paint safe without loosening the CSP. The palette is now
   applied by a single inline script emitted from
   `App\Support\ThemeBootstrap::SCRIPT`; the CSP (`script-src 'self'`) carries

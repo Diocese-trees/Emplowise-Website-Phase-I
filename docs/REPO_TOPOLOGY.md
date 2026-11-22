@@ -103,6 +103,23 @@ the EmploStart product link, Contact and the audit CTA), `footer.blade.php`, and
 opens without JavaScript on desktop, in the mobile drawer and in the left rail.
 `ExportStatic` mirrors the 404 view to `404.html`.
 
+## Interactive components
+
+- **Team showcase** (`partials/team-showcase.blade.php`): one card with a
+  `role="tablist"` row and three tabpanels. No simulated browser chrome or
+  stacked-card props; placeholder portraits render an initials monogram
+  (`.team-avatar`) at the same 4:5 ratio as a real photo. Arrow keys, Home and
+  End move between tabs; colours come from the shared surface/ink tokens so the
+  names stay readable in dark mode.
+- **FAQ accordion** (`js/faq.js`): each `.acc-trigger` has an `id`, and its
+  panel is a `role="region"` labelled by that trigger and marked `hidden` until
+  opened. Click toggles, Escape collapses the open item, and the search filter
+  keeps `aria-expanded` and `hidden` in sync when it hides items.
+- **Contact** (`pages/contact.blade.php`): email is the only verified direct
+  channel, so every action is a `mailto:`; no `tel:` is invented. `.btn--sm`,
+  contact chips, the email link and footer social buttons all meet the 44px
+  target.
+
 ## Visibility
 
 The copy is private. To make it public:

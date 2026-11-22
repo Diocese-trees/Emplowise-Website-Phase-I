@@ -288,6 +288,10 @@ final class SiteAndApiTest extends TestCase
 
         $this->assertStringContainsString('mailto:'.$copy['email'], $html);
         $this->assertStringContainsString('id="copy-email"', $html);
+        // Email is the only verified direct channel in this build; a phone
+        // number is confirmed in writing after the audit, so no tel: link.
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'href="mailto:'));
+        $this->assertStringNotContainsString('href="tel:', $html);
         // The page closes on the shared footer: copyright plus the brand line.
         $this->assertStringContainsString((string) date('Y'), $html);
         $this->assertStringContainsString(config('emplowise.copy.layout.footer_tagline'), $html);
@@ -321,6 +325,12 @@ final class SiteAndApiTest extends TestCase
         }
 
         $this->assertSame(3, substr_count($html, 'class="team-avatar"'));
+
+        // No simulated browser chrome or stacked-card props: the showcase is
+        // one honest card with tabs.
+        $this->assertStringNotContainsString('team-window-bar', $html);
+        $this->assertStringNotContainsString('team-dots', $html);
+        $this->assertStringNotContainsString('team.emplowise', $html);
 
         $css = (string) file_get_contents(public_path('css/site.css'));
         $this->assertStringContainsString('aspect-ratio: 4 / 5', $css);
@@ -377,6 +387,24 @@ final class SiteAndApiTest extends TestCase
             ->assertOk()
             ->assertSee($total.' questions')
             ->assertSee('Yes. All five tools are free, with no account required.');
+    }
+
+    public function test_faq_accordion_is_wired_for_assistive_tech(): void
+    {
+        $total = collect(config('emplowise.faqs'))->sum(fn (array $group): int => count($group['items']));
+        $html = (string) $this->get('/faq')->assertOk()->getContent();
+
+        // Every trigger owns a labelled region that starts collapsed.
+        $this->assertSame($total, substr_count($html, 'class="acc-trigger"'));
+        $this->assertSame($total, substr_count($html, 'role="region"'));
+        $this->assertSame($total, preg_match_all('/class="acc-trigger"[^>]*aria-expanded="false"/s', $html));
+        $this->assertSame(0, preg_match('/<div class="acc-panel"[^>]*role="region"[^>]*aria-labelledby="[^"]+"(?![^>]*\bhidden\b)/', $html));
+        $this->assertSame($total, preg_match_all('/<div class="acc-panel"[^>]*\bhidden\b/', $html));
+
+        foreach (preg_match_all('/id="(faq-panel-\d+-\d+)"/', $html, $panels) ? $panels[1] : [] as $panel) {
+            $this->assertStringContainsString('aria-controls="'.$panel.'"', $html);
+            $this->assertStringContainsString('id="'.$panel.'-trigger"', $html);
+        }
     }
 
     public function test_audit_submission_is_validated_and_stored(): void
