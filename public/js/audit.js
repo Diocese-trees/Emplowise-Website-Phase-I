@@ -35,8 +35,31 @@
         const csrfMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
         const staticMode = form.getAttribute('data-audit-mode') === 'web3forms';
+        const keyless = staticMode && form.getAttribute('data-audit-nokey') === '1';
+        const fallbackEmail = form.getAttribute('data-fallback-email') || '';
         const DRAFT_KEY = 'emplowise_audit_draft';
         const DRAFT_FIELDS = ['contact_name', 'company_name', 'email', 'phone', 'headcount_band', 'notes', 'preferred_date', 'preferred_slot'];
+
+        // A keyless preview build has nowhere to send the form. Say so on
+        // arrival with a working email link instead of letting the submit
+        // handler fail, and never fire a request that cannot succeed.
+        function showPreviewNotice() {
+            if (!status) return;
+            status.classList.remove('is-ok');
+            status.classList.add('is-error');
+            if (!fallbackEmail) {
+                status.textContent = 'Online booking is not connected in this preview build.';
+                return;
+            }
+            status.textContent = 'Online booking is not connected in this preview build. Email ';
+            const mail = document.createElement('a');
+            mail.href = 'mailto:' + fallbackEmail;
+            mail.textContent = fallbackEmail;
+            status.appendChild(mail);
+            status.appendChild(document.createTextNode(' to schedule your audit.'));
+        }
+
+        if (keyless) showPreviewNotice();
 
         function stepEl(number) {
             return steps[number - 1];
@@ -355,11 +378,8 @@
 
             // A preview build without a Web3Forms key cannot send anywhere, so
             // stop before firing a request that is guaranteed to fail.
-            if (staticMode && auditForm.getAttribute('data-audit-nokey') === '1') {
-                if (status) {
-                    status.classList.add('is-error');
-                    status.textContent = 'Booking is not connected in this preview build.';
-                }
+            if (keyless) {
+                showPreviewNotice();
                 return;
             }
 

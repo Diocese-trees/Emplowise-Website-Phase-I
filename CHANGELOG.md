@@ -6,6 +6,20 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Closed the static API boundary and made the keyless audit state actionable.
+  Every `/api/*` route now has a client-side fallback that runs before any
+  request: `chat.js` checks for `data-endpoint`, `student.js` checks each
+  endpoint before `postJson()`, and `audit.js` checks
+  `data-audit-mode="web3forms"`. The audit form now carries
+  `data-fallback-email` (from `config/emplowise.php`); a keyless export shows
+  "Online booking is not connected in this preview build" with a `mailto:` link
+  on arrival and on submit instead of failing silently. New assertions in
+  `ExportStaticTest` scan every exported HTML file for `/api/chat`,
+  `/api/audit`, `/api/student/`, and `/api/csp-report`, and check the email
+  fallback. Headless Chromium against a local export confirmed zero `fetch()`
+  calls, zero `/api/` requests, and zero console errors on `/free-hr-audit/`,
+  `/`, and `/emplostart/` (ATS run included). 58 tests, 742 assertions.
+  `docs/STATIC_HOSTING.md` documents the endpoint matrix.
 - Split the layout and the EmploStart page into partials, with no rendered change.
   `layouts/app.blade.php` now includes `partials/header.blade.php` and
   `partials/footer.blade.php`, both cut verbatim from the layout (3,429 and 2,834

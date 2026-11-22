@@ -139,6 +139,47 @@ final class ExportStaticTest extends TestCase
         }
     }
 
+    public function test_no_exported_page_keeps_a_laravel_api_route(): void
+    {
+        $this->artisan('emplowise:export-static', [
+            'path' => $this->target,
+            '--base' => 'https://example.github.io/demo',
+            '--audit-key' => 'test-key',
+        ])->assertSuccessful();
+
+        $routes = ['/api/chat', '/api/audit', '/api/student/', '/api/csp-report'];
+        $files = File::allFiles($this->target);
+
+        foreach ($files as $file) {
+            if ($file->getExtension() !== 'html') {
+                continue;
+            }
+
+            $html = (string) File::get($file->getPathname());
+
+            foreach ($routes as $route) {
+                $this->assertStringNotContainsString(
+                    $route,
+                    $html,
+                    $file->getRelativePathname().' still points at '.$route,
+                );
+            }
+        }
+    }
+
+    public function test_a_keyless_export_offers_an_email_fallback(): void
+    {
+        $this->artisan('emplowise:export-static', [
+            'path' => $this->target,
+            '--base' => 'https://example.github.io/demo',
+        ])->assertSuccessful();
+
+        $audit = (string) File::get($this->target.'/free-hr-audit/index.html');
+
+        $this->assertStringContainsString('data-fallback-email="hello@emplowise.com"', $audit);
+        $this->assertStringContainsString('data-audit-nokey="1"', $audit);
+    }
+
     public function test_it_swaps_the_booking_form_to_web3forms(): void
     {
         $this->artisan('emplowise:export-static', [

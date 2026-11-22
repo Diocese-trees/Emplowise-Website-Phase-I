@@ -41,8 +41,9 @@ of bandwidth per month, which is far above this site's size.
 4. Push to `main` (or run the workflow manually from the Actions tab).
 
 Until step 1 is done, local exports still work: the form is marked
-`data-audit-nokey="1"`, and the wizard stops with "Booking is not connected in
-this preview build" instead of posting to a broken endpoint.
+`data-audit-nokey="1"`, and the wizard stops before submitting and shows an
+email link (`data-fallback-email`, taken from `config/emplowise.php`) instead of
+posting to a broken endpoint.
 
 ### Changing where submissions go
 
@@ -83,6 +84,33 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
   client to `credentials: 'omit'` with no CSRF header.
 - Normalises canonicals, `og:url`, sitemap entries and internal links to the
   trailing-slash form GitHub Pages actually serves (`/faq/`).
+
+## API boundary on a static host
+
+`routes/web.php` keeps seven `POST /api/*` routes for the Laravel deployment.
+None of them may appear in a static build, so each client script has a fallback
+that runs before any request is attempted:
+
+| Route | Static behaviour |
+| --- | --- |
+| `POST /api/chat` | `data-endpoint` is removed; `chat.js` answers from its bundled knowledge base |
+| `POST /api/audit` | Form is rewritten to Web3Forms; without a key it stops and shows the email fallback |
+| `POST /api/student/interview/questions` | `#emplostart-config` loses its endpoints; `student.js` uses `js/toolkit/interview.js` |
+| `POST /api/student/interview/feedback` | Same — local engine |
+| `POST /api/student/ats` | Same — local engine |
+| `POST /api/student/profile` | Same — local engine |
+| `POST /api/csp-report` | The exported CSP has no `report-uri`, so nothing is sent |
+
+Gating lives in the clients rather than one global flag: `chat.js` checks the
+endpoint attribute, `student.js` checks each endpoint before calling
+`postJson()`, and `audit.js` checks `data-audit-mode="web3forms"`. That keeps
+each page independent. `ExportStaticTest` enforces the result by scanning every
+exported `.html` file for `/api/chat`, `/api/audit`, `/api/student/`, and
+`/api/csp-report`, so a new endpoint cannot leak into the static site silently.
+
+Verified with headless Chromium against a local export: loading
+`/free-hr-audit/`, sending a chat message, and running the ATS tool produced
+zero `fetch()` calls, zero `/api/` requests, and zero console errors.
 
 ## Browser-engine parity
 
