@@ -30,7 +30,10 @@ Each `seo` block controls one page:
 - `secondary_keywords`: exactly two supporting phrases, different from every other page.
 - `title`: 45 to 60 characters, keyword near the front, ending with `| Emplowise`.
 - `description`: 135 to 155 characters, with a confirmed fact or price.
-- `h1`: the main heading. Keep the primary keyword in it.
+- `h1`: the main heading. Keep the primary keyword in it. Each template in
+  `resources/views/pages/` renders its own `<h1>` from this key, so change the
+  copy here, not the markup. There is no shared `seo-h1` partial any more; keep
+  exactly one `<h1>` per page template.
 - `h1_accent`: the phrase inside the h1 shown in the italic accent style. It must appear word for word in `h1`.
 - `h2`: a section heading that also contains the primary keyword.
 - `intro`: the first paragraph. Keep the primary keyword in it.

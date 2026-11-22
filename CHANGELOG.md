@@ -6,6 +6,15 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Inlined the SEO `<h1>`. `resources/views/partials/seo-h1.blade.php` is deleted;
+  every template in `resources/views/pages/` now renders its own `<h1>` from
+  `$seo['h1']` and `$seo['h1_accent']` with the same markup, so each page has
+  exactly one visible semantic heading and the existing `.hero h1` /
+  `.page-head h1` styles still apply. The rendered `<h1>` is byte-identical to
+  the previous build on all 11 exported pages (1 h1 and 1 accent each, no page
+  with zero or multiple). Backup branch: `backup/main-pre-h1-inline-2026-11-22`
+  (at `636e8db`). `CONTENT_EDITING_GUIDE.md` notes that the copy keys drive the
+  markup now; 56 tests pass and the SEO audit is 9/9.
 - Removed the intro splash. `resources/views/partials/intro.blade.php`,
   `public/css/intro.css` and `public/js/intro.js` are deleted; the layout no
   longer includes the partial or loads the script, and `intro.css` is out of
