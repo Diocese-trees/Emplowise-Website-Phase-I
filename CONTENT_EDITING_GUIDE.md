@@ -9,12 +9,16 @@ Every public sentence on the Emplowise site lives in `config/emplowise.php`. You
 | Meet Emplowise | `/` | `seo.home` and `copy.home` |
 | Our Story | `/what-we-are` | `seo.what-we-are` and `copy.what-we-are` |
 | What We Do | `/what-we-do` | `seo.what-we-do` and `copy.what-we-do` |
-| Why Us | `/why-emplowise` | `seo.pricing` and `copy.pricing` |
-| EmploStart | `/emplostart` | `seo.student-hub` and `copy.student-hub` |
+| What We Are Building | `/what-we-are-building` | `seo.what-we-are-building` and `copy.what-we-are-building` |
+| Why Us | `/why-emplowise` | `seo.why-emplowise` and `copy.why-emplowise` |
+| EmploStart | `/emplostart` | `seo.emplostart` and `copy.emplostart` |
 | FAQ | `/faq` | `seo.faq`, `copy.faq`, and `faqs` |
+| Contact Us | `/contact` | `seo.contact` and `copy.contact` |
 | Free HR Audit | `/free-hr-audit` | `seo.free-hr-audit` and `copy.free-hr-audit` |
 
-Shared header, footer, and chat widget text is in `copy.layout` and `copy.chat`. Package prices, the service list, the four method stages, and the FAQ answers are in the `packages`, `services`, `methodology`, and `faqs` arrays.
+Shared header, footer, chat widget and theme-toggle text is in `copy.layout` and `copy.chat`. Package prices, the service list, the four method stages, and the FAQ answers are in the `packages`, `services`, `methodology`, and `faqs` arrays.
+
+The keys follow the current page names, not the earlier ones: there is no `copy.pricing` or `copy.student-hub` any more, they are `copy.why-emplowise` and `copy.emplostart`. `seo.team` and `copy.team` feed the team section on Our Story; `/team` itself is a 301 to `/what-we-are#team`.
 
 ## Editing a search snippet
 
@@ -33,13 +37,22 @@ Edit only the text inside the quotes. Keep the array keys unchanged.
 
 ## Editing body copy, buttons, and headings
 
-Each `copy` block mirrors the page from top to bottom. For example, `copy.pricing.compare.table` holds the five column labels in the comparison table, and `copy.free-hr-audit.success.steps` holds the three confirmation lines.
+Each `copy` block mirrors the page from top to bottom. For example, `copy.why-emplowise.compare.table` holds the five column labels in the comparison table, and `copy.free-hr-audit.success.steps` holds the three confirmation lines.
 
 Field labels, helper hints, and tool result headings live in the same `copy` block as the rest of the page. Input placeholders stay in the Blade file next to the field, because they are example values tied to that one input. Short status messages that the JavaScript swaps in at runtime stay in `public/js`. Assistant answers are generated at request time from `app/Services/EmplowiseAssistant.php` and the local knowledge base in `public/js/chat.js`, so edit those two files to change how the chat replies.
 
+### Header, footer and theme text
+
+`copy.layout` holds the navigation labels, the header CTA, the footer columns and the theme toggle:
+
+- `theme_toggle_dark` / `theme_toggle_light` are the screen-reader labels on the header and drawer buttons ("Switch to dark theme" / "Switch to light theme"). Keep them as instructions, not state names.
+- `theme_footer_dark` / `theme_footer_light` are the visible footer label, which names the mode the button will switch *to*.
+
+The toggle appears in the header above 1040px, as a row in the mobile drawer at 1040px and below, and in the footer meta always. Each button gets its label from the same two keys, so editing them once updates all three.
+
 ## Student Hub and chat controls
 
-The five Student Hub tools and the chat widget keep their visible labels in `copy.student-hub`:
+The five Student Hub tools and the chat widget keep their visible labels in `copy.emplostart`:
 
 - **Interview:** `interview.breakdown_heading` ("Why this score") and `interview.probe_heading` ("Ask yourself next") label the score dimensions and the practice prompt. `interview.score_note` names the four dimensions, so keep it in step with the 35/25/25/15 weights in `app/Services/StudentToolkit.php`.
 - **Resume builder:** `resume.example`, `resume.clear`, and `resume.save_note`. The note must keep saying the draft stays in the browser and is never sent to a server.
@@ -48,6 +61,25 @@ The five Student Hub tools and the chat widget keep their visible labels in `cop
 - **Chat:** `chat.reset` labels the "Start over" button and `chat.quick` holds the opening chips. Follow-up suggestion chips and intent scoring live in `app/Services/EmplowiseAssistant.php`; the browser fallback copy and its internal links live in `public/js/chat.js`. Keep both in step with the confirmed facts.
 
 Interview and ATS scores are calculated by the local engines first. A configured model can refine the wording around a result, but the numbers a student sees always come from the deterministic local calculation, so a model change cannot move a score.
+
+## Contact Us
+
+The page deliberately has no form — the h1 promises "without a maze of forms" — so the only actions are the mailto link, the copy-email button and the route into the Free HR Audit. Keep it that way; if a contact form is ever required, the heading and the `micro_status` line have to change with it.
+
+`copy.contact` is laid out in the order the page reads:
+
+| Block | Keys | Note |
+| --- | --- | --- |
+| Direct-line panel | `panel_kicker`, `panel_heading`, `panel_body`, `panel_email_cta`, `panel_audit_cta` | the navy panel at the top |
+| Facts | `fact_hours_label`, `fact_hours`, `fact_reply_label`, `fact_reply`, `fact_market_label`, `fact_market` | office hours, reply window, team base — keep the hours in step with the footer and the FAQ |
+| What happens next | `next_heading`, `next_body`, `next_steps` | three steps, each with `title` and `body`; the layout is built for three |
+| Email card | `email_heading`, `email_body`, `email`, `email_write`, `copy_label`, `copy_done`, `copy_fail` | `email` is used for the visible address and the `mailto:`; change it in one place only |
+| Socials card | `social_heading`, `social_body`, `social_note`, `social_pending`, `socials` | each entry is `label`, `icon`, `href`, `pending`; `pending` keeps the link inert and shows the `social_pending` note instead of navigating |
+| Resources card | `resources_heading`, `resources_note`, `resources` | each entry is `label` and `route` (a Laravel route name); keep it to the pages that exist |
+| AI shortcut | `ai_heading`, `ai_body`, `ai_query`, `ai_links` | each entry is `label` and a base `href`; the template appends the URL-encoded `ai_query`, so keep base URLs free of query strings |
+| Footer line | `micro_copyright`, `micro_status` | `micro_status` is the "actively being built" note |
+
+The social URLs are placeholders (`wa.me/923000000000`, the generic profile paths) until the real accounts exist; they are marked pending so the page does not present them as live.
 
 ## Editing prices and facts
 
@@ -67,3 +99,12 @@ php artisan config:clear && php artisan config:cache
 `emplowise:seo-audit` checks every route for missing keys, title and description length, duplicate titles, duplicate keywords, keyword placement in the title, h1, intro, and section heading, banned filler words, em dashes, and the confirmed business facts. It prints a table and exits non-zero when something needs fixing. The second command clears the old cached config and rebuilds it so the live site uses your new text.
 
 To preview locally without caching, run `php artisan config:clear` and open the site with `php artisan serve`.
+
+## Layout or styling changes
+
+Text edits never need a rebuild. If you change a stylesheet in `public/css`, run
+`php artisan emplowise:bundle-css` afterwards and commit the regenerated
+`site.css`/`hub.css` in the same change set, or the site keeps serving the old
+bundle. See "Styles and assets" in the README, and
+[`docs/THEME_AND_MOTION.md`](docs/THEME_AND_MOTION.md) before touching colours or
+adding a component that must work in dark mode.
