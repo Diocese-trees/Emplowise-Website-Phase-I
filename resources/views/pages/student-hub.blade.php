@@ -4,8 +4,7 @@
 @section('meta_description', $seo['description'])
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset_v('css/student.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/print.css') }}" media="print">
+    <link rel="stylesheet" href="{{ asset_v('css/hub.css') }}">
 @endpush
 
 @section('content')

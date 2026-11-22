@@ -20,6 +20,9 @@ final class EmplowiseSeoAudit extends Command
         'pricing',
         'student-hub',
         'faq',
+        'contact',
+        'team',
+        'ai-automation',
         'free-hr-audit',
     ];
 
@@ -154,7 +157,7 @@ final class EmplowiseSeoAudit extends Command
         }
 
         $this->newLine();
-        $this->info('SEO audit passed. All 7 routes have unique, in-range titles and descriptions, and every primary keyword appears in the title, h1, intro, and a section heading.');
+        $this->info('SEO audit passed. All 10 routes have unique, in-range titles and descriptions, and every primary keyword appears in the title, h1, intro, and a section heading.');
 
         return self::SUCCESS;
     }

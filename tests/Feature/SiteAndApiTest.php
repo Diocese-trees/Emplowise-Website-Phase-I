@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Models\AuditRequest;
 use App\Models\ChatMessage;
 use App\Services\EmplowiseAssistant;
+use App\Support\CssBundles;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +15,7 @@ final class SiteAndApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_all_seven_pages_render(): void
+    public function test_all_public_pages_render(): void
     {
         $pages = [
             '/' => 'Remote HR services in Pakistan',
@@ -23,6 +24,9 @@ final class SiteAndApiTest extends TestCase
             '/pricing' => 'PKR 40,000',
             '/student-hub' => 'Free ATS resume checker',
             '/faq' => 'HR outsourcing questions',
+            '/contact' => 'Contact Emplowise',
+            '/team' => 'Emplowise team',
+            '/ai-automation' => 'AI automation for HR',
             '/free-hr-audit' => 'free HR audit in Pakistan',
         ];
 
@@ -45,12 +49,58 @@ final class SiteAndApiTest extends TestCase
     public function test_student_assets_load_only_on_the_hub(): void
     {
         $hub = $this->get('/student-hub')->assertOk();
-        $hub->assertSee('css/student.css', false);
+        $hub->assertSee('css/site.css', false);
+        $hub->assertSee('css/hub.css', false);
         $hub->assertSee('js/student.js', false);
 
         $home = $this->get('/')->assertOk();
-        $home->assertDontSee('css/student.css', false);
+        $home->assertDontSee('css/hub.css', false);
         $home->assertDontSee('js/student.js', false);
+    }
+
+    public function test_stylesheets_ship_as_two_bundles(): void
+    {
+        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $home = (string) $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(2, preg_match_all('/<link rel="stylesheet"/', $hub), 'The hub should load two bundles');
+        $this->assertSame(1, preg_match_all('/<link rel="stylesheet"/', $home), 'Other pages should load one bundle');
+
+        foreach ([$hub, $home] as $html) {
+            $this->assertStringNotContainsString('css/tokens.css', $html);
+            $this->assertStringNotContainsString('css/components.css', $html);
+            $this->assertStringNotContainsString('css/print.css', $html);
+            $this->assertStringNotContainsString('css/student.css', $html);
+        }
+    }
+
+    public function test_css_bundles_are_regenerated_from_their_sources(): void
+    {
+        foreach (CssBundles::build() as $name => $expected) {
+            $path = public_path('css/'.$name);
+
+            $this->assertFileExists($path);
+            $this->assertSame(
+                $expected,
+                (string) file_get_contents($path),
+                $name.' is stale; run php artisan emplowise:bundle-css'
+            );
+        }
+    }
+
+    public function test_primary_nav_stays_compact_and_secondary_pages_move_to_the_footer(): void
+    {
+        $html = (string) $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(1, preg_match('/<nav class="main-nav".*?<\/nav>/s', $html, $nav));
+        $this->assertLessThanOrEqual(6, substr_count($nav[0], '<a '), 'Header nav must fit on one laptop line');
+        $this->assertStringContainsString('Free HR Audit', $nav[0]);
+        $this->assertStringNotContainsString('>FAQ<', $nav[0]);
+        $this->assertStringNotContainsString('>What We Are<', $nav[0]);
+
+        $this->assertSame(1, preg_match('/<footer class="site-footer">.*?<\/footer>/s', $html, $footer));
+        $this->assertStringContainsString('>FAQ<', $footer[0]);
+        $this->assertStringContainsString('>What We Are<', $footer[0]);
     }
 
     public function test_resume_builder_offers_draft_recovery_controls(): void
@@ -74,17 +124,19 @@ final class SiteAndApiTest extends TestCase
         $this->assertMatchesRegularExpression('/data-prompt-filter="Job search">Job search <span class="filter-count">3<\/span>/', $html);
     }
 
-    public function test_print_stylesheet_is_non_blocking_and_scripts_defer(): void
+    public function test_print_rules_stay_scoped_and_scripts_defer(): void
     {
-        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
+        $bundle = (string) file_get_contents(public_path('css/hub.css'));
 
-        $this->assertMatchesRegularExpression('/css\/print\.css\?v=\d+" media="print"/', $hub);
+        $this->assertStringContainsString('@media print', $bundle);
+        $this->assertStringContainsString('.resume-paper', $bundle);
+
+        $hub = (string) $this->get('/student-hub')->assertOk()->getContent();
         $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
 
         $home = (string) $this->get('/')->assertOk()->getContent();
         $this->assertMatchesRegularExpression('/<script src="\/js\/app\.js\?v=\d+" defer><\/script>/', $home);
         $this->assertMatchesRegularExpression('/<script src="\/js\/chat\.js\?v=\d+" defer><\/script>/', $home);
-        $this->assertStringNotContainsString('media="print"', $home);
     }
 
     public function test_the_hub_loads_every_browser_engine_before_student_js(): void
@@ -103,7 +155,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_pages_render_without_php_diagnostics(): void
     {
-        $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'];
+        $pages = ['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/contact', '/team', '/ai-automation', '/free-hr-audit'];
         $markers = ['Warning:', 'Notice:', 'Deprecated:', 'Fatal error', 'Undefined variable', 'Undefined array key'];
 
         foreach ($pages as $path) {
@@ -145,6 +197,9 @@ final class SiteAndApiTest extends TestCase
             '/pricing' => 'pricing',
             '/student-hub' => 'student-hub',
             '/faq' => 'faq',
+            '/contact' => 'contact',
+            '/team' => 'team',
+            '/ai-automation' => 'ai-automation',
             '/free-hr-audit' => 'free-hr-audit',
         ];
 
@@ -186,13 +241,97 @@ final class SiteAndApiTest extends TestCase
         $this->assertNotFalse($xml);
 
         $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
-        $this->assertCount(7, $locations);
+        $this->assertCount(10, $locations);
 
-        foreach (['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/free-hr-audit'] as $path) {
+        foreach (['/', '/what-we-are', '/what-we-do', '/pricing', '/student-hub', '/faq', '/contact', '/team', '/ai-automation', '/free-hr-audit'] as $path) {
             $this->assertTrue(
                 collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),
                 'Missing sitemap entry for '.$path
             );
+        }
+    }
+
+    public function test_contact_hub_links_out_safely_and_keeps_the_email_copyable(): void
+    {
+        $copy = config('emplowise.copy.contact');
+        $query = rawurlencode($copy['ai_query']);
+        $html = (string) $this->get('/contact')->assertOk()->getContent();
+
+        foreach ($copy['ai_links'] as $link) {
+            $this->assertStringContainsString('href="'.$link['href'].$query.'"', $html);
+            $this->assertStringContainsString('target="_blank" rel="noopener noreferrer"', $html);
+        }
+
+        $this->assertStringContainsString('mailto:'.$copy['email'], $html);
+        $this->assertStringContainsString('id="copy-email"', $html);
+        $this->assertStringContainsString($copy['micro_copyright'], $html);
+        $this->assertStringContainsString($copy['micro_status'], $html);
+
+        foreach ($copy['resources'] as $resource) {
+            $this->assertStringContainsString('href="'.route($resource['route'], [], false).'"', $html);
+            $this->assertStringContainsString($resource['label'], $html);
+        }
+
+        foreach ($copy['socials'] as $social) {
+            $this->assertStringContainsString('aria-label="'.$social['label'].'"', $html);
+        }
+    }
+
+    public function test_team_page_uses_a_tabbed_window_showcase_with_portraits(): void
+    {
+        $html = (string) $this->get('/team')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, 'role="tablist"'));
+        $this->assertSame(3, substr_count($html, 'role="tab"'));
+        $this->assertSame(3, substr_count($html, 'role="tabpanel"'));
+        $this->assertStringContainsString('data-team-tab="ali"', $html);
+        $this->assertStringContainsString('class="team-photo"', $html);
+        $this->assertStringContainsString('<h2>'.e(config('emplowise.seo.team.h2')).'</h2>', $html);
+
+        foreach (config('emplowise.copy.team.profiles') as $profile) {
+            $this->assertStringContainsString($profile['portrait'], $html);
+            $this->assertStringContainsString($profile['name'], $html);
+            $this->assertStringContainsString(e($profile['bio']), $html);
+            $this->assertStringContainsString('width="800"', $html);
+            $this->assertStringContainsString('height="1000"', $html);
+        }
+
+        $css = (string) file_get_contents(public_path('css/site.css'));
+        $this->assertStringContainsString('aspect-ratio: 4 / 5', $css);
+    }
+
+    public function test_ai_automation_page_is_monochrome_and_prelaunch(): void
+    {
+        $copy = config('emplowise.copy.ai-automation');
+        $html = (string) $this->get('/ai-automation')->assertOk()->getContent();
+
+        $this->assertStringContainsString('class="page-ai"', $html);
+        $this->assertStringContainsString($copy['banner'], $html);
+        $this->assertStringContainsString('disabled aria-disabled="true"', $html);
+        $this->assertStringContainsString($copy['cta'], $html);
+        $this->assertStringContainsString(route('what-we-do', [], false), $html);
+        $this->assertStringContainsString('<h2>'.e(config('emplowise.seo.ai-automation.h2')).'</h2>', $html);
+
+        foreach ($copy['modules'] as $module) {
+            $this->assertStringContainsString($module['name'], $html);
+            $this->assertStringContainsString(e($module['body']), $html);
+        }
+
+        $css = (string) file_get_contents(public_path('css/site.css'));
+        $this->assertStringContainsString('body.page-ai > *:not(script):not(.skip-link)', $css);
+        $this->assertStringContainsString('filter: grayscale(100%)', $css);
+    }
+
+    public function test_home_is_a_compact_snapshot_without_the_duplicated_pillar_lists(): void
+    {
+        $html = (string) $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, 'id="hero-panel"'));
+        $this->assertSame(0, substr_count($html, 'pillar-detail'));
+        $this->assertSame(0, substr_count($html, 'pillar-list'));
+
+        foreach (['payroll', 'performance', 'policy'] as $pillar) {
+            $this->assertStringContainsString(route('what-we-do', [], false).'#'.$pillar, $html);
         }
     }
 

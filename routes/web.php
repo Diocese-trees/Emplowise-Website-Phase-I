@@ -15,10 +15,13 @@ Route::get('/what-we-do', [SiteController::class, 'whatWeDo'])->name('what-we-do
 Route::get('/pricing', [SiteController::class, 'pricing'])->name('pricing');
 Route::get('/student-hub', [SiteController::class, 'studentHub'])->name('student-hub');
 Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
+Route::get('/contact', [SiteController::class, 'contact'])->name('contact');
+Route::get('/team', [SiteController::class, 'team'])->name('team');
+Route::get('/ai-automation', [SiteController::class, 'aiAutomation'])->name('ai-automation');
 Route::get('/free-hr-audit', [SiteController::class, 'audit'])->name('free-hr-audit');
 
 Route::get('/sitemap.xml', function () {
-    $pages = ['home', 'what-we-are', 'what-we-do', 'pricing', 'student-hub', 'faq', 'free-hr-audit'];
+    $pages = ['home', 'what-we-are', 'what-we-do', 'pricing', 'student-hub', 'faq', 'contact', 'team', 'ai-automation', 'free-hr-audit'];
     $urls = '';
     foreach ($pages as $name) {
         $priority = $name === 'home' ? '1.0' : '0.8';

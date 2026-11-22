@@ -117,6 +117,42 @@ return [
             'h2' => 'Your free HR audit in Pakistan is in the queue.',
             'intro' => 'Emplowise runs a free HR audit in Pakistan for startups and SMEs, delivered remotely. You get a structured review of payroll inputs, performance practice, and policy coverage, plus a prioritised gap list.',
         ],
+
+        // === PAGE: CONTACT ===
+        'contact' => [
+            'primary_keyword' => 'contact Emplowise',
+            'secondary_keywords' => ['Emplowise contact details', 'remote HR support contact'],
+            'title' => 'Contact Emplowise for Remote HR Support | Emplowise',
+            'description' => 'Contact Emplowise for remote HR support in Pakistan. Email the team, ask an AI assistant, or book a free HR audit and get a prioritised gap list.',
+            'h1' => 'Contact Emplowise without a maze of forms.',
+            'h1_accent' => 'without a maze of forms',
+            'h2' => 'Contact Emplowise through the channel you prefer.',
+            'intro' => 'Contact Emplowise for remote HR support in Pakistan. Ask an AI assistant, email the team, or jump straight to services, pricing, and the free HR audit.',
+        ],
+
+        // === PAGE: TEAM ===
+        'team' => [
+            'primary_keyword' => 'Emplowise team',
+            'secondary_keywords' => ['remote HR leadership team', 'Emplowise founders and advisor'],
+            'title' => 'Meet the Emplowise team behind remote HR | Emplowise',
+            'description' => 'Meet the Emplowise team behind remote HR in Pakistan: an advisor, a content strategist, and a senior HR manager running people operations.',
+            'h1' => 'The Emplowise team that runs your people operations.',
+            'h1_accent' => 'Emplowise team',
+            'h2' => 'How the Emplowise team splits the work.',
+            'intro' => 'The Emplowise team runs remote HR for startups and SMEs in Pakistan. Three people own strategy, marketing, and people operations, and they answer directly.',
+        ],
+
+        // === PAGE: AI AUTOMATION ===
+        'ai-automation' => [
+            'primary_keyword' => 'AI automation for HR',
+            'secondary_keywords' => ['HR payroll automation', 'HR policy co-pilot'],
+            'title' => 'AI Automation for HR, Building Soon | Emplowise',
+            'description' => 'Emplowise is building AI automation for HR: a payroll engine, a performance insight layer, and a policy co-pilot. The division is pre-launch.',
+            'h1' => 'AI automation for HR, built in the open.',
+            'h1_accent' => 'built in the open',
+            'h2' => 'Where AI automation for HR will plug in.',
+            'intro' => 'Emplowise is building AI automation for HR. A payroll engine, a performance insight layer, and a policy co-pilot are in pre-launch, and this page shows the shape of the division.',
+        ],
     ],
 
     'brand' => [
@@ -597,6 +633,143 @@ return [
             ],
         ],
 
+        'contact' => [
+            'breadcrumb' => 'Contact',
+            'kicker' => 'Reach the team',
+            'ai_heading' => 'Ask your favorite AI what Emplowise is',
+            'ai_body' => 'Each pill opens a new tab with a ready-made question. It is the fastest second opinion before you talk to us.',
+            'ai_query' => 'What is Emplowise, what remote HR services does it offer in Pakistan, and what are its package prices?',
+            'ai_links' => [
+                ['label' => 'ChatGPT', 'href' => 'https://chatgpt.com/?q='],
+                ['label' => 'Claude', 'href' => 'https://claude.ai/new?q='],
+                ['label' => 'Gemini', 'href' => 'https://gemini.google.com/app?q='],
+                ['label' => 'Perplexity', 'href' => 'https://www.perplexity.ai/search?q='],
+            ],
+            'email_heading' => 'Email us',
+            'email_body' => 'Scope questions, hiring support, or anything the audit form does not cover.',
+            'email' => 'hello@emplowise.com',
+            'copy_label' => 'Copy email',
+            'copy_done' => 'Email copied.',
+            'copy_fail' => 'Copy failed. Select the address and copy it manually.',
+            'social_heading' => 'Socials',
+            'social_body' => 'Profiles are being set up, so these links are marked pending.',
+            'socials' => [
+                ['label' => 'LinkedIn', 'icon' => 'linkedin'],
+                ['label' => 'Instagram', 'icon' => 'instagram'],
+                ['label' => 'X', 'icon' => 'x'],
+                ['label' => 'GitHub', 'icon' => 'github'],
+            ],
+            'resources_heading' => 'Resources',
+            'resources' => [
+                ['label' => 'What We Do', 'route' => 'what-we-do'],
+                ['label' => 'Pricing', 'route' => 'pricing'],
+                ['label' => 'Student Hub', 'route' => 'student-hub'],
+                ['label' => 'FAQ', 'route' => 'faq'],
+                ['label' => 'Team', 'route' => 'team'],
+                ['label' => 'AI Automation', 'route' => 'ai-automation'],
+                ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],
+            ],
+            'micro_copyright' => 'Copyright Pending © 2026 Emplowise.',
+            'micro_status' => 'Website is actively being built in the background.',
+        ],
+
+        'team' => [
+            'breadcrumb' => 'Team',
+            'kicker' => 'The people behind the work',
+            'window_label' => 'Emplowise team showcase',
+            'window_title' => 'team.emplowise',
+            'window_meta' => 'people operations',
+            'tablist_label' => 'Emplowise team members',
+            'showcase_lede' => 'Three windows, three owners, one operating rhythm. Switch tabs to meet each person.',
+            'focus_label' => 'Focus',
+            'panel_note' => 'Profiles are confirmed. Portraits are placeholders until the official shoot.',
+            'photo_todo' => 'TODO: replace this placeholder portrait with the confirmed team photo at the same 4:5 ratio.',
+            'profiles' => [
+                [
+                    'id' => 'ali',
+                    'num' => '01',
+                    'name' => 'Muhammad Ali',
+                    'role' => 'Advisor',
+                    'focus' => 'Vision, governance, and operational growth',
+                    'portrait' => 'img/team/placeholder-ali.png',
+                    'alt' => 'Portrait placeholder for Muhammad Ali',
+                    'bio' => "Strategic advisor guiding Emplowise's long-term vision, governance, and operational growth.",
+                    'bio_todo' => 'TODO: replace the advisor bio with confirmed copy before launch.',
+                ],
+                [
+                    'id' => 'hadi',
+                    'num' => '02',
+                    'name' => 'Abdul Hadi',
+                    'role' => 'Co-Founder',
+                    'focus' => 'Content Strategist & Strategic Marketer',
+                    'portrait' => 'img/team/placeholder-hadi.png',
+                    'alt' => 'Portrait placeholder for Abdul Hadi',
+                    'bio' => 'A marketer by design and storyteller by passion, driving Strategic Partnerships at Advegen alongside founding roles at Emplowise and The Creative Nexus. Navigates the gray to align brand narrative, growth strategy, and impact across SDGs 1, 3, 4, and 8.',
+                    'bio_todo' => null,
+                ],
+                [
+                    'id' => 'nabil',
+                    'num' => '03',
+                    'name' => 'Samarah Nabil',
+                    'role' => 'Co-Founder',
+                    'focus' => 'Senior HR Business Manager & Analyst',
+                    'portrait' => 'img/team/placeholder-nabil.png',
+                    'alt' => 'Portrait placeholder for Samarah Nabil',
+                    'bio' => "Brings 9+ years of experience in strategic HR, talent acquisition, and performance management, having engaged and supported 2,000+ employees. Leads Emplowise's core people operations, analytics, and organizational frameworks.",
+                    'bio_todo' => null,
+                ],
+            ],
+            'cta_heading' => 'Work with the team behind the structure.',
+            'cta_body' => 'Bring a people problem, a payroll question, or a policy gap. The first conversation is a free HR audit, not a pitch.',
+        ],
+
+        'ai-automation' => [
+            'breadcrumb' => 'AI Automation',
+            'kicker' => 'Pre-launch division',
+            'banner' => 'Emplowise AI Automation Division — Building Soon',
+            'hero_sub' => 'A built division waiting on launch. The interfaces are real, the data is frozen, and nothing here pretends to be live yet.',
+            'cta' => 'Building Soon',
+            'cta_note' => 'No waitlist and no intake form yet. The confirmed HR services stay live while this division finishes its build.',
+            'modules_heading' => 'Three modules already in the build.',
+            'modules_lede' => 'Each module is scoped, designed, and waiting on launch approval. The dashboard below shows how they sit together.',
+            'module_status' => 'In build',
+            'modules' => [
+                [
+                    'name' => 'Payroll Engine',
+                    'icon' => 'payroll',
+                    'body' => 'Turns attendance, leave, and salary inputs into a checked payroll run. Variance flags surface before payday, not after.',
+                ],
+                [
+                    'name' => 'Performance Insight Layer',
+                    'icon' => 'performance',
+                    'body' => 'Reads review cycles and manager notes to show where goals drift, which teams need support, and what changed since last quarter.',
+                ],
+                [
+                    'name' => 'Policy Co-Pilot',
+                    'icon' => 'policy',
+                    'body' => 'Answers policy questions from the approved handbook, cites the clause, and drafts an update when the rule changes.',
+                ],
+            ],
+            'dashboard' => [
+                'label' => 'Static preview of the Emplowise AI operations desk',
+                'window' => 'AI operations desk',
+                'tab' => 'Preview',
+                'status' => 'Static preview',
+                'caption' => 'Static preview. No live data, no client records.',
+                'kpis' => [
+                    ['label' => 'Payroll inputs', 'value' => 'Mapped'],
+                    ['label' => 'Review signals', 'value' => 'Mapped'],
+                    ['label' => 'Policy answers', 'value' => 'Mapped'],
+                ],
+                'rows' => [
+                    ['name' => 'Payroll Engine', 'meta' => 'Attendance, leave, salary inputs', 'state' => 'Staged'],
+                    ['name' => 'Performance Insight Layer', 'meta' => 'Review cycles and manager notes', 'state' => 'Staged'],
+                    ['name' => 'Policy Co-Pilot', 'meta' => 'Approved handbook and clause citations', 'state' => 'Staged'],
+                ],
+            ],
+            'back_label' => 'See the confirmed HR services',
+        ],
+
         'chat' => [
             'aria_label' => 'Emplowise assistant',
             'title' => 'Emplowise assistant',
@@ -650,10 +823,8 @@ return [
             'strip_label' => 'Confirmed services',
             'pillars' => [
                 'kicker' => 'What we run',
-                'lede' => 'Open a pillar to see the confirmed services behind it and the workflow checks and templates that remove manual chase work.',
-                'checks' => 'Workflow checks and templates',
-                'services' => 'Confirmed services',
-                'link' => 'See how payroll, performance, and policy run',
+                'lede' => 'Each pillar opens the confirmed services, workflow checks, and templates that sit behind it.',
+                'card_link' => 'See the confirmed services',
             ],
             'method' => [
                 'kicker' => 'The method',
@@ -675,21 +846,6 @@ return [
                 'lede' => 'Five working tools for students and early career candidates. No account, no upsell, no invented feedback. Powered by Alibaba Cloud AI with a local fallback that always works.',
                 'cta_prompts' => 'Explore the :count prompts',
                 'cta_ats' => 'Score your resume',
-                'tools_aria' => 'Five free student tools',
-                'tool_free' => 'Free',
-                'tools' => [
-                    'Mock interview simulator',
-                    'ATS resume and JD analyzer',
-                    'ATS resume builder',
-                    'Profile optimizer',
-                    'Prompt library, :count prompts',
-                ],
-            ],
-            'stats' => [
-                'services' => 'Confirmed services',
-                'pillars' => 'Operating pillars',
-                'questions' => 'Answered questions',
-                'prompts' => 'Free career prompts',
             ],
             'cta_band' => [
                 'heading' => 'Start with a free HR audit. Leave with a gap list.',
@@ -1059,10 +1215,19 @@ return [
 
     'nav' => [
         ['label' => 'Home', 'route' => 'home'],
-        ['label' => 'What We Are', 'route' => 'what-we-are'],
         ['label' => 'What We Do', 'route' => 'what-we-do'],
         ['label' => 'Pricing', 'route' => 'pricing'],
         ['label' => 'Student Hub', 'route' => 'student-hub'],
+    ],
+
+    // Secondary pages live in the footer so the header stays on one line.
+    'footer_company' => [
+        ['label' => 'What We Are', 'route' => 'what-we-are'],
+        ['label' => 'What We Do', 'route' => 'what-we-do'],
+        ['label' => 'Team', 'route' => 'team'],
+        ['label' => 'AI Automation', 'route' => 'ai-automation'],
+        ['label' => 'Pricing', 'route' => 'pricing'],
         ['label' => 'FAQ', 'route' => 'faq'],
+        ['label' => 'Contact', 'route' => 'contact'],
     ],
 ];

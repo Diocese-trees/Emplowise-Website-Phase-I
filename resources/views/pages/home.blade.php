@@ -6,7 +6,6 @@
 @section('content')
     @php
         $serviceCount = count(config('emplowise.services'));
-        $faqCount = collect(config('emplowise.faqs'))->sum(fn ($group) => count($group['items']));
     @endphp
 
     <section class="hero">
@@ -138,8 +137,8 @@
 
             <div class="pillar-grid">
                 @foreach ($pillars as $index => $pillar)
-                    <article class="pillar pillar--{{ $pillar['slug'] }} reveal" data-delay="{{ $index + 1 }}" data-pillar>
-                        <button type="button" class="pillar-head" aria-expanded="false" aria-controls="pillar-{{ $pillar['slug'] }}">
+                    <article class="pillar pillar--{{ $pillar['slug'] }} reveal" data-delay="{{ $index + 1 }}">
+                        <a class="pillar-head pillar-head--link" href="{{ route('what-we-do') }}#{{ $pillar['slug'] }}">
                             <span class="pillar-top">
                                 <span class="pillar-badge">
                                     <span class="pillar-icon" aria-hidden="true">
@@ -153,33 +152,15 @@
                                     </span>
                                     <span class="pillar-num">{{ $pillar['number'] }}</span>
                                 </span>
-                                <span class="pillar-arrow" aria-hidden="true">+</span>
+                                <span class="pillar-arrow" aria-hidden="true">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </span>
                             </span>
                             <h3>{{ $pillar['name'] }}</h3>
-                            <p class="pillar-kicker">{{ $pillar['kicker'] }}</p>
-                            <p class="pillar-summary">{{ $pillar['summary'] }}</p>
-                        </button>
-
-                        <div class="pillar-detail" id="pillar-{{ $pillar['slug'] }}">
-                            <h3>{{ $copy['pillars']['checks'] }}</h3>
-                            <ul class="pillar-list">
-                                @foreach ($pillar['automation'] as $item)
-                                    <li>{{ $item }}</li>
-                                @endforeach
-                            </ul>
-
-                            <h3>{{ $copy['pillars']['services'] }}</h3>
-                            <ul class="pillar-list">
-                                @foreach ($pillar['services'] as $service)
-                                    <li>{{ $service }}</li>
-                                @endforeach
-                            </ul>
-
-                            <div class="pillar-foot">
-                                <span class="badge badge--pending">{{ $pillar['status'] }}</span>
-                                <a href="{{ route('what-we-do') }}#{{ $pillar['slug'] }}" class="link-arrow">{{ $copy['pillars']['link'] }}</a>
-                            </div>
-                        </div>
+                            <span class="pillar-kicker">{{ $pillar['kicker'] }}</span>
+                            <span class="pillar-summary">{{ $pillar['summary'] }}</span>
+                            <span class="pillar-card-link">{{ $copy['pillars']['card_link'] }}</span>
+                        </a>
                     </article>
                 @endforeach
             </div>
@@ -221,23 +202,21 @@
                 </p>
             </div>
 
-            <div class="price-grid">
+            <div class="price-grid price-grid--compact">
                 @foreach ($packages as $index => $package)
-                    <article class="price-card {{ $package['featured'] ? 'price-card--featured' : '' }} reveal" data-delay="{{ $index + 1 }}">
+                    <a href="{{ route('pricing') }}" class="price-card price-card--compact {{ $package['featured'] ? 'price-card--featured' : '' }} reveal" data-delay="{{ $index + 1 }}">
                         @if ($package['featured'])
                             <span class="price-tag">{{ $copy['pricing']['tag'] }}</span>
                         @endif
-                        <p class="price-name">{{ $package['name'] }}</p>
-                        <p class="price-amount">{{ $package['price_display'] }}</p>
-                        <p class="price-period">{{ $package['period'] }}</p>
+                        <span class="price-name">{{ $package['name'] }}</span>
+                        <span class="price-amount">{{ $package['price_display'] }}</span>
+                        <span class="price-period">{{ $package['period'] }}</span>
                         <span class="price-capacity">{{ $package['capacity'] }}</span>
-                        <ul class="price-list">
-                            <li>{{ $package['summary'] }}</li>
-                            <li>{{ $package['best_for'] }}</li>
-                            <li>{{ $copy['pricing']['inclusions_line'] }}</li>
-                        </ul>
-                        <a href="{{ route('pricing') }}" class="btn {{ $package['featured'] ? 'btn--light' : 'btn--ghost' }} btn--sm">{{ $copy['pricing']['link'] }}</a>
-                    </article>
+                        <span class="price-card-link">
+                            {{ $copy['pricing']['link'] }}
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </span>
+                    </a>
                 @endforeach
             </div>
 
@@ -248,7 +227,7 @@
     </section>
 
     <section class="section section--navy">
-        <div class="shell hub-teaser">
+        <div class="shell hub-teaser hub-teaser--solo">
             <div class="reveal">
                 <p class="kicker">{{ $copy['student']['kicker'] }}</p>
                 <h2>{{ $copy['student']['heading'] }}</h2>
@@ -261,54 +240,6 @@
                 </div>
             </div>
 
-            <div class="hub-tools reveal" data-delay="2" aria-label="{{ $copy['student']['tools_aria'] }}">
-                <a class="hub-tool" href="{{ route('student-hub') }}#interview">
-                    <span>
-                        <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></i>
-                        {{ $copy['student']['tools'][0] }}
-                    </span>
-                    <b>{{ $copy['student']['tool_free'] }}</b>
-                </a>
-                <a class="hub-tool" href="{{ route('student-hub') }}#ats">
-                    <span>
-                        <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></i>
-                        {{ $copy['student']['tools'][1] }}
-                    </span>
-                    <b>{{ $copy['student']['tool_free'] }}</b>
-                </a>
-                <a class="hub-tool" href="{{ route('student-hub') }}#resume">
-                    <span>
-                        <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></i>
-                        {{ $copy['student']['tools'][2] }}
-                    </span>
-                    <b>{{ $copy['student']['tool_free'] }}</b>
-                </a>
-                <a class="hub-tool" href="{{ route('student-hub') }}#profile">
-                    <span>
-                        <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></i>
-                        {{ $copy['student']['tools'][3] }}
-                    </span>
-                    <b>{{ $copy['student']['tool_free'] }}</b>
-                </a>
-                <a class="hub-tool" href="{{ route('student-hub') }}#prompts">
-                    <span>
-                        <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></i>
-                        {{ str_replace(':count', $promptCount, $copy['student']['tools'][4]) }}
-                    </span>
-                    <b>{{ $copy['student']['tool_free'] }}</b>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="section section--tight section--ice">
-        <div class="shell">
-            <div class="stat-row reveal">
-                <div class="stat stat--light"><b data-count="{{ $serviceCount }}">{{ $serviceCount }}</b><span>{{ $copy['stats']['services'] }}</span></div>
-                <div class="stat stat--light"><b data-count="{{ count($pillars) }}">{{ count($pillars) }}</b><span>{{ $copy['stats']['pillars'] }}</span></div>
-                <div class="stat stat--light"><b data-count="{{ $faqCount }}">{{ $faqCount }}</b><span>{{ $copy['stats']['questions'] }}</span></div>
-                <div class="stat stat--light"><b data-count="{{ $promptCount }}">{{ $promptCount }}</b><span>{{ $copy['stats']['prompts'] }}</span></div>
-            </div>
         </div>
     </section>
 

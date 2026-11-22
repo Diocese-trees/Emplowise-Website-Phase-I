@@ -3,7 +3,7 @@
 **Remote HR services website, grounded AI assistant and a free student career toolkit.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all seven pages are static HTML on GitHub Pages. The Student Hub scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md).
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all ten pages are static HTML on GitHub Pages. The Student Hub scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![Tests](https://img.shields.io/badge/tests-passing-16a34a?style=flat-square)](#testing)
@@ -15,8 +15,8 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 7 pages: Home, What We Are, What We Do, Pricing, Student Hub, FAQ, Free HR Audit |
-| Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, 9 tracked Pending Input items — all from `config/emplowise.php` |
+| Public site | 10 pages: Home, What We Are, What We Do, Pricing, Student Hub, FAQ, Contact, Team, AI Automation, Free HR Audit |
+| Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | Student Hub | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
@@ -40,10 +40,10 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 7 pages, chat partial
+resources/views          Layout, 10 pages, chat partial
 public/css|js            Modular CSS (10 files) and vanilla JS (3 files)
 database/migrations      audit_requests, chat_messages
-tests/Feature            16 tests covering pages, APIs and headers
+tests/Feature            55 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
 docs/screenshots         README imagery
 ```
@@ -52,9 +52,9 @@ docs/screenshots         README imagery
 
 ## About the project
 
-Production-ready Laravel 13 application built for Emplowise HR Services. Seven public pages, a Gen Z–voiced HR assistant, five free student career tools, and a multi-step Free HR Audit intake that persists to the database.
+Production-ready Laravel 13 application built for Emplowise HR Services. Ten public pages, a Gen Z–voiced HR assistant, five free student career tools, and a multi-step Free HR Audit intake that persists to the database.
 
-All business content lives in `config/emplowise.php`. Nothing commercial is hard-coded in Blade or JavaScript, and anything not evidenced by the source material is labelled **Pending Input** rather than invented.
+All business content lives in `config/emplowise.php`. Nothing commercial is hard-coded in Blade or JavaScript, and claims that lack supplied evidence are left out rather than invented.
 
 ---
 ## Stack
@@ -255,10 +255,10 @@ Rules applied throughout:
 
 - Every confirmed claim traces to the supplied business material.
 - No invented prices, clients, testimonials, percentages, or savings.
-- Unresolved commercial details render as **Pending Input** in the UI, not as silent omissions.
+- Unresolved commercial details stay in `pending_inputs` and shape the assistant's guardrails, so they are never invented.
 - The assistant's system prompt includes the same constraint list, so model output is grounded in the same config.
 
-### Pending Input register
+### Open scope register
 
 These items are intentionally unresolved and surfaced in the UI:
 
@@ -281,7 +281,7 @@ The Free HR Audit form is the only verified contact channel in this build.
 ```
 app/
   Http/Controllers/
-    SiteController.php          # renders all seven pages with config data
+    SiteController.php          # renders all ten pages with config data
     AuditRequestController.php  # validates + persists audit intake
     Api/ChatController.php      # chat endpoint + transcript logging
     Api/StudentController.php   # interview / ATS / profile endpoints
@@ -325,14 +325,14 @@ php artisan test
 Coverage in `tests/Feature/`:
 
 - every public page returns `200`
-- pricing shows Pending Input guardrails and the correct confirmed tiers
+- pricing renders the confirmed tiers and comparison guardrails
 - FAQ renders all four categories
 - audit: validation errors, successful persistence, email normalisation, honeypot rejection
 - chat: local fallback reply plus two `chat_messages` rows
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned
-- static export: seven pages, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+- static export: ten pages, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
 
 Browser-engine parity is checked separately, outside PHPUnit:
 
@@ -367,4 +367,4 @@ port 8080 with migrations, config caches, and permissions handled at start-up.
 - No authentication or admin UI. Audit submissions and chat transcripts are read directly from the database.
 - On the static build the booking form sends through Web3Forms (free tier: 250 submissions a month) instead of the database, so nothing is stored and the reference number is generated in the browser. Set `WEB3FORMS_ACCESS_KEY` before publishing, or the workflow refuses to deploy.
 - The AI path was exercised against the local fallback in this environment; supply a key and confirm the primary/fallback chain in staging before launch.
-- Client results and package inclusions stay Pending Input until the business supplies verified data.
+- Client results and package inclusions remain out of scope until the business supplies verified data.

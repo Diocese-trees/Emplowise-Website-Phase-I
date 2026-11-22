@@ -40,6 +40,9 @@ final class ExportStaticTest extends TestCase
             'pricing/index.html',
             'student-hub/index.html',
             'faq/index.html',
+            'contact/index.html',
+            'team/index.html',
+            'ai-automation/index.html',
             'free-hr-audit/index.html',
         ];
 
@@ -68,16 +71,23 @@ final class ExportStaticTest extends TestCase
         $home = (string) File::get($this->target.'/index.html');
         $faq = (string) File::get($this->target.'/faq/index.html');
 
-        $this->assertStringContainsString('href="https://example.github.io/demo/css/tokens.css', $home);
+        $this->assertStringContainsString('href="https://example.github.io/demo/css/site.css', $home);
         $this->assertStringContainsString('src="https://example.github.io/demo/js/app.js', $home);
         $this->assertStringContainsString('<link rel="canonical" href="https://example.github.io/demo/faq/"', $faq);
         $this->assertStringNotContainsString('href="/css/', $home);
         $this->assertStringNotContainsString('src="/js/', $home);
 
-        // Self-hosted fonts are rewritten too, so woff2 files resolve under the subpath.
-        $fonts = (string) File::get($this->target.'/css/fonts.css');
-        $this->assertStringContainsString('url(https://example.github.io/demo/fonts/', $fonts);
-        $this->assertStringNotContainsString('url(/fonts/', $fonts);
+        // Directory links keep their fragment, so /page#anchor becomes /page/#anchor.
+        $this->assertStringContainsString('href="https://example.github.io/demo/what-we-do/#payroll"', $home);
+        $this->assertStringContainsString('href="https://example.github.io/demo/student-hub/#interview"', $home);
+
+        // Self-hosted fonts are rewritten inside the bundle, so woff2 files resolve under the subpath.
+        $site = (string) File::get($this->target.'/css/site.css');
+        $this->assertStringContainsString('url(https://example.github.io/demo/fonts/', $site);
+        $this->assertStringNotContainsString('url(/fonts/', $site);
+
+        $hub = (string) File::get($this->target.'/student-hub/index.html');
+        $this->assertStringContainsString('href="https://example.github.io/demo/css/hub.css', $hub);
     }
 
     public function test_static_pages_drop_the_api_and_use_local_engines(): void
@@ -154,7 +164,7 @@ final class ExportStaticTest extends TestCase
             '--audit-key' => 'test-key',
         ])->assertSuccessful();
 
-        foreach (['index.html', 'student-hub/index.html', 'free-hr-audit/index.html', '404.html'] as $page) {
+        foreach (['index.html', 'student-hub/index.html', 'team/index.html', 'ai-automation/index.html', 'free-hr-audit/index.html', '404.html'] as $page) {
             $html = (string) File::get($this->target.'/'.$page);
 
             $this->assertStringNotContainsString('style="', $html, $page.' has an inline style');

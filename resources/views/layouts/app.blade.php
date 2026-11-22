@@ -61,21 +61,22 @@
     <link rel="icon" type="image/png" href="{{ asset_v('favicon.png') }}">
     <link rel="preload" href="/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/jakarta-fdb05bf0-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="{{ asset_v('css/fonts.css') }}">
-
-    <link rel="stylesheet" href="{{ asset_v('css/tokens.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/layout.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/pages.css') }}">
+    <link rel="stylesheet" href="{{ asset_v('css/site.css') }}">
     @stack('styles')
-    <link rel="stylesheet" href="{{ asset_v('css/chat.css') }}">
-    <link rel="stylesheet" href="{{ asset_v('css/inline.css') }}">
     <script type="application/ld+json">
         {!! json_encode($document, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 </head>
-<body>
+@php
+    $bodyClass = match (true) {
+        request()->routeIs('home') => 'page-home',
+        request()->routeIs('contact') => 'page-contact',
+        request()->routeIs('team') => 'page-team',
+        request()->routeIs('ai-automation') => 'page-ai',
+        default => '',
+    };
+@endphp
+<body class="{{ $bodyClass }}">
 <a class="skip-link" href="#main">{{ $ui['skip_link'] }}</a>
 
 <div class="page-bg" aria-hidden="true">
@@ -128,7 +129,7 @@
             <div>
                 <p class="footer-title">{{ $ui['footer_company_title'] }}</p>
                 <div class="footer-links">
-                    @foreach (collect(config('emplowise.nav'))->reject(fn ($item) => in_array($item['route'], ['home', 'student-hub'], true)) as $item)
+                    @foreach (config('emplowise.footer_company') as $item)
                         <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
                     @endforeach
                 </div>

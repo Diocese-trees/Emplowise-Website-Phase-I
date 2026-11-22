@@ -33,6 +33,9 @@ final class ExportStatic extends Command
         '/pricing' => 'pricing/index.html',
         '/student-hub' => 'student-hub/index.html',
         '/faq' => 'faq/index.html',
+        '/contact' => 'contact/index.html',
+        '/team' => 'team/index.html',
+        '/ai-automation' => 'ai-automation/index.html',
         '/free-hr-audit' => 'free-hr-audit/index.html',
     ];
 
@@ -168,15 +171,16 @@ final class ExportStatic extends Command
         $html = preg_replace('#\b(href|src)="/(?!/)#', '$1="'.$base.'/', $html) ?? $html;
 
         // Directory indexes are served at /page/, so link to that form directly.
+        // Keep any #fragment or ?query attached to the link.
         foreach (array_keys($this->pages) as $page) {
             if ($page === '/') {
                 continue;
             }
-            $html = str_replace(
-                'href="'.$base.$page.'"',
-                'href="'.$base.$page.'/"',
+            $html = preg_replace(
+                '~href="'.preg_quote($base.$page, '~').'(?=["#?])~',
+                'href="'.$base.$page.'/',
                 $html,
-            );
+            ) ?? $html;
         }
 
         // No chat endpoint on a static host. Dropping the attribute makes the
@@ -231,10 +235,7 @@ final class ExportStatic extends Command
             .$this->cspMeta()
             .'<meta name="robots" content="noindex">'
             .'<title>Page not found | Emplowise</title>'
-            .'<link rel="stylesheet" href="'.$base.'/css/tokens.css">'
-            .'<link rel="stylesheet" href="'.$base.'/css/base.css">'
-            .'<link rel="stylesheet" href="'.$base.'/css/layout.css">'
-            .'<link rel="stylesheet" href="'.$base.'/css/pages.css">'
+            .'<link rel="stylesheet" href="'.$base.'/css/site.css">'
             .'</head><body>'
             .'<a class="skip-link" href="#main">Skip to content</a>'
             .'<header class="site-header"><div class="shell">'

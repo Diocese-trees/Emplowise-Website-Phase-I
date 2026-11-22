@@ -83,6 +83,30 @@ final class SiteController extends Controller
         ]);
     }
 
+    public function contact(): View
+    {
+        return view('pages.contact', [
+            'seo' => config('emplowise.seo.contact'),
+            'copy' => config('emplowise.copy.contact'),
+        ]);
+    }
+
+    public function team(): View
+    {
+        return view('pages.team', [
+            'seo' => config('emplowise.seo.team'),
+            'copy' => config('emplowise.copy.team'),
+        ]);
+    }
+
+    public function aiAutomation(): View
+    {
+        return view('pages.ai-automation', [
+            'seo' => config('emplowise.seo.ai-automation'),
+            'copy' => config('emplowise.copy.ai-automation'),
+        ]);
+    }
+
     public function audit(): View
     {
         return view('pages.audit', [
