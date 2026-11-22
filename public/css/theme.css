@@ -152,6 +152,8 @@ html[data-theme="dark"] .site-header.is-stuck {
 }
 
 html[data-theme="dark"] .nav-link { color: var(--d-ink-soft); }
+html[data-theme="dark"] .nav-group[open] > summary { background: rgba(148, 163, 184, 0.12); color: var(--d-ink); }
+
 html[data-theme="dark"] .nav-link:hover,
 html[data-theme="dark"] .nav-link.is-current { color: #ffffff; }
 

@@ -108,10 +108,13 @@ final class SiteAndApiTest extends TestCase
         $html = (string) $this->get('/')->assertOk()->getContent();
 
         $this->assertSame(1, preg_match('/<nav class="main-nav".*?<\/nav>/s', $html, $nav));
-        $this->assertLessThanOrEqual(7, substr_count($nav[0], '<a '), 'Header nav must fit on one laptop line');
+        $topLevel = (string) preg_replace('/<details class="nav-group".*?<\/details>/s', '', $nav[0]);
+        $this->assertLessThanOrEqual(5, substr_count($topLevel, '<a '), 'Header nav keeps at most five top-level links');
         $this->assertStringNotContainsString('FAQ', $nav[0]);
+        $this->assertStringContainsString('Company', $nav[0]);
         $this->assertStringContainsString('Meet Emplowise', $nav[0]);
         $this->assertStringContainsString('Our Story', $nav[0]);
+        $this->assertStringContainsString('What We Do', $nav[0]);
         $this->assertStringContainsString('Meet The Team', $nav[0]);
         $this->assertStringContainsString("Where&#039;s AI", $nav[0]);
         $this->assertStringContainsString('EmploStart', $nav[0]);

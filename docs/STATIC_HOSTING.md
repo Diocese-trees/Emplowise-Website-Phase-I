@@ -84,6 +84,9 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
   client to `credentials: 'omit'` with no CSRF header.
 - Normalises canonicals, `og:url`, sitemap entries and internal links to the
   trailing-slash form GitHub Pages actually serves (`/faq/`).
+- Writes `404.html` at the build root with the same brand chrome and
+  base-prefixed links to Home, the Free HR Audit and Contact, so GitHub Pages
+  serves a real page for unknown paths instead of its default error.
 
 ## API boundary on a static host
 

@@ -358,3 +358,8 @@
         font-size: 1.15rem;
     }
 }
+/* While the consent card is on screen it owns the bottom-right corner on
+   small phones; hiding the launcher keeps both tap targets clear. */
+@media (max-width: 640px) {
+    body.has-consent .chat-launcher { display: none; }
+}

@@ -94,6 +94,15 @@ Two caveats if you do: the page URLs baked into that build use the copy's own
 name (`...github.io/Emplowise-repo-qodar-ai-work-in-progress`), and the demo will
 then compete with the original's Pages site for search indexing.
 
+## Site shell
+
+The rendered shell is three partials: `resources/views/partials/header.blade.php`
+(brand, one `Company` dropdown built from `config('emplowise.footer_company')`,
+the EmploStart product link, Contact and the audit CTA), `footer.blade.php`, and
+`errors/404.blade.php`. The Company group is a native `<details>` element, so it
+opens without JavaScript on desktop, in the mobile drawer and in the left rail.
+`ExportStatic` mirrors the 404 view to `404.html`.
+
 ## Visibility
 
 The copy is private. To make it public:

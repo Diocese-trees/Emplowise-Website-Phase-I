@@ -80,6 +80,7 @@
         window.clearTimeout(hideTimer);
         banner.hidden = false;
         banner.classList.remove('is-closing');
+        document.body.classList.add('has-consent');
 
         if (expand && prefs) {
             prefs.hidden = false;
@@ -99,6 +100,7 @@
         hideTimer = window.setTimeout(function () {
             banner.hidden = true;
             banner.classList.remove('is-closing');
+            document.body.classList.remove('has-consent');
         }, 240);
     }
 

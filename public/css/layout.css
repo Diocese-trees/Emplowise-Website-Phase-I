@@ -139,6 +139,64 @@
 
 .nav-link--cta { display: none; }
 
+/* Company group: a native <details> so it works without JS and keeps
+   keyboard behaviour. Desktop shows a panel; the drawer and rail expand it
+   in place. */
+.nav-group { position: relative; }
+
+.nav-group > summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.nav-group[open] > summary {
+    color: var(--navy);
+    background: rgba(240, 249, 249, 0.8);
+}
+
+.nav-group > summary::-webkit-details-marker { display: none; }
+
+.nav-group-caret {
+    width: 7px;
+    height: 7px;
+    border-right: 1.6px solid currentColor;
+    border-bottom: 1.6px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform var(--dur-fast) var(--ease);
+}
+
+.nav-group[open] .nav-group-caret { transform: rotate(225deg) translateY(-1px); }
+
+.nav-group-panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: var(--z-dropdown);
+    display: grid;
+    gap: 0.15rem;
+    min-width: 230px;
+    padding: 0.5rem;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-group-panel .nav-link { width: 100%; }
+
+/* EmploStart reads as the product link, not another company page. */
+.nav-link--student {
+    color: var(--teal-deep);
+    box-shadow: inset 0 0 0 1px rgba(13, 148, 136, 0.28);
+}
+
+.nav-link--student:hover { color: var(--teal-deep); background: rgba(13, 148, 136, 0.08); }
+
 .header-actions {
     display: flex;
     align-items: center;
@@ -1055,6 +1113,17 @@ a.footer-meta { display: inline-flex; align-items: center; }
         transform: none;
     }
 
+    .nav-group-panel {
+        position: static;
+        min-width: 0;
+        padding: 0 0 0 0.75rem;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .nav-group-toggle { width: 100%; justify-content: space-between; }
+
     .nav-link {
         width: 100%;
         padding: 0.85rem 1rem;
@@ -1193,6 +1262,19 @@ h1, h2, h3 { text-wrap: balance; }
         flex-direction: column;
         align-items: stretch;
         gap: 0.1rem;
+    }
+
+    .nav-group { width: 100%; }
+
+    .nav-group > summary { width: 100%; justify-content: space-between; }
+
+    .nav-group-panel {
+        position: static;
+        min-width: 0;
+        padding: 0 0 0 0.5rem;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
     }
 
     .nav-link {

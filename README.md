@@ -377,7 +377,7 @@ public/
   js/toolkit/  interview.js, ats.js, profile.js (browser ports of StudentToolkit)
 resources/views/
   layouts/app.blade.php
-  partials/header.blade.php     # site header, cut verbatim from the layout
+  partials/header.blade.php     # site shell: brand, Company dropdown, audit CTA
   partials/footer.blade.php     # site footer, cut verbatim from the layout
   partials/chat.blade.php
   partials/emplostart/          # ats, interview, profile tool panels
