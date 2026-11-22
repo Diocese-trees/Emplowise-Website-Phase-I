@@ -18,7 +18,7 @@ and deferring it would flash the light palette on every dark visit.
 
 Only dark sets an attribute: `<html data-theme="dark">`. The light theme is the
 absence of the attribute, which keeps every existing selector working. The meta
-`theme-color` is updated to `#081B3E` (light) or `#060d1a` (dark).
+`theme-color` is updated to `#081B3E` (light) or `#000000` (dark, AMOLED).
 
 `theme.js` also:
 
@@ -60,8 +60,9 @@ Placement, by breakpoint (all gated on `html.js-theme`):
 | Nav drawer row | `.nav-theme` inside `nav#main-nav` | only at 1040px and below |
 
 The footer toggle was removed when the closing band was simplified: dark mode
-stays available in the header (desktop) and the drawer (everything narrower).
-Cookie settings moved to the floating `.consent-fab` button.
+stays available in the header (desktop, inside the left rail from 1200px) and
+the drawer (everything narrower). Cookie settings is the "Cookie settings"
+button in the footer legal row; there is no floating button any more.
 
 The header control is desktop-only because it pushed the header into horizontal
 overflow just above the drawer breakpoint (1041px) once the audit CTA sat next
@@ -90,14 +91,23 @@ ramp and the shadows.
 
 **Do not re-point `--white` or `--navy`.** They are semantic: `--navy` is the
 navy band and text-on-light, `--white` is text-on-navy. Re-pointing them would
-invert the hero, `section--navy`, the CTA band and the footer, which already
-work on dark. Sections therefore need explicit overrides:
+invert the hero, `section--navy`, the CTA band and the footer. The dark palette
+is AMOLED, so those chrome bands get explicit near-black gradients instead:
 
 ```css
+html[data-theme="dark"] .hero { background: linear-gradient(160deg, #0a1424, #050a12 55%, #000); }
+html[data-theme="dark"] .section--navy,
+html[data-theme="dark"] .cta-band,
+html[data-theme="dark"] .site-footer { background: linear-gradient(160deg, #0b0b0d, #000 70%); }
 html[data-theme="dark"] .section:not(.section--navy),
 html[data-theme="dark"] .page-head { background: transparent; }
-html[data-theme="dark"] .section--alt { background: rgba(148, 197, 224, .035); }
+html[data-theme="dark"] .section--alt { background: rgba(255, 255, 255, .03); }
 ```
+
+The brand accents (teal, aqua, cyan, indigo, violet) are never neutralised:
+they are the identity that survives the AMOLED flip. Icons that use deep teal
+or cyan on light need brighter dark variants — see the `.shortcut-icon`,
+`.pillar-icon` and `.pillar-kicker` overrides near the end of `theme.css`.
 
 **Override hard-coded light surfaces and text** with
 `html[data-theme="dark"] .selector` rules. The semantic tokens written for that
@@ -105,19 +115,19 @@ layer are:
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--d-page` | `#060d1a` | page background |
-| `--d-surface` | `#0c1728` | cards |
-| `--d-surface-2` | `#101d31` | insets, inputs |
-| `--d-surface-3` | `#14243c` | raised chips |
-| `--d-ink` | `#dbe6f4` | body text |
-| `--d-ink-soft` | `#a7b9d1` | secondary text |
-| `--d-ink-dim` | `#7f93ae` | meta text |
-| `--d-line` | `rgba(148,197,224,.16)` | borders |
-| `--d-line-strong` | `rgba(148,197,224,.3)` | borders, focus |
+| `--d-page` | `#000000` | page background (true black) |
+| `--d-surface` | `#0a0a0b` | cards |
+| `--d-surface-2` | `#101012` | insets, inputs |
+| `--d-surface-3` | `#17171a` | raised chips |
+| `--d-ink` | `#e7e7ea` | body text |
+| `--d-ink-soft` | `#a9a9b2` | secondary text |
+| `--d-ink-dim` | `#7c7c86` | meta text |
+| `--d-line` | `rgba(255,255,255,.1)` | borders |
+| `--d-line-strong` | `rgba(255,255,255,.2)` | borders, focus |
 | `--d-accent` | `#5eead4` | links, kickers, numbers |
 
-Measured against `--d-page`: body text 15.4:1, secondary 8.99:1, dim 5.72:1,
-accent 13.1:1.
+Measured against `--d-page`: body text 17.0:1, secondary 9.01:1, dim 5.08:1,
+accent 14.2:1.
 
 ### Checklist for a new component
 
@@ -172,6 +182,19 @@ stagger by `0.12 / 0.24 / 0.36 / 0.48s`. The hidden state only applies under
 `html.js-anim`, which `app.js` adds when an observer is available, so content is
 never invisible without JS.
 
+**Hero entrance** — the first screen animates immediately instead of waiting for
+a scroll. `components.css` runs `@keyframes hero-in` on the kicker, h1, sub,
+rotator, actions, proof row, scroll cue and panel, staggered from 0.04s to
+0.4s. It is wrapped in `@media (prefers-reduced-motion: no-preference)`, so the
+same OS setting that disables reveals also makes this page completely static.
+No JavaScript is involved, which means the motion still plays on a page where
+the observer or home script fails.
+
+**Card feedback** — `.shortcut` (home) and `.pillar` lift 4–6px on hover with a
+spring easing and a soft shadow; the icon scales/rotates slightly and the arrow
+slides 3px. All of it is transform/opacity, so it is cheap and it disappears
+under reduce.
+
 **Intro** — `public/js/intro.js`, once per browser session
 (`sessionStorage['emplowise:intro']`), skipped on `saveData` or 2G. Append
 `?intro=1` to any URL to replay it regardless of the session flag — useful for
@@ -211,9 +234,11 @@ rather than a transform, and never rely on motion alone.
 ## 5. Validating a theme change
 
 1. `php artisan test` — 56 tests, including static-export assertions.
-2. `php artisan emplowise:seo-audit` — nine routes.
-3. Screenshot all nine routes at 1440px in light and dark, with the intro and
-   consent dismissed (see `docs/screenshots/*-dark.jpg`).
-4. Sweep 320 / 768 / 1040 / 1041 / 1280 / 2560 for horizontal overflow in both
-   themes.
+2. `php artisan emplowise:seo-audit` — nine marketing routes.
+3. Screenshot all eleven routes at 1440px in light and dark, with the intro and
+   consent dismissed (see `docs/screenshots/*-dark.jpg`). Check `/terms` and
+   `/privacy` too, plus one mobile capture at 390px.
+4. Sweep 320 / 768 / 1040 / 1041 / 1199 / 1200 / 1280 / 2560 for horizontal
+   overflow in both themes. 1199 must show the top bar; 1200 must show the left
+   rail with `body { padding-left: 184px }` and a fixed 184px header.
 5. Check the no-JS case: no visible toggle, no stuck intro, content readable.

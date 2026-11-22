@@ -153,6 +153,30 @@ return [
             'h2' => 'Where AI automation for HR will plug in.',
             'intro' => 'Emplowise is building AI automation for HR. A payroll engine, a performance insight layer, and a policy co-pilot are in pre-launch, and this page shows the shape of the division.',
         ],
+
+        // === PAGE: TERMS ===
+        'terms' => [
+            'primary_keyword' => 'Emplowise terms of service',
+            'secondary_keywords' => ['remote HR service terms', 'HR retainer agreement Pakistan'],
+            'title' => 'Terms of Service for HR Retainers | Emplowise',
+            'description' => 'The terms that cover the Emplowise website, the free HR audit, and monthly remote HR retainers. Plain language, Pakistan law, scope confirmed in writing.',
+            'h1' => 'Terms of service, written to be read.',
+            'h1_accent' => 'written to be read',
+            'h2' => 'The terms behind the work.',
+            'intro' => 'These terms cover this website, the free HR audit, and any monthly retainer with Emplowise HR Services. Where a signed scope or proposal says something different, that document wins.',
+        ],
+
+        // === PAGE: PRIVACY ===
+        'privacy' => [
+            'primary_keyword' => 'Emplowise privacy policy',
+            'secondary_keywords' => ['HR audit data privacy', 'cookie policy Pakistan'],
+            'title' => 'Privacy Policy and Cookie Choices | Emplowise',
+            'description' => 'Privacy at Emplowise: what we collect, how cookies work, and how to access or delete your data. No data is sold and analytics stay off until you opt in.',
+            'h1' => 'Privacy, in plain language.',
+            'h1_accent' => 'in plain language',
+            'h2' => 'What we collect and why.',
+            'intro' => 'This policy explains what Emplowise collects when you use this site, book a free HR audit, or email the team, and the choices you have. It covers cookies and the tools we use to run the site.',
+        ],
     ],
 
     'brand' => [
@@ -617,11 +641,14 @@ return [
             'breadcrumb_home' => 'Home',
             'nav_audit_label' => 'Free HR Audit',
             'menu_open' => 'Open menu',
-            'footer_note' => 'Emplowise is the human resource partner for growing businesses in Pakistan. We run remote HR for teams of 5 to 100, helping CEOs meet their targets before the next quarter. Start with a free HR audit: we identify the gaps, then your HR Business Manager agrees the fix with you. Retainers from PKR 40,000 a month.',
+            'footer_note' => 'Emplowise is the HR partner for growing businesses in Pakistan. We run remote HR for teams of 5 to 100 and start every engagement with a free audit and a written gap list.',
             'footer_company_title' => 'Company',
             'footer_resources_title' => 'Resources',
             'footer_start_title' => 'Start here',
             'footer_tagline' => 'People analytics without bias, so CEOs can set new standards.',
+            'footer_legal_label' => 'Legal',
+            'footer_terms' => 'Terms',
+            'footer_privacy' => 'Privacy',
             'footer_rights' => 'All rights reserved.',
             'back_to_top' => 'Back to top',
             'theme_toggle_dark' => 'Switch to dark theme',
@@ -705,6 +732,147 @@ return [
                 ['label' => 'EmploStart', 'route' => 'emplostart'],
                 ['label' => 'FAQ', 'route' => 'faq'],
                 ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],
+            ],
+        ],
+
+        'legal' => [
+            'terms' => [
+                'updated' => '22 November 2026',
+                'toc_label' => 'On this page',
+                'sections' => [
+                    [
+                        'id' => 'who-we-are',
+                        'heading' => 'Who we are',
+                        'paragraphs' => [
+                            'Emplowise HR Services ("Emplowise", "we") provides remote HR support to businesses in Pakistan. You can reach us at hello@emplowise.com.',
+                            'These terms apply to this website and to any free HR audit or paid retainer you request from us. They do not replace a signed proposal or scope document; if the two differ, the signed document controls.',
+                        ],
+                    ],
+                    [
+                        'id' => 'using-this-site',
+                        'heading' => 'Using this site',
+                        'paragraphs' => [
+                            'The site is informational. It describes our services, method, and published starting prices, but it is not legal, tax, or employment advice, and it is not a binding quote.',
+                            'Prices, capacities, and inclusions are indicative until they are confirmed in writing after your free HR audit. We may correct errors and change published prices at any time.',
+                        ],
+                    ],
+                    [
+                        'id' => 'free-hr-audit',
+                        'heading' => 'The free HR audit',
+                        'paragraphs' => [
+                            'The audit is free and carries no obligation to buy. You get a structured review of the information you share and a prioritised gap list.',
+                            'The audit is a diagnostic conversation, not a compliance certification. It does not replace legal advice, a statutory audit, or a review of your full records. Do not send payroll data, identity documents, or other sensitive records until we agree on a secure route.',
+                        ],
+                    ],
+                    [
+                        'id' => 'retainers',
+                        'heading' => 'Retainers and scope',
+                        'paragraphs' => [
+                            'Paid work runs on a monthly retainer. The scope, start date, named lead, and what sits outside the scope are confirmed in writing before work begins.',
+                            'Prices are in Pakistani rupees and exclude applicable taxes unless the proposal says otherwise. Either side may end the retainer with the notice period stated in the proposal.',
+                        ],
+                    ],
+                    [
+                        'id' => 'outcomes',
+                        'heading' => 'No guarantee of a business outcome',
+                        'paragraphs' => [
+                            'We commit to the method, the deliverables, and the response times in your scope. We cannot guarantee a hiring result, a revenue target, or a regulatory outcome, because those depend on decisions and records outside our control.',
+                        ],
+                    ],
+                    [
+                        'id' => 'intellectual-property',
+                        'heading' => 'Intellectual property',
+                        'paragraphs' => [
+                            'The content on this site, including text, templates, and design, belongs to Emplowise or its licensors. You may read it and share links, but you may not resell it or present it as your own.',
+                            'Templates and documents we create for a client are licensed to that client for internal use during and after the engagement, as set out in the proposal.',
+                        ],
+                    ],
+                    [
+                        'id' => 'liability',
+                        'heading' => 'Liability',
+                        'paragraphs' => [
+                            'To the extent permitted by law, Emplowise is not liable for indirect or consequential loss, lost profits, or loss of data. Our total liability for a claim is limited to the fees paid for the month in which the issue arose.',
+                            'Nothing in these terms limits liability that cannot be limited by law.',
+                        ],
+                    ],
+                    [
+                        'id' => 'law',
+                        'heading' => 'Governing law and changes',
+                        'paragraphs' => [
+                            'These terms are governed by the laws of Pakistan, and the courts of Pakistan have jurisdiction over disputes.',
+                            'If we change these terms, we update the date at the top of this page. Material changes will be flagged on the site before they take effect.',
+                        ],
+                    ],
+                ],
+            ],
+            'privacy' => [
+                'updated' => '22 November 2026',
+                'toc_label' => 'On this page',
+                'sections' => [
+                    [
+                        'id' => 'what-we-collect',
+                        'heading' => 'What we collect',
+                        'paragraphs' => [
+                            'When you book a free HR audit, we collect the details you enter: your name, work email, company, headcount band, the areas you want reviewed, and any notes you add. If you email us, we keep that message and our reply.',
+                            'Like most sites, our host may record basic technical information such as the requested page, browser type, and IP address in server logs. We use this to keep the site working and secure.',
+                        ],
+                    ],
+                    [
+                        'id' => 'why',
+                        'heading' => 'Why we use it',
+                        'paragraphs' => [
+                            'We use audit responses to prepare and deliver the audit, to reply to you, and to keep a record of what was agreed. We use technical logs to operate and protect the site.',
+                            'We do not sell personal data, and we do not use it for advertising. Analytics and marketing storage stay off until you turn them on in the cookie panel.',
+                        ],
+                    ],
+                    [
+                        'id' => 'cookies',
+                        'heading' => 'Cookies and local storage',
+                        'paragraphs' => [
+                            'One essential preference stores your cookie choice for up to 180 days. It is kept in a first-party cookie and in local storage so the panel does not ask again on every page.',
+                            'If you allow analytics or marketing, the site may load the relevant measurement later. No third-party analytics or advertising tags are installed today. You can change or withdraw your choice through the cookie settings link in the footer.',
+                        ],
+                    ],
+                    [
+                        'id' => 'sharing',
+                        'heading' => 'Sharing and processors',
+                        'paragraphs' => [
+                            'We share data only with providers that help us run the site and reply to you, such as hosting and email. They act on our instructions and are not allowed to use your data for their own marketing.',
+                            'We may disclose information if the law requires it, or to protect the rights and safety of Emplowise, our clients, or others.',
+                        ],
+                    ],
+                    [
+                        'id' => 'retention',
+                        'heading' => 'How long we keep it',
+                        'paragraphs' => [
+                            'Audit responses are kept while we assess fit and for a reasonable period afterwards so we can answer follow-up questions. Email is kept for as long as needed to manage the relationship.',
+                            'You can ask us to delete your audit response or email at any time, unless we are required to keep it for a legal or accounting reason.',
+                        ],
+                    ],
+                    [
+                        'id' => 'rights',
+                        'heading' => 'Your choices and rights',
+                        'paragraphs' => [
+                            'You can ask for a copy of the personal data we hold about you, ask us to correct it, or ask us to delete it. You can also withdraw consent for optional cookies at any time.',
+                            'Email hello@emplowise.com with the request. We may ask a clarifying question to make sure we are dealing with the right person.',
+                        ],
+                    ],
+                    [
+                        'id' => 'security',
+                        'heading' => 'Security and international processing',
+                        'paragraphs' => [
+                            'We use HTTPS, access controls, and reputable hosting providers. No method of transmission or storage is perfectly secure, so please do not send sensitive records until we agree on a secure route.',
+                            'Our providers may process data outside Pakistan. Where that happens, we rely on the provider\'s contractual safeguards and keep the set of providers small.',
+                        ],
+                    ],
+                    [
+                        'id' => 'contact-privacy',
+                        'heading' => 'Contact and changes',
+                        'paragraphs' => [
+                            'Questions about this policy can go to hello@emplowise.com. If we change the policy, we update the date at the top of this page.',
+                        ],
+                    ],
+                ],
             ],
         ],
 
@@ -843,7 +1011,7 @@ return [
                 ['label' => 'Focus', 'value' => 'Payroll, performance, and policy on one monthly rhythm.'],
                 ['label' => 'First step', 'value' => 'A free audit and a prioritised gap list in one conversation.'],
             ],
-            'scroll_cue' => 'Scroll to the operating model',
+            'scroll_cue' => 'Jump to the shortcuts',
             'panel' => [
                 'aria' => 'Emplowise operating stack',
                 'float_a' => 'Remote delivery',
@@ -863,6 +1031,17 @@ return [
                 ],
             ],
             'strip_label' => 'Confirmed services',
+            'shortcuts' => [
+                'kicker' => 'Navigate',
+                'heading' => 'Four doors. Pick the one that fits.',
+                'lede' => 'This page is the map, not the manual. Each card opens the page that answers that question in full.',
+                'items' => [
+                    ['label' => 'What we do', 'desc' => 'The three pillars and every confirmed service.', 'route' => 'what-we-do', 'icon' => 'chart-bars'],
+                    ['label' => 'Pricing', 'desc' => 'Monthly retainers by headcount, from PKR 40,000.', 'route' => 'why-emplowise', 'icon' => 'card'],
+                    ['label' => 'EmploStart', 'desc' => 'Five free career tools. No account needed.', 'route' => 'emplostart', 'hash' => 'prompts', 'icon' => 'chip'],
+                    ['label' => 'Contact', 'desc' => 'Talk to the team and book the free audit.', 'route' => 'contact', 'icon' => 'mail'],
+                ],
+            ],
             'pillars' => [
                 'kicker' => 'What we run',
                 'lede' => 'Every pillar opens the confirmed services, workflow checks, and templates behind it. Nothing is listed that the team does not deliver.',

@@ -190,8 +190,15 @@
         </div>
 
         <div class="footer-bottom">
-            <span>&copy; {{ date('Y') }} {{ config('emplowise.brand.legal_name') }}. {{ $ui['footer_rights'] }}</span>
-            <span class="footer-legal">{{ $ui['footer_tagline'] }}</span>
+            <p class="footer-fine">
+                <span>&copy; {{ date('Y') }} {{ config('emplowise.brand.legal_name') }}. {{ $ui['footer_rights'] }}</span>
+                <span class="footer-legal">{{ $ui['footer_tagline'] }}</span>
+            </p>
+            <nav class="footer-legal-links" aria-label="{{ $ui['footer_legal_label'] }}">
+                <a href="{{ route('terms') }}">{{ $ui['footer_terms'] }}</a>
+                <a href="{{ route('privacy') }}">{{ $ui['footer_privacy'] }}</a>
+                <button type="button" data-consent-open>{{ $ui['consent_footer'] }}</button>
+            </nav>
         </div>
     </div>
 </footer>
@@ -203,13 +210,6 @@
     <x-icon name="arrow-up" :size="18" />
 </button>
 
-{{-- Consent stays reachable without parking a permanent link in the footer:
-     the button steps in after load, steps out of the way, and returns when
-     the visitor reaches the end of the page. --}}
-<button class="consent-fab" type="button" data-consent-open>
-    <x-icon name="cookie" :size="16" />
-    <span>{{ $ui['consent_footer'] }}</span>
-</button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

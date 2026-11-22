@@ -47,7 +47,7 @@
                     @endforeach
                 </dl>
 
-                <a class="scroll-cue" href="#pillars"><i aria-hidden="true"></i> {{ $copy['scroll_cue'] }}</a>
+                <a class="scroll-cue" href="#shortcuts"><i aria-hidden="true"></i> {{ $copy['scroll_cue'] }}</a>
             </div>
 
             <aside class="hero-panel" id="hero-panel" aria-label="{{ $copy['panel']['aria'] }}">
@@ -123,6 +123,35 @@
         </div>
     </div>
 
+    <section class="section section--tight home-shortcuts" id="shortcuts">
+        <div class="shell">
+            <div class="section-head section-head--split reveal">
+                <div>
+                    <p class="kicker">{{ $copy['shortcuts']['kicker'] }}</p>
+                    <h2>{{ $copy['shortcuts']['heading'] }}</h2>
+                </div>
+                <p class="lede">{{ $copy['shortcuts']['lede'] }}</p>
+            </div>
+
+            <div class="shortcut-grid">
+                @foreach ($copy['shortcuts']['items'] as $index => $item)
+                    <a class="shortcut reveal" href="{{ route($item['route']) }}{{ isset($item['hash']) ? '#'.$item['hash'] : '' }}" data-delay="{{ $index + 1 }}">
+                        <span class="shortcut-icon" aria-hidden="true">
+                            <x-icon :name="$item['icon']" :size="20" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <span class="shortcut-label">{{ $item['label'] }}</span>
+                            <span class="shortcut-desc">{{ $item['desc'] }}</span>
+                        </span>
+                        <span class="shortcut-arrow" aria-hidden="true">
+                            <x-icon name="arrow-right" :size="16" />
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <section class="section" id="pillars">
         <div class="shell">
             <div class="section-head section-head--split reveal">
@@ -167,88 +196,12 @@
         </div>
     </section>
 
-    <section class="section section--alt">
-        <div class="shell">
-            <div class="section-head reveal">
-                <p class="kicker">{{ $copy['method']['kicker'] }}</p>
-                <h2>{{ $copy['method']['heading'] }}</h2>
-                <p class="lede">
-                    {{ $copy['method']['lede'] }}
-                </p>
-            </div>
-
-            <div class="method-grid">
-                @foreach ($methodology as $index => $step)
-                    <div class="method-step reveal" data-delay="{{ $index + 1 }}">
-                        <span class="method-num">{{ $step['step'] }}</span>
-                        <h3>{{ $step['name'] }}</h3>
-                        <p>{{ $step['summary'] }}</p>
-                        <span class="method-output">{{ $step['output'] }}</span>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="shell">
-            <div class="section-head section-head--split reveal">
-                <div>
-                    <p class="kicker">{{ $copy['pricing']['kicker'] }}</p>
-                    <h2>{{ $copy['pricing']['heading'] }}</h2>
-                </div>
-                <p class="lede">
-                    {{ $copy['pricing']['lede'] }}
-                </p>
-            </div>
-
-            <div class="price-grid price-grid--compact">
-                @foreach ($packages as $index => $package)
-                    <a href="{{ route('why-emplowise') }}" class="price-card price-card--compact {{ $package['featured'] ? 'price-card--featured' : '' }} reveal" data-delay="{{ $index + 1 }}">
-                        @if ($package['featured'])
-                            <span class="price-tag">{{ $copy['pricing']['tag'] }}</span>
-                        @endif
-                        <span class="price-name">{{ $package['name'] }}</span>
-                        <span class="price-amount">{{ $package['price_display'] }}</span>
-                        <span class="price-period">{{ $package['period'] }}</span>
-                        <span class="price-capacity">{{ $package['capacity'] }}</span>
-                        <span class="price-card-link">
-                            {{ $copy['pricing']['link'] }}
-                            <x-icon name="arrow-right" :size="15" />
-                        </span>
-                    </a>
-                @endforeach
-            </div>
-
-            <p class="small muted s1">
-                {{ $copy['pricing']['note'] }}
-            </p>
-        </div>
-    </section>
-
-    <section class="section section--navy">
-        <div class="shell hub-teaser hub-teaser--solo">
-            <div class="reveal">
-                <p class="kicker">{{ $copy['student']['kicker'] }}</p>
-                <h2>{{ $copy['student']['heading'] }}</h2>
-                <p class="lede">
-                    {{ $copy['student']['lede'] }}
-                </p>
-                <div class="hero-actions s2">
-                    <a href="{{ route('emplostart') }}#prompts" class="btn btn--student">{{ str_replace(':count', $promptCount, $copy['student']['cta_prompts']) }}</a>
-                    <a href="{{ route('emplostart') }}#ats" class="btn btn--outline-light">{{ $copy['student']['cta_ats'] }}</a>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
     <section class="cta-band">
         <div class="shell cta-inner">
             <h2>{{ $copy['cta_band']['heading'] }}</h2>
             <div class="cta-actions">
                 <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">{{ $copy['cta_band']['primary'] }}</a>
-                <a href="{{ route('what-we-do') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
+                <a href="{{ route('why-emplowise') }}" class="btn btn--outline-light">{{ $copy['cta_band']['secondary'] }}</a>
             </div>
         </div>
     </section>

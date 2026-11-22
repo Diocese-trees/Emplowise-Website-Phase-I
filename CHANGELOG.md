@@ -6,6 +6,44 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- UX refresh: the landing page is now a map, the chrome is slimmer, and dark
+  mode is true black.
+  - **Cookie choice on arrival.** With no stored `emplowise:consent` value, the
+    preferences card opens by itself after the intro (with a 4.4s fallback), so
+    every first visit gets a choice. The floating `.consent-fab` pill, its CSS
+    and its JS timers were removed. Reopening lives in the footer's
+    "Cookie settings" button.
+  - **Legal pages.** `/terms` and `/privacy` are real pages driven by
+    `config('emplowise.seo.terms/privacy')` and
+    `config('emplowise.copy.legal.terms/privacy')`, rendered through the shared
+    `pages/legal.blade.php` (numbered sections, sticky "On this page", cross
+    links, updated date). They are in the sitemap and the static export, which
+    now emits 11 pages. Footer links: Terms, Privacy, Cookie settings.
+  - **Compact footer.** Reduced top and bottom padding, a two-sentence bio,
+    smaller type and social icons, a single legal row, and no bottom space
+    reserved for the removed floating pill.
+  - **AMOLED dark mode.** `--d-page` is `#000`, surfaces are neutral graphite
+    (`#0a0a0b` / `#101012` / `#17171a`), lines are white-alpha, and the hero,
+    navy bands and footer use near-black gradients with the teal/indigo glows
+    retained. Brand accents, the reverse logo and contrast ratios (17.0:1 body,
+    9.01:1 secondary) are preserved. `theme-color` is `#000000` in dark.
+  - **Visible motion.** A CSS-only `hero-in` entrance staggers the hero copy and
+    panel on load; shortcut and pillar cards lift and slide their arrows on
+    hover. All of it is inside `prefers-reduced-motion: no-preference`.
+  - **Desktop left rail.** From 1200px the header becomes a fixed 184px column:
+    brand at the top, vertical nav, theme toggle and audit CTA pinned to the
+    bottom, and `body { padding-left: 184px }`. The consent card sits beside the
+    rail. The top bar and mobile drawer are untouched at 1199px and below, which
+    keeps the change CSS-only and easy to roll back.
+  - **Less white space, clearer paths.** Section padding fell from
+    `clamp(4rem, 8vw, 7.5rem)` to `clamp(3rem, 5.5vw, 5rem)`, the hero and page
+    heads are tighter, and the four-card `copy.home.shortcuts` grid (What we do,
+    Pricing, EmploStart, Contact) fills the gap where the long scroll used to
+    be. The home page no longer repeats the method, pricing or EmploStart
+    sections; they remain on `/why-emplowise` and `/emplostart`.
+  - Tests updated for 11 pages (page render, SEO snippets, diagnostics, sitemap
+    count) and the static-export file list. Docs updated in
+    `docs/THEME_AND_MOTION.md` and `CONTENT_EDITING_GUIDE.md`.
 - Reworked the contact page's closing area and the shared footer:
   - `footer_note` is now SEO-facing brand copy — human resource partner,
     remote HR for teams of 5 to 100, free HR audit, HR Business Manager, and
@@ -19,10 +57,9 @@ each commit body carries the detail. Dates are the commit dates.
     ("People analytics without bias, so CEOs can set new standards."). The
     previous scope disclaimer is gone.
   - Removed the footer dark-mode and cookie buttons. Dark mode remains in the
-    header and the mobile drawer; cookie settings is a floating
-    `.consent-fab` pill that appears after 1.4s, hides after 7s, returns at
-    the end of the page, stays put while focused, and hides while the consent
-    card is open.
+    header and the mobile drawer. (The floating consent pill described in this
+    pass was superseded by the UX refresh above: the card now opens on the first
+    visit and "Cookie settings" lives in the footer legal row.)
   - The duplicate contact micro line ("Website is actively being built…") was
     removed; `micro_copyright` and `micro_status` no longer exist.
   - The closing AI card is compact at every breakpoint (max 56rem, 1.02–1.18rem

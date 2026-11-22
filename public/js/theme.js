@@ -30,7 +30,7 @@
         }
 
         var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', theme === 'dark' ? '#060d1a' : '#081B3E');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#081B3E');
 
         sync(theme);
 

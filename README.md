@@ -3,7 +3,7 @@
 **Remote HR services website, grounded AI assistant and EmploStart, a free career toolkit for early career candidates.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — all nine pages are static HTML on GitHub Pages. The EmploStart scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. The EmploStart scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![Tests](https://img.shields.io/badge/tests-passing-16a34a?style=flat-square)](#testing)
@@ -15,7 +15,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 9 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit |
+| Public site | 11 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
@@ -26,7 +26,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 ### Screens
 
 Every page ships in light and dark. The pairs below are captured at 1440×900;
-the full set (nine pages × two themes) is in `docs/screenshots/`.
+the full set (eleven pages × two themes) is in `docs/screenshots/`.
 
 | Why Emplowise | EmploStart |
 | --- | --- |
@@ -61,7 +61,7 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 9 pages, chat partial
+resources/views          Layout, 11 pages, chat partial
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 database/migrations      audit_requests, chat_messages
@@ -350,7 +350,7 @@ The Free HR Audit form is the only verified contact channel in this build.
 ```
 app/
   Http/Controllers/
-    SiteController.php          # renders all nine pages with config data
+    SiteController.php          # renders all eleven pages with config data
     AuditRequestController.php  # validates + persists audit intake
     Api/ChatController.php      # chat endpoint + transcript logging
     Api/StudentController.php   # interview / ATS / profile endpoints
@@ -405,7 +405,7 @@ Coverage in `tests/Feature/`:
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned
-- static export: nine pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+- static export: eleven pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
 
 Browser-engine parity is checked separately, outside PHPUnit:
 

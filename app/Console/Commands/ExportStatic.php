@@ -36,6 +36,8 @@ final class ExportStatic extends Command
         '/faq' => 'faq/index.html',
         '/contact' => 'contact/index.html',
         '/free-hr-audit' => 'free-hr-audit/index.html',
+        '/terms' => 'terms/index.html',
+        '/privacy' => 'privacy/index.html',
     ];
 
     /**

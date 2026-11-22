@@ -18,6 +18,8 @@ Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
 Route::get('/contact', [SiteController::class, 'contact'])->name('contact');
 Route::get('/what-we-are-building', [SiteController::class, 'whatWeAreBuilding'])->name('what-we-are-building');
 Route::get('/free-hr-audit', [SiteController::class, 'audit'])->name('free-hr-audit');
+Route::get('/terms', [SiteController::class, 'terms'])->name('terms');
+Route::get('/privacy', [SiteController::class, 'privacy'])->name('privacy');
 
 // Legacy URLs stay reachable after the information architecture change.
 Route::redirect('/pricing', '/why-emplowise', 301);
@@ -27,7 +29,7 @@ Route::redirect('/ai-automation', '/what-we-are-building', 301);
 Route::get('/team', fn () => redirect('/what-we-are#team', 301));
 
 Route::get('/sitemap.xml', function () {
-    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit'];
+    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit', 'terms', 'privacy'];
     $urls = '';
     foreach ($pages as $name) {
         $priority = $name === 'home' ? '1.0' : '0.8';

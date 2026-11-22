@@ -27,6 +27,8 @@ final class SiteAndApiTest extends TestCase
             '/contact' => 'Contact Emplowise',
             '/what-we-are-building' => 'AI automation for HR',
             '/free-hr-audit' => 'free HR audit in Pakistan',
+            '/terms' => 'Terms of service',
+            '/privacy' => 'Privacy Policy',
         ];
 
         foreach ($pages as $path => $needle) {
@@ -173,7 +175,7 @@ final class SiteAndApiTest extends TestCase
 
     public function test_pages_render_without_php_diagnostics(): void
     {
-        $pages = ['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit'];
+        $pages = ['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit', '/terms', '/privacy'];
         $markers = ['Warning:', 'Notice:', 'Deprecated:', 'Fatal error', 'Undefined variable', 'Undefined array key'];
 
         foreach ($pages as $path) {
@@ -218,6 +220,8 @@ final class SiteAndApiTest extends TestCase
             '/contact' => 'contact',
             '/what-we-are-building' => 'what-we-are-building',
             '/free-hr-audit' => 'free-hr-audit',
+            '/terms' => 'terms',
+            '/privacy' => 'privacy',
         ];
 
         $titles = [];
@@ -258,9 +262,9 @@ final class SiteAndApiTest extends TestCase
         $this->assertNotFalse($xml);
 
         $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
-        $this->assertCount(9, $locations);
+        $this->assertCount(11, $locations);
 
-        foreach (['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit'] as $path) {
+        foreach (['/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq', '/contact', '/what-we-are-building', '/free-hr-audit', '/terms', '/privacy'] as $path) {
             $this->assertTrue(
                 collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),
                 'Missing sitemap entry for '.$path

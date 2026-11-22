@@ -688,6 +688,37 @@ html.js-anim .reveal.is-visible {
 .reveal[data-delay="3"] { transition-delay: 0.36s; }
 .reveal[data-delay="4"] { transition-delay: 0.48s; }
 
+/* Immediate entrance motion for the first screen. .reveal still handles
+   everything below the fold; these keyframes make the hero feel alive on
+   load instead of waiting for a scroll. Gated on no-preference so a visitor
+   who asked their OS for less motion gets a completely static page. */
+@keyframes hero-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .hero-copy .kicker,
+    .hero-copy h1,
+    .hero-copy .hero-sub,
+    .hero-copy .hero-rotate,
+    .hero-copy .hero-actions,
+    .hero-copy .hero-proof,
+    .hero-copy .scroll-cue {
+        animation: hero-in 0.75s var(--ease-out) both;
+    }
+
+    .hero-copy .kicker { animation-delay: 0.04s; }
+    .hero-copy h1 { animation-delay: 0.1s; }
+    .hero-copy .hero-sub { animation-delay: 0.16s; }
+    .hero-copy .hero-rotate { animation-delay: 0.22s; }
+    .hero-copy .hero-actions { animation-delay: 0.28s; }
+    .hero-copy .hero-proof { animation-delay: 0.34s; }
+    .hero-copy .scroll-cue { animation-delay: 0.4s; }
+
+    .hero-panel { animation: hero-in 0.85s 0.18s var(--ease-out) both; }
+}
+
 .toast {
     position: fixed;
     left: 50%;

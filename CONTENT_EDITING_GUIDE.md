@@ -15,6 +15,8 @@ Every public sentence on the Emplowise site lives in `config/emplowise.php`. You
 | FAQ | `/faq` | `seo.faq`, `copy.faq`, and `faqs` |
 | Contact Us | `/contact` | `seo.contact` and `copy.contact` |
 | Free HR Audit | `/free-hr-audit` | `seo.free-hr-audit` and `copy.free-hr-audit` |
+| Terms | `/terms` | `seo.terms` and `copy.legal.terms` |
+| Privacy | `/privacy` | `seo.privacy` and `copy.legal.privacy` |
 
 Shared header, footer, chat widget and theme-toggle text is in `copy.layout` and `copy.chat`. Package prices, the service list, the four method stages, and the FAQ answers are in the `packages`, `services`, `methodology`, and `faqs` arrays.
 
@@ -47,11 +49,31 @@ Field labels, helper hints, and tool result headings live in the same `copy` blo
 
 - `theme_toggle_dark` / `theme_toggle_light` are the screen-reader labels on the header and drawer buttons ("Switch to dark theme" / "Switch to light theme"). Keep them as instructions, not state names.
 - `theme_footer_dark` / `theme_footer_light` are the visible drawer label, which names the mode the button will switch *to*.
-- `footer_note` is the brand bio under the footer logo. It is also the page's main descriptive paragraph on `/contact`, so keep it specific: who you serve, the headcount range, the free audit, and the published starting price.
+- `footer_note` is the brand bio under the footer logo. It is also the page's main descriptive paragraph on `/contact`, so keep it specific: who you serve, the headcount range, the free audit, and the published starting price. Keep it to two sentences — the compact footer is deliberately short.
 - `footer_tagline` is the line beside the copyright ("People analytics without bias, so CEOs can set new standards."). It replaces the old scope disclaimer; do not add a second legal paragraph unless counsel asks for one.
-- `consent_footer` labels the floating cookie button. The button appears after load, auto-hides, and returns at the end of the page.
+- `footer_legal_label`, `footer_terms`, and `footer_privacy` label the legal row at the bottom of the footer. Add a route and a link here if counsel asks for another document.
+- `consent_footer` labels the "Cookie settings" button in the footer legal row. There is no floating cookie button any more; the banner opens by itself on the first visit without a saved choice and can be reopened from this button.
 
-The theme toggle appears in the header above 1040px and as a row in the mobile drawer at 1040px and below. The footer no longer carries a toggle, so editing the two keys updates both remaining controls.
+### Home shortcuts
+
+`copy.home.shortcuts` is the four-card grid under the hero. Each item is
+`label`, `desc`, `route`, optional `hash`, and `icon` (one of the names in
+`resources/views/components/icon.blade.php`). The landing page intentionally
+does not repeat the method, pricing, or EmploStart sections — they live on
+`/why-emplowise` and `/emplostart`, and the cards are the navigation into them.
+If you add a fifth card the grid wraps in the stylesheet; update the copy and
+keep descriptions under roughly 60 characters.
+
+### Legal pages
+
+`copy.legal.terms` and `copy.legal.privacy` share one template
+(`resources/views/pages/legal.blade.php`). Each block is an array of
+`id`, `heading`, and `paragraphs`; the template numbers the sections and builds
+the "On this page" list automatically. `updated` is the visible date. Keep the
+tone client-facing and plain, and route anything that needs legal advice to
+counsel rather than inventing a clause.
+
+The theme toggle appears in the header above 1040px (inside the left rail from 1200px) and as a row in the mobile drawer at 1040px and below. The footer no longer carries a toggle, so editing the two keys updates both remaining controls.
 
 ## Student Hub and chat controls
 
@@ -100,7 +122,7 @@ php artisan emplowise:seo-audit
 php artisan config:clear && php artisan config:cache
 ```
 
-`emplowise:seo-audit` checks every route for missing keys, title and description length, duplicate titles, duplicate keywords, keyword placement in the title, h1, intro, and section heading, banned filler words, em dashes, and the confirmed business facts. It prints a table and exits non-zero when something needs fixing. The second command clears the old cached config and rebuilds it so the live site uses your new text.
+`emplowise:seo-audit` checks the nine marketing routes for missing keys, title and description length, duplicate titles, duplicate keywords, keyword placement in the title, h1, intro, and section heading, banned filler words, em dashes, and the confirmed business facts. Terms and privacy carry their own meta titles and descriptions and are covered by the route-render tests. It prints a table and exits non-zero when something needs fixing. The second command clears the old cached config and rebuilds it so the live site uses your new text.
 
 To preview locally without caching, run `php artisan config:clear` and open the site with `php artisan serve`.
 

@@ -2544,3 +2544,258 @@ body.page-ai { background: #f4f4f4; }
     .ai-banner-inner { font-size: 0.55rem; letter-spacing: 0.1em; }
     .ai-actions .btn { width: 100%; }
 }
+
+/* ------------------------------------------------------------------
+   Home: navigation shortcuts
+   The landing page stays a map: four bold doors replace the long
+   method/pricing/student scroll that now lives on its own page.
+------------------------------------------------------------------- */
+
+.home-shortcuts {
+    padding-block: clamp(1.8rem, 3.2vw, 2.6rem);
+}
+
+.shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.shortcut {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.95rem 1rem;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease),
+        border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+.shortcut::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--grad-teal);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+}
+
+.shortcut:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(13, 148, 136, 0.3);
+}
+
+.shortcut:hover::before { opacity: 1; }
+
+.shortcut-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(13, 148, 136, 0.1);
+    border: 1px solid rgba(13, 148, 136, 0.18);
+    color: var(--teal-deep);
+    transition: transform var(--dur) var(--ease-spring);
+}
+
+.shortcut:nth-child(2) .shortcut-icon {
+    background: rgba(8, 145, 178, 0.1);
+    border-color: rgba(8, 145, 178, 0.2);
+    color: var(--cyan-deep);
+}
+
+.shortcut:nth-child(3) .shortcut-icon {
+    background: rgba(124, 58, 237, 0.1);
+    border-color: rgba(124, 58, 237, 0.2);
+    color: var(--violet);
+}
+
+.shortcut:nth-child(4) .shortcut-icon {
+    background: rgba(79, 70, 229, 0.1);
+    border-color: rgba(79, 70, 229, 0.2);
+    color: var(--indigo);
+}
+
+.shortcut:hover .shortcut-icon { transform: scale(1.06); }
+
+.shortcut-copy { display: grid; gap: 0.1rem; min-width: 0; }
+
+.shortcut-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+}
+
+.shortcut-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--slate-500);
+}
+
+.shortcut-arrow {
+    color: var(--slate-400);
+    transition: transform var(--dur) var(--ease-spring), color var(--dur-fast) var(--ease);
+}
+
+.shortcut:hover .shortcut-arrow {
+    transform: translateX(3px);
+    color: var(--teal-deep);
+}
+
+/* ------------------------------------------------------------------
+   Legal: terms and privacy
+------------------------------------------------------------------- */
+
+.legal-section { padding-top: clamp(1.8rem, 3vw, 2.6rem); }
+
+.legal-updated {
+    margin: 0.9rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+}
+
+.legal-layout {
+    display: grid;
+    grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+    gap: clamp(1.6rem, 3.5vw, 3.4rem);
+    align-items: start;
+}
+
+.legal-toc {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem);
+    padding-left: 1rem;
+    border-left: 2px solid var(--line);
+}
+
+.legal-toc-title {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+}
+
+.legal-toc ol {
+    display: grid;
+    gap: 0.05rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legal-toc a {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.28rem 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--slate-600);
+    transition: color var(--dur-fast) var(--ease);
+}
+
+.legal-toc a span {
+    flex: 0 0 auto;
+    padding-top: 0.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--teal-deep);
+}
+
+.legal-toc a:hover { color: var(--navy); }
+
+.legal-toc-mail {
+    display: inline-block;
+    margin-top: 0.85rem;
+    font-size: 0.72rem;
+    color: var(--teal-deep);
+    word-break: break-word;
+}
+
+.legal-body { max-width: 72ch; }
+
+.legal-block {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.legal-block:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.legal-num {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--teal-deep);
+}
+
+.legal-block h2 {
+    margin: 0 0 0.55rem;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    letter-spacing: -0.015em;
+}
+
+.legal-block p {
+    margin: 0 0 0.65rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--slate-600);
+}
+
+.legal-block p:last-child { margin-bottom: 0; }
+
+.legal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1.4rem;
+}
+
+.legal-note {
+    margin: 1rem 0 0;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--slate-500);
+}
+
+@media (max-width: 900px) {
+    .shortcut-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .legal-layout { grid-template-columns: 1fr; }
+
+    .legal-toc {
+        position: static;
+        padding: 0.9rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+    }
+
+    .legal-toc ol { grid-template-columns: 1fr 1fr; gap: 0 0.9rem; }
+}
+
+@media (max-width: 560px) {
+    .shortcut-grid { grid-template-columns: 1fr; }
+    .legal-toc ol { grid-template-columns: 1fr; }
+    .legal-actions .btn { width: 100%; }
+}

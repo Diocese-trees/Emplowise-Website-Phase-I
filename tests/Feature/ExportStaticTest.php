@@ -43,6 +43,8 @@ final class ExportStaticTest extends TestCase
             'contact/index.html',
             'what-we-are-building/index.html',
             'free-hr-audit/index.html',
+            'terms/index.html',
+            'privacy/index.html',
         ];
 
         foreach ($pages as $page) {

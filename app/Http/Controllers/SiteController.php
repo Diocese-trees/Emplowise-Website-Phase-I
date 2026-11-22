@@ -101,6 +101,24 @@ final class SiteController extends Controller
         ]);
     }
 
+    public function terms(): View
+    {
+        return view('pages.legal', [
+            'seo' => config('emplowise.seo.terms'),
+            'copy' => config('emplowise.copy.legal.terms'),
+            'kind' => 'terms',
+        ]);
+    }
+
+    public function privacy(): View
+    {
+        return view('pages.legal', [
+            'seo' => config('emplowise.seo.privacy'),
+            'copy' => config('emplowise.copy.legal.privacy'),
+            'kind' => 'privacy',
+        ]);
+    }
+
     public function audit(): View
     {
         return view('pages.audit', [
