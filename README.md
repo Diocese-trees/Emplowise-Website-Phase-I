@@ -6,10 +6,8 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 **Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. The EmploStart scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
-[![Tests](https://img.shields.io/badge/tests-passing-16a34a?style=flat-square)](#testing)
+[![CI](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml/badge.svg)](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml)
 [![PHP](https://img.shields.io/badge/PHP-8.3-777bb4?style=flat-square)](composer.json)
-
-![Emplowise home page](docs/screenshots/home.jpg)
 
 ## Contents
 
@@ -23,37 +21,6 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
 | Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
 
-### Screens
-
-Every page ships in light and dark. The pairs below are captured at 1440×900;
-the full set (eleven pages × two themes) is in `docs/screenshots/`.
-
-| Why Emplowise | EmploStart |
-| --- | --- |
-| ![Why Emplowise](docs/screenshots/pricing.jpg) | ![EmploStart](docs/screenshots/student-hub.jpg) |
-
-| Free HR Audit | FAQ |
-| --- | --- |
-| ![Audit](docs/screenshots/audit.jpg) | ![FAQ](docs/screenshots/faq.jpg) |
-
-| Contact Us | What We Do |
-| --- | --- |
-| ![Contact Us](docs/screenshots/contact.jpg) | ![What We Do](docs/screenshots/what-we-do.jpg) |
-
-| Our Story | What We Are Building |
-| --- | --- |
-| ![Our Story](docs/screenshots/what-we-are.jpg) | ![What We Are Building](docs/screenshots/what-we-are-building.jpg) |
-
-Dark mode:
-
-| Home | EmploStart |
-| --- | --- |
-| ![Home in dark mode](docs/screenshots/home-dark.jpg) | ![EmploStart in dark mode](docs/screenshots/student-hub-dark.jpg) |
-
-| Contact Us | Free HR Audit |
-| --- | --- |
-| ![Contact Us in dark mode](docs/screenshots/contact-dark.jpg) | ![Free HR Audit in dark mode](docs/screenshots/audit-dark.jpg) |
-
 ## Repository layout
 
 ```
@@ -65,9 +32,9 @@ resources/views          Layout, 11 pages, chat partial
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 database/migrations      audit_requests, chat_messages
-tests/Feature            62 tests covering pages, APIs, exports and headers
+tests/Feature            60 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
-docs/                    hosting, static export, theme/motion, repo topology, screenshots
+docs/                    hosting, static export, theme/motion, repo topology
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history
 ```
 
@@ -387,7 +354,7 @@ resources/views/
 routes/web.php
 tools/parity/                   # PHP-generated fixtures + Node parity harnesses
 tests/Feature/                  # page, API, header and static-export tests
-.github/workflows/              # publish-static.yml renders and pushes gh-pages
+.github/workflows/              # ci.yml (tests + export), publish-static.yml (gh-pages)
 ```
 
 Front-end conventions: design tokens in `tokens.css`; teal `#0D9488`, teal-deep `#0F766E`, navy `#081B3E`, aqua `#5EEAD4`, ice `#F0F9F9`, off-white `#F7F7F7`; Montserrat 700/800 for headings, Plus Jakarta Sans 400/500/600 for body. The look is flat with soft navy shadows and teal→aqua gradients reserved for emphasis (hero glow, primary buttons, kickers); every interactive component degrades gracefully without JavaScript. Dark mode, the token contract and the motion timings are documented in [`docs/THEME_AND_MOTION.md`](docs/THEME_AND_MOTION.md).
@@ -424,6 +391,13 @@ node tools/parity/check-interview.mjs
 node tools/parity/check-ats.mjs
 node tools/parity/check-profile.mjs
 ```
+
+`.github/workflows/ci.yml` runs the same gate on every push and pull request:
+it rebuilds the CSS bundles and fails on a diff, checks JS syntax, runs the SEO
+audit and the test suite, replays the three browser-engine parity fixtures, and
+smoke-tests a keyless static export (`index.html`, `404.html`, the audit form
+and the CSP meta). Screenshots are local captures for review: `docs/screenshots/`
+is git-ignored, so the repository carries no image binaries.
 
 ---
 

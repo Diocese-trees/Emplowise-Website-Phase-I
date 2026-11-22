@@ -33,3 +33,6 @@ Thumbs.db
 /bootstrap/cache/*.php
 !/bootstrap/cache/.gitignore
 /docs/.DS_Store
+
+# Local capture set; regenerate with a browser, never ship the binaries
+/docs/screenshots/

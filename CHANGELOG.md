@@ -6,6 +6,18 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Release hygiene. Deleted the two placeholder tests
+  (`tests/Feature/ExampleTest.php`, `tests/Unit/ExampleTest.php`) and the now
+  empty `Unit` suite from `phpunit.xml`; the Feature suite is the contract (60
+  tests, 827 assertions). `docs/screenshots/` is git-ignored and untracked
+  (`git rm -r --cached`), and the README no longer embeds the 22 image binaries.
+  Added `.github/workflows/ci.yml` (push to `main`, PRs, manual): bundle
+  freshness (`git diff --exit-code` after `emplowise:bundle-css`), `node
+  --check` on every script, SEO audit, tests, interview/ATS/profile parity, and
+  a keyless static-export smoke test asserting `index.html`, `404.html`, the
+  audit form and the CSP meta. README, `REPO_TOPOLOGY`, `THEME_AND_MOTION` and
+  `AGENTS.md` were reconciled (Laravel 13, 60 tests, CI entry, local-only
+  captures).
 - Turned the EmploStart tool rail into a sticky segmented bar on small screens.
   Below 1000px it pins under the header (`position: sticky`, `--z-sticky`) in a
   five-column grid; below 760px it becomes one horizontal scroll row with

@@ -1,0 +1,76 @@
+name: CI
+
+# Every push and pull request must pass the same gate the release loop uses:
+# regenerated CSS bundles match their sources, the test suite and SEO audit
+# pass, the browser engines match their PHP fixtures, and the static export
+# renders without an audit key.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, curl, openssl, tokenizer, xml, ctype, json, sqlite3, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare the environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
+          chmod -R ug+rwx storage bootstrap/cache
+
+      - name: Fail if the CSS bundles are stale
+        run: |
+          php artisan emplowise:bundle-css
+          git diff --exit-code -- public/css/site.css public/css/hub.css
+
+      - name: Check JavaScript syntax
+        run: |
+          for file in public/js/*.js public/js/toolkit/*.js; do
+            node --check "$file"
+          done
+
+      - name: Audit SEO copy
+        run: php artisan emplowise:seo-audit
+
+      - name: Run the test suite
+        run: php artisan test
+
+      - name: Check browser-engine parity
+        run: |
+          node tools/parity/check-interview.mjs
+          node tools/parity/check-ats.mjs
+          node tools/parity/check-profile.mjs
+
+      - name: Smoke-test the static export
+        run: |
+          php artisan emplowise:export-static build/static --base="https://example.github.io/ci"
+          test -f build/static/index.html
+          test -f build/static/404.html
+          test -f build/static/free-hr-audit/index.html
+          grep -q 'data-audit-nokey="1"' build/static/free-hr-audit/index.html
+          grep -q "script-src 'self' 'sha256-" build/static/index.html

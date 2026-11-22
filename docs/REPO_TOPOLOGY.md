@@ -13,6 +13,16 @@ publishes the site, and only one is written by a bot.
 The copy is a full mirror, not a fork: it holds all branches and tags, so its
 clone works on its own, and nothing about the original depends on it.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on pushes to `main`, on pull requests and by
+manual dispatch. It fails if the regenerated bundles differ from the committed
+`site.css`/`hub.css`, checks JavaScript syntax, runs `emplowise:seo-audit` and
+the Feature suite, replays the interview/ATS/profile parity fixtures, and
+renders a keyless static export with `index.html`, `404.html`, the audit form
+and the CSP meta asserted. It has read-only permissions; only
+`publish-static.yml` writes `gh-pages`.
+
 ## Keeping the copy in sync
 
 `.github/workflows/sync-from-upstream.yml` runs **every two hours at :23** and on

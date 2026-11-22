@@ -271,11 +271,12 @@ rather than a transform, and never rely on motion alone.
 
 ## 5. Validating a theme change
 
-1. `php artisan test` — 56 tests, including static-export assertions.
+1. `php artisan test` — 60 tests, including static-export assertions.
 2. `php artisan emplowise:seo-audit` — nine marketing routes.
-3. Screenshot all eleven routes at 1440px in light and dark, with the consent
-   card dismissed (see `docs/screenshots/*-dark.jpg`). Check `/terms` and
-   `/privacy` too, plus one mobile capture at 390px.
+3. Capture all eleven routes at 1440px in light and dark, with the consent
+   card dismissed. Captures are local review artefacts under the git-ignored
+   `docs/screenshots/`; nothing is committed. Check `/terms` and `/privacy`
+   too, plus one mobile capture at 390px.
 4. Sweep 320 / 768 / 1040 / 1041 / 1199 / 1200 / 1280 / 2560 for horizontal
    overflow in both themes. 1199 must show the top bar; 1200 must show the left
    rail with `body { padding-left: 184px }` and a fixed 184px header.
