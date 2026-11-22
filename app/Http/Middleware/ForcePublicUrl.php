@@ -54,10 +54,10 @@ class ForcePublicUrl
             'http://127.0.0.1',
         ]));
 
-        // Canonical URLs, OpenGraph URLs, and JSON-LD must stay absolute.
+        // Canonical URLs, OpenGraph/Twitter images and JSON-LD must stay absolute.
         $kept = [];
         $html = preg_replace_callback(
-            '/<script type="application\/ld\+json">.*?<\/script>|<(?:link|meta)[^>]*(?:rel="canonical"|property="og:url")[^>]*>/is',
+            '/<script type="application\/ld\+json">.*?<\/script>|<(?:link|meta)[^>]*(?:rel="canonical"|property="og:(?:url|image)"|name="twitter:image")[^>]*>/is',
             function (array $match) use (&$kept): string {
                 $kept[] = $match[0];
 

@@ -6,6 +6,20 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Cleaned up favicons and social cards. The head now declares exactly two icons,
+  both at the site root (`favicon.ico` any size, `favicon.png` 32×32), and the
+  duplicate `public/img/favicon.png` is deleted. Open Graph gained
+  `og:image` + `og:image:alt`, the Twitter card moved to
+  `summary_large_image`, and `twitter:image` + `twitter:image:alt` were added,
+  defaulting to `img/logo-primary.png` and overridable per page with
+  `@section('og_image')`. `ForcePublicUrl` was collapsing same-origin absolute
+  URLs, so `og:image` and `twitter:image` were added to its keep list next to
+  `canonical` and `og:url`; image URLs stay absolute in both the app and the
+  static export, including subdirectory bases. `public/robots.txt` now points at
+  an absolute `Sitemap:` URL (the exported robots.txt already built one from
+  `--base`). Verified over real HTTP and a static export: absolute
+  `og:image`/`twitter:image`, two icon links, 56 tests pass, SEO audit 9/9.
+  Backup branch: `backup/main-pre-seo-meta-2026-11-22` (at `fc8b475`).
 - Added a real 404 page. `resources/views/errors/404.blade.php` extends
   `layouts.app` and shows a 404 kicker, one `<h1>`, and links to Home, the Free
   HR Audit and Contact. A missing route now returns 404 with the full site

@@ -10,6 +10,18 @@
         $pageTitle = trim($__env->yieldContent('title', 'Emplowise | Remote HR Solutions for Growing Businesses'));
         $pageDescription = trim($__env->yieldContent('meta_description', 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance management, and policy making, plus a free career toolkit for early career candidates.'));
         $pageUrl = url()->current();
+        $ogImage = trim($__env->yieldContent('og_image', ''));
+        $ogImage = $ogImage !== '' ? $ogImage : asset_v('img/logo-primary.png');
+        if (! str_starts_with($ogImage, 'http://') && ! str_starts_with($ogImage, 'https://')) {
+            $ogRoot = rtrim((string) \Illuminate\Support\Facades\URL::to('/'), '/');
+            if (! str_starts_with($ogRoot, 'http://') && ! str_starts_with($ogRoot, 'https://')) {
+                $ogScheme = parse_url($pageUrl, PHP_URL_SCHEME) ?: 'https';
+                $ogHost = parse_url($pageUrl, PHP_URL_HOST) ?: '';
+                $ogPort = parse_url($pageUrl, PHP_URL_PORT);
+                $ogRoot = $ogScheme.'://'.$ogHost.($ogPort ? ':'.$ogPort : '');
+            }
+            $ogImage = $ogRoot.'/'.ltrim($ogImage, '/');
+        }
         $offers = collect(config('emplowise.packages'))->map(fn ($package) => [
             '@type' => 'Offer',
             'name' => $package['name'],
@@ -54,11 +66,16 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ $pageUrl }}">
     <meta property="og:site_name" content="Emplowise">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:alt" content="Emplowise logo">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image:alt" content="Emplowise logo">
 
-    <link rel="icon" type="image/png" href="{{ asset_v('favicon.png') }}">
+    <link rel="icon" href="{{ asset_v('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_v('favicon.png') }}">
     <link rel="preload" href="/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/jakarta-fdb05bf0-latin.woff2" as="font" type="font/woff2" crossorigin>
     {{-- Synchronous so data-theme is on <html> before the first paint; deferred
