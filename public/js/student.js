@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    const config = document.getElementById('student-config');
+    const config = document.getElementById('emplostart-config');
     if (!config) return;
 
     const endpoints = {

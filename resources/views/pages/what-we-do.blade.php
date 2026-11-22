@@ -58,7 +58,7 @@
                         <h3 class="s40">
                             {{ $copy['services'] }}
                         </h3>
-                        <div class="table-wrap">
+                        <div class="table-wrap" role="region" tabindex="0" aria-label="{{ $pillar['name'] }} services">
                             <table class="data">
                                 <thead>
                                     <tr>
@@ -92,7 +92,7 @@
                 </p>
             </div>
 
-            <div class="table-wrap">
+            <div class="table-wrap" role="region" tabindex="0" aria-label="{{ $seo['h2'] }}">
                 <table class="data">
                     <thead>
                         <tr>

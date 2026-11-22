@@ -384,6 +384,11 @@
     box-shadow: var(--shadow-sm);
 }
 
+.table-wrap:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 3px;
+}
+
 table.data {
     width: 100%;
     border-collapse: collapse;
