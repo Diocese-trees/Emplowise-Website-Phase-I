@@ -587,12 +587,39 @@
 
         restoreDraft();
 
+        let errorSeq = 0;
+
+        function markField(wrap, invalid) {
+            const error = wrap.querySelector('.field-error');
+
+            wrap.querySelectorAll('input, select, textarea').forEach(function (control) {
+                if (invalid) {
+                    if (!error) return;
+                    if (!error.id) error.id = 'audit-error-' + (errorSeq += 1);
+                    control.setAttribute('aria-invalid', 'true');
+                    const ids = (control.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+                    if (ids.indexOf(error.id) === -1) ids.push(error.id);
+                    control.setAttribute('aria-describedby', ids.join(' '));
+                    return;
+                }
+
+                control.removeAttribute('aria-invalid');
+                if (!error || !error.id) return;
+                const rest = (control.getAttribute('aria-describedby') || '')
+                    .split(/\s+/)
+                    .filter(function (id) { return id && id !== error.id; });
+                if (rest.length) control.setAttribute('aria-describedby', rest.join(' '));
+                else control.removeAttribute('aria-describedby');
+            });
+        }
+
         function setError(name, message) {
             const wrap = fieldWrap(name);
             if (!wrap) return;
             wrap.classList.add('has-error');
             const error = wrap.querySelector('.field-error');
             if (error) error.textContent = message;
+            markField(wrap, true);
         }
 
         function clearErrors(scope) {
@@ -600,6 +627,7 @@
                 wrap.classList.remove('has-error');
                 const error = wrap.querySelector('.field-error');
                 if (error) error.textContent = '';
+                markField(wrap, false);
             });
         }
 
@@ -627,6 +655,13 @@
                 const target = stepEl(current);
                 if (target) {
                     target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+                    const heading = target.querySelector('h2, h3, legend');
+                    if (heading) {
+                        // Move focus to the new step so keyboard and screen
+                        // reader users do not walk the whole header again.
+                        if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+                        heading.focus({ preventScroll: true });
+                    }
                 }
             }
         }
@@ -874,9 +909,18 @@
                             document.getElementById('success-slot').textContent = preferredSlot || 'Pending';
                         }
                         auditForm.hidden = true;
+                        if (status) {
+                            status.classList.remove('is-error');
+                            status.textContent = '';
+                        }
                         if (success) {
                             success.classList.add('is-visible');
                             success.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+                            const thanks = success.querySelector('h2');
+                            if (thanks) {
+                                if (!thanks.hasAttribute('tabindex')) thanks.setAttribute('tabindex', '-1');
+                                thanks.focus({ preventScroll: true });
+                            }
                         }
                         return;
                     }
