@@ -4,7 +4,7 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
-## Unreleased
+## v2.0 — Executive redesign (2026-11-22)
 
 - Final verification pass. Lighthouse (mobile and desktop) on `/`,
   `/emplostart/` and `/free-hr-audit/` now scores 100 for accessibility, best
