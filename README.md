@@ -377,7 +377,10 @@ public/
   js/toolkit/  interview.js, ats.js, profile.js (browser ports of StudentToolkit)
 resources/views/
   layouts/app.blade.php
+  partials/header.blade.php     # site header, cut verbatim from the layout
+  partials/footer.blade.php     # site footer, cut verbatim from the layout
   partials/chat.blade.php
+  partials/emplostart/          # ats, interview, profile tool panels
   pages/*.blade.php
   errors/404.blade.php          # dynamic 404; the static build mirrors it as 404.html
 routes/web.php

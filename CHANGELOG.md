@@ -6,6 +6,19 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Split the layout and the EmploStart page into partials, with no rendered change.
+  `layouts/app.blade.php` now includes `partials/header.blade.php` and
+  `partials/footer.blade.php`, both cut verbatim from the layout (3,429 and 2,834
+  bytes). The three tool tabs on `/emplostart` moved to
+  `partials/emplostart/{interview,ats,profile}.blade.php` (110/88/59 lines) and
+  the page fell from 491 to 237 lines (3 insertions, 257 deletions). Resume and
+  Prompts panels stay inline, since they are not among the three named tabs.
+  Panel comments stay in the parent: Laravel 8's view engine `ltrim`s included
+  output, so an indented comment inside a partial would shift whitespace. Both
+  refactors were proven by rendering before and after and diffing with the
+  per-session CSRF token and dev port normalised — identical for `/`,
+  `/contact`, `/what-we-are` and `/emplostart`. 56 tests pass. README views tree
+  updated. Backup branch: `backup/main-pre-partials-2026-11-22` (at `776dc65`).
 - Replaced the team placeholder portraits with a CSS initials avatar. The
   showcase checks `portrait` for `placeholder-`; while it matches, each panel
   shows initials derived from the profile name (`MA`, `AH`, `SN`) in a 4:5 block
