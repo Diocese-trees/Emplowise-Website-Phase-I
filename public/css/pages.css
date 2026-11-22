@@ -2799,3 +2799,23 @@ body.page-ai { background: #f4f4f4; }
     .legal-toc ol { grid-template-columns: 1fr; }
     .legal-actions .btn { width: 100%; }
 }
+
+
+/* ------------------------------------------------- team initials avatar */
+/* Shown while a profile still points at a placeholder portrait. */
+.team-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+    background: linear-gradient(150deg, var(--navy-900) 0%, #0b3b46 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.75rem, 6vw, 4.25rem);
+    letter-spacing: 0.04em;
+    user-select: none;
+}

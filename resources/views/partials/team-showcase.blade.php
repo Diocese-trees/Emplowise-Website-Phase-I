@@ -28,6 +28,15 @@
 
         <div class="team-panels">
             @foreach ($team['profiles'] as $profile)
+                @php
+                    $portrait = (string) ($profile['portrait'] ?? '');
+                    $isPlaceholder = str_contains($portrait, 'placeholder-');
+                    $words = preg_split('/\s+/', trim((string) $profile['name'])) ?: [];
+                    $initials = '';
+                    foreach (array_slice($words, 0, 2) as $word) {
+                        $initials .= mb_strtoupper(mb_substr($word, 0, 1));
+                    }
+                @endphp
                 <section class="team-panel {{ $loop->first ? 'is-active' : '' }}"
                          id="team-panel-{{ $profile['id'] }}"
                          data-team-panel="{{ $profile['id'] }}"
@@ -35,18 +44,24 @@
                          aria-labelledby="team-tab-{{ $profile['id'] }}"
                          tabindex="0">
                     <figure class="team-photo">
-                        {{-- TODO: replace this placeholder portrait with the confirmed team photo at the same 4:5 ratio. --}}
-                        <picture>
-                            <source type="image/webp"
-                                    srcset="{{ asset_v($profile['portrait_webp_small']) }} 420w, {{ asset_v($profile['portrait_webp']) }} 840w"
-                                    sizes="(max-width: 900px) 100vw, 420px">
-                            <img src="{{ asset_v($profile['portrait']) }}"
-                                 alt="{{ $profile['alt'] }}"
-                                 width="800"
-                                 height="1000"
-                                 loading="lazy"
-                                 decoding="async">
-                        </picture>
+                        @if ($isPlaceholder)
+                            {{-- Headshot pending: show a neutral initials block instead of a stand-in portrait. --}}
+                            <div class="team-avatar" role="img" aria-label="{{ $profile['name'] }}">
+                                <span aria-hidden="true">{{ $initials }}</span>
+                            </div>
+                        @else
+                            <picture>
+                                <source type="image/webp"
+                                        srcset="{{ asset_v($profile['portrait_webp_small']) }} 420w, {{ asset_v($profile['portrait_webp']) }} 840w"
+                                        sizes="(max-width: 900px) 100vw, 420px">
+                                <img src="{{ asset_v($profile['portrait']) }}"
+                                     alt="{{ $profile['alt'] }}"
+                                     width="800"
+                                     height="1000"
+                                     loading="lazy"
+                                     decoding="async">
+                            </picture>
+                        @endif
                         <figcaption><span>{{ $profile['num'] }}</span> {{ $profile['role'] }}</figcaption>
                     </figure>
 

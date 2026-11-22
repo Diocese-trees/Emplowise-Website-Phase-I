@@ -91,8 +91,8 @@ final class ExportStaticTest extends TestCase
         $this->assertStringNotContainsString(', /img/', $home);
 
         $team = (string) File::get($this->target.'/what-we-are/index.html');
-        $this->assertStringContainsString('srcset="https://example.github.io/demo/img/team/', $team);
-        $this->assertStringNotContainsString('srcset="/img/team/', $team);
+        $this->assertSame(3, substr_count($team, 'class="team-avatar"'));
+        $this->assertStringNotContainsString('img/team/placeholder-', $team);
 
         // Directory links keep their fragment, so /page#anchor becomes /page/#anchor.
         $this->assertStringContainsString('href="https://example.github.io/demo/what-we-do/#payroll"', $home);

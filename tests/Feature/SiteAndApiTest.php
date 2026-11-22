@@ -311,12 +311,13 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringContainsString('<h2>'.e(config('emplowise.seo.team.h2')).'</h2>', $html);
 
         foreach (config('emplowise.copy.team.profiles') as $profile) {
-            $this->assertStringContainsString($profile['portrait'], $html);
+            $this->assertStringNotContainsString($profile['portrait'], $html);
+            $this->assertStringContainsString('aria-label="'.e($profile['name']).'"', $html);
             $this->assertStringContainsString($profile['name'], $html);
             $this->assertStringContainsString(e($profile['bio']), $html);
-            $this->assertStringContainsString('width="800"', $html);
-            $this->assertStringContainsString('height="1000"', $html);
         }
+
+        $this->assertSame(3, substr_count($html, 'class="team-avatar"'));
 
         $css = (string) file_get_contents(public_path('css/site.css'));
         $this->assertStringContainsString('aspect-ratio: 4 / 5', $css);

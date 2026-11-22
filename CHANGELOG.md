@@ -6,6 +6,19 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Replaced the team placeholder portraits with a CSS initials avatar. The
+  showcase checks `portrait` for `placeholder-`; while it matches, each panel
+  shows initials derived from the profile name (`MA`, `AH`, `SN`) in a 4:5 block
+  instead of the stand-in image, and flips back to the real `<picture>` as soon
+  as a confirmed headshot path is set. Styling lives in `pages.css` (new
+  `.team-avatar` rules; inline CSS is blocked by the export CSP) and removes
+  about 44 KB of portrait WebP from the team page along with three image
+  requests. `team.js` was left alone: it is a full ARIA tab widget with roving
+  `tabindex` and arrow/Home/End keys, not a minor toggle, and it loads from
+  `pages/what-we-are.blade.php`, not the layout. Two assertions that encoded the
+  placeholder markup were updated. 56 tests pass. `CONTENT_EDITING_GUIDE.md`
+  documents the swap. Backup branch: `backup/main-pre-team-avatars-2026-11-22`
+  (at `ca5636e`).
 - Cleaned up favicons and social cards. The head now declares exactly two icons,
   both at the site root (`favicon.ico` any size, `favicon.png` 32×32), and the
   duplicate `public/img/favicon.png` is deleted. Open Graph gained

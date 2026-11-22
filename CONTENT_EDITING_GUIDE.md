@@ -22,6 +22,8 @@ Shared header, footer, chat widget and theme-toggle text is in `copy.layout` and
 
 The keys follow the current page names, not the earlier ones: there is no `copy.pricing` or `copy.student-hub` any more, they are `copy.why-emplowise` and `copy.emplostart`. `seo.team` and `copy.team` feed the team section on Our Story; `/team` itself is a 301 to `/what-we-are#team`.
 
+Team portraits are still placeholders. Each profile points at `img/team/placeholder-*.png|webp`, and while the path contains `placeholder-` the showcase renders a CSS initials avatar instead of the photo. Drop a confirmed 4:5 headshot in and point `portrait`, `portrait_webp` and `portrait_webp_small` at it — the block switches back to the real `<picture>` automatically, no template change needed.
+
 ## Editing a search snippet
 
 Each `seo` block controls one page:
