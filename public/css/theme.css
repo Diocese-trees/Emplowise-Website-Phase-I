@@ -1,34 +1,42 @@
 /* Dark theme.
    theme.js sets html[data-theme] before the first paint from the stored
-   choice, falling back to prefers-color-scheme. The palette is AMOLED:
-   true black page, neutral graphite surfaces, and the brand teal / aqua /
-   indigo accents left untouched so the identity survives the dark flip. */
+   choice, falling back to prefers-color-scheme. The palette is three brand
+   navy layers rather than flat black: canvas, card and elevated, each a few
+   percent lighter, with cool slate ink. Brand teal / aqua / indigo accents
+   are untouched so the identity survives the dark flip. */
 
 html[data-theme="dark"] {
     color-scheme: dark;
 
     /* Semantic surfaces used by the override layer below. */
-    --d-page: #000000;
-    --d-surface: #0a0a0b;
-    --d-surface-2: #101012;
-    --d-surface-3: #17171a;
-    --d-ink: #e7e7ea;
-    --d-ink-soft: #a9a9b2;
-    --d-ink-dim: #7c7c86;
-    --d-line: rgba(255, 255, 255, 0.1);
-    --d-line-strong: rgba(255, 255, 255, 0.2);
+    --d-page: #050f26;
+    --d-surface: #08182f;
+    --d-surface-2: #0a1d38;
+    --d-surface-3: #0e2444;
+    --d-ink: #e9eff8;
+    --d-ink-soft: #a9b8cc;
+    --d-ink-dim: #7f8fa6;
+    --d-line: rgba(148, 163, 184, 0.16);
+    --d-line-strong: rgba(148, 163, 184, 0.28);
     --d-accent: #5eead4;
 
     /* Re-point the shared tokens that only ever describe light chrome. */
     --line: var(--d-line);
     --line-strong: var(--d-line-strong);
+    --surface: var(--d-surface);
     --surface-2: var(--d-surface-2);
     --surface-3: var(--d-surface-3);
+    --surface-canvas: var(--d-page);
+    --surface-card: var(--d-surface);
+    --surface-elevated: var(--d-surface-3);
+    --border-subtle: var(--d-line);
+    --ink-primary: var(--d-ink);
+    --ink-muted: var(--d-ink-soft);
     --ice: var(--d-surface-2);
     --offwhite: var(--d-surface);
     --sand: var(--d-surface-2);
     --sand-line: var(--d-line);
-    --glass: rgba(10, 10, 11, 0.82);
+    --glass: rgba(8, 24, 47, 0.82);
 
     /* Text ramp: same roles, inverted lightness. */
     --slate: var(--d-ink);
@@ -49,12 +57,12 @@ html[data-theme="dark"] body {
     color: var(--d-ink);
 }
 
-html[data-theme="dark"] body.page-ai { background: #000000; }
+html[data-theme="dark"] body.page-ai { background: var(--d-page); }
 
 html[data-theme="dark"] .page-bg {
     background-image:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
-        radial-gradient(120% 90% at 50% -10%, #101012 0%, #060607 45%, #000000 100%);
+        radial-gradient(120% 90% at 50% -10%, var(--d-surface-2) 0%, #061022 45%, var(--d-page) 100%);
 }
 
 html[data-theme="dark"] .page-bg span { opacity: 0.28; }
@@ -65,9 +73,9 @@ html[data-theme="dark"] h1,
 html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,
 html[data-theme="dark"] h4,
-html[data-theme="dark"] h5 { color: #eaf2fc; }
+html[data-theme="dark"] h5 { color: var(--d-ink); }
 
-html[data-theme="dark"] strong { color: #f2f7fe; }
+html[data-theme="dark"] strong { color: #f4f8fd; }
 
 html[data-theme="dark"] a { color: var(--d-accent); }
 html[data-theme="dark"] a:hover { color: #a7f3e6; }
@@ -103,16 +111,16 @@ html[data-theme="dark"] .section--alt {
 /* AMOLED chrome: the hero, navy bands and footer keep the brand glow but
    sit on near-black instead of navy, so the page reads as true black. */
 html[data-theme="dark"] .hero {
-    background: linear-gradient(160deg, #0a1424 0%, #050a12 55%, #000000 100%);
+    background: linear-gradient(160deg, #0a1a33 0%, #061022 55%, var(--d-page) 100%);
 }
 
 html[data-theme="dark"] .section--navy,
 html[data-theme="dark"] .cta-band {
-    background: linear-gradient(160deg, #0b0b0d 0%, #000000 70%);
+    background: linear-gradient(160deg, var(--d-surface) 0%, var(--d-page) 70%);
 }
 
 html[data-theme="dark"] .site-footer {
-    background: linear-gradient(160deg, #0b0b0d 0%, #000000 70%);
+    background: linear-gradient(160deg, var(--d-surface) 0%, var(--d-page) 70%);
 }
 
 html[data-theme="dark"] .site-footer::after {
@@ -263,12 +271,25 @@ html[data-theme="dark"] .field textarea::placeholder { color: #6f8299; }
 html[data-theme="dark"] .field label,
 html[data-theme="dark"] .field-label { color: var(--d-ink-soft); }
 
+html[data-theme="dark"] select option {
+    background: var(--d-surface-2);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] input:-webkit-autofill:hover,
+html[data-theme="dark"] input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--d-ink);
+    box-shadow: 0 0 0 1000px var(--d-surface-2) inset;
+    caret-color: var(--d-ink);
+}
+
 html[data-theme="dark"] .search-box input:focus,
 html[data-theme="dark"] .input:focus,
 html[data-theme="dark"] .field input:focus,
 html[data-theme="dark"] .field select:focus,
 html[data-theme="dark"] .field textarea:focus {
-    background: #0d0d0f;
+    background: var(--d-surface-3);
     border-color: var(--d-accent);
 }
 
@@ -415,9 +436,9 @@ html[data-theme="dark"] .consent {
     color: var(--d-ink);
 }
 
-html[data-theme="dark"] .consent h2 { color: #eaf2fc; }
+html[data-theme="dark"] .consent h2 { color: var(--d-ink); }
 html[data-theme="dark"] .consent-body { color: var(--d-ink-soft); }
-html[data-theme="dark"] .consent-opt-label { color: #eaf2fc; }
+html[data-theme="dark"] .consent-opt-label { color: var(--d-ink); }
 html[data-theme="dark"] .consent-opt-desc,
 html[data-theme="dark"] .consent-note { color: var(--d-ink-dim); }
 html[data-theme="dark"] .consent-manage { color: var(--d-accent); }
@@ -436,7 +457,7 @@ html[data-theme="dark"] .social-link:hover { background: var(--d-surface-3); col
 
 html[data-theme="dark"] .toast {
     background: rgba(23, 23, 26, 0.97);
-    color: #f2f7fe;
+    color: #f4f8fd;
 }
 
 html[data-theme="dark"] .to-top {
@@ -457,7 +478,7 @@ html[data-theme="dark"] .site-footer a:hover { color: #ffffff; }
 
 /* Contact: the panel stays navy in both themes; the cards need their own
    accents because teal-deep is a light-mode colour. */
-html[data-theme="dark"] .contact-email { color: #eaf2fc; }
+html[data-theme="dark"] .contact-email { color: var(--d-ink); }
 html[data-theme="dark"] .contact-step-num { color: var(--d-accent); }
 html[data-theme="dark"] .contact-step { border-top-color: rgba(94, 234, 212, 0.4); }
 html[data-theme="dark"] .contact-ai-pill {
@@ -473,7 +494,7 @@ html[data-theme="dark"] .contact-card-foot { color: var(--d-ink-dim); border-top
 html[data-theme="dark"] .pull-quote {
     background: linear-gradient(150deg, rgba(23, 23, 26, 0.92), rgba(10, 10, 11, 0.96));
     border-color: var(--d-line-strong);
-    color: #eaf2fc;
+    color: var(--d-ink);
 }
 
 html[data-theme="dark"] .pull-quote cite { color: var(--d-ink-dim); }
@@ -492,7 +513,7 @@ html[data-theme="dark"] .faq-toolbar {
     border-color: var(--d-line);
 }
 
-html[data-theme="dark"] .acc-trigger { color: #eaf2fc; }
+html[data-theme="dark"] .acc-trigger { color: var(--d-ink); }
 html[data-theme="dark"] .acc-trigger:hover { color: var(--d-accent); }
 html[data-theme="dark"] .acc-icon { background: rgba(94, 234, 212, 0.12); color: var(--d-accent); }
 html[data-theme="dark"] .acc-trigger[aria-expanded="true"] .acc-icon { background: var(--teal); color: #ffffff; }
@@ -501,7 +522,7 @@ html[data-theme="dark"] .acc-item.is-open { border-color: rgba(94, 234, 212, 0.4
 html[data-theme="dark"] .acc-panel { color: var(--d-ink-soft); }
 
 /* Pricing: only the featured card set a light amount; the rest stayed navy. */
-html[data-theme="dark"] .price-amount { color: #eaf2fc; }
+html[data-theme="dark"] .price-amount { color: var(--d-ink); }
 html[data-theme="dark"] .price-name { color: var(--d-accent); }
 html[data-theme="dark"] .price-card--featured .price-amount { color: #ffffff; }
 
@@ -526,7 +547,7 @@ html[data-theme="dark"] .tool-status {
     border-color: rgba(94, 234, 212, 0.24);
 }
 
-html[data-theme="dark"] .question-text { color: #eaf2fc; }
+html[data-theme="dark"] .question-text { color: var(--d-ink); }
 
 html[data-theme="dark"] .answer-box {
     background: var(--d-surface-2);
@@ -540,7 +561,7 @@ html[data-theme="dark"] .bar-row .bar-head { color: var(--d-ink); }
 html[data-theme="dark"] .bar-row .bar-head span:last-child { color: var(--d-ink-dim); }
 
 html[data-theme="dark"] .score-number {
-    background: linear-gradient(120deg, #f2f7fe, #c4b5fd 60%, #5eead4);
+    background: linear-gradient(120deg, #f4f8fd, #c4b5fd 60%, #5eead4);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -660,11 +681,11 @@ html[data-theme="dark"] .footer-legal-links button:hover { color: var(--d-accent
 
 @media (min-width: 1200px) {
     html[data-theme="dark"] .site-header {
-        background: rgba(0, 0, 0, 0.9);
-        border-right-color: rgba(255, 255, 255, 0.08);
+        background: rgba(8, 24, 47, 0.94);
+        border-right-color: var(--d-line);
     }
 
-    html[data-theme="dark"] .site-header.is-stuck { background: rgba(0, 0, 0, 0.96); }
+    html[data-theme="dark"] .site-header.is-stuck { background: rgba(8, 24, 47, 0.97); }
 
     html[data-theme="dark"] .nav-link:hover { background: rgba(94, 234, 212, 0.08); }
 

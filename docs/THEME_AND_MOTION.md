@@ -18,7 +18,7 @@ and deferring it would flash the light palette on every dark visit.
 
 Only dark sets an attribute: `<html data-theme="dark">`. The light theme is the
 absence of the attribute, which keeps every existing selector working. The meta
-`theme-color` is updated to `#081B3E` (light) or `#000000` (dark, AMOLED).
+`theme-color` is updated to `#081B3E` (light) or `#050F26` (dark, Midnight Navy).
 
 `theme.js` also:
 
@@ -85,20 +85,23 @@ theme contract.
 Two mechanisms, used for different jobs:
 
 **Re-point tokens that only ever describe light chrome** (on
-`html[data-theme="dark"]`): `--line`, `--line-strong`, `--surface-2`,
-`--surface-3`, `--ice`, `--offwhite`, `--sand`, `--glass`, the `--slate--`
-ramp and the shadows.
+`html[data-theme="dark"]`): `--line`, `--line-strong`, `--surface`,
+`--surface-2`, `--surface-3`, `--surface-canvas`, `--surface-card`,
+`--surface-elevated`, `--border-subtle`, `--ink-primary`, `--ink-muted`,
+`--ice`, `--offwhite`, `--sand`, `--glass`, the `--slate--` ramp and the
+shadows.
 
 **Do not re-point `--white` or `--navy`.** They are semantic: `--navy` is the
 navy band and text-on-light, `--white` is text-on-navy. Re-pointing them would
 invert the hero, `section--navy`, the CTA band and the footer. The dark palette
-is AMOLED, so those chrome bands get explicit near-black gradients instead:
+is three brand navy layers, so those chrome bands get explicit navy gradients
+instead:
 
 ```css
-html[data-theme="dark"] .hero { background: linear-gradient(160deg, #0a1424, #050a12 55%, #000); }
+html[data-theme="dark"] .hero { background: linear-gradient(160deg, #0a1a33, #061022 55%, #050f26); }
 html[data-theme="dark"] .section--navy,
 html[data-theme="dark"] .cta-band,
-html[data-theme="dark"] .site-footer { background: linear-gradient(160deg, #0b0b0d, #000 70%); }
+html[data-theme="dark"] .site-footer { background: linear-gradient(160deg, var(--d-surface), var(--d-page) 70%); }
 html[data-theme="dark"] .section:not(.section--navy),
 html[data-theme="dark"] .page-head { background: transparent; }
 html[data-theme="dark"] .section--alt { background: rgba(255, 255, 255, .03); }
@@ -115,19 +118,59 @@ layer are:
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--d-page` | `#000000` | page background (true black) |
-| `--d-surface` | `#0a0a0b` | cards |
-| `--d-surface-2` | `#101012` | insets, inputs |
-| `--d-surface-3` | `#17171a` | raised chips |
-| `--d-ink` | `#e7e7ea` | body text |
-| `--d-ink-soft` | `#a9a9b2` | secondary text |
-| `--d-ink-dim` | `#7c7c86` | meta text |
-| `--d-line` | `rgba(255,255,255,.1)` | borders |
-| `--d-line-strong` | `rgba(255,255,255,.2)` | borders, focus |
+| `--d-page` | `#050f26` | page background (Midnight Navy) |
+| `--d-surface` | `#08182f` | cards (canvas + ~5% lightness) |
+| `--d-surface-2` | `#0a1d38` | insets, inputs |
+| `--d-surface-3` | `#0e2444` | raised chips (canvas + ~9%) |
+| `--d-ink` | `#e9eff8` | body text |
+| `--d-ink-soft` | `#a9b8cc` | secondary text |
+| `--d-ink-dim` | `#7f8fa6` | meta text |
+| `--d-line` | `rgba(148,163,184,.16)` | borders |
+| `--d-line-strong` | `rgba(148,163,184,.28)` | borders, focus |
 | `--d-accent` | `#5eead4` | links, kickers, numbers |
 
-Measured against `--d-page`: body text 17.0:1, secondary 9.01:1, dim 5.08:1,
-accent 14.2:1.
+Measured against `--d-page`: body text 15.7:1, secondary 9.1:1, dim 5.5:1,
+accent 13.9:1. The three surfaces differ by 4–6% and 8–10% lightness, and the
+border is cool slate rather than white-alpha.
+
+## 3a. Surface, type and spacing scale
+
+`tokens.css` owns the scale so components never guess:
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--surface-canvas` | `#f4f9fb` / `--d-page` | page background |
+| `--surface-card` | `#ffffff` / `--d-surface` | cards, panels |
+| `--surface-elevated` | `#ffffff` / `--d-surface-3` | menus, raised chips |
+| `--border-subtle` | `#e4eaf1` / `--d-line` | 1px hairlines |
+| `--shell` | `1140px` | container width |
+| `--prose` | `65ch` | long-form measure |
+| `--header-h` | `64px` | header height |
+
+Body text is `1rem` on `1.6`; `h1` tops out at `2.875rem`, `h2` at `2rem`,
+`h3` at `1.25rem`. Sections use `clamp(2.75rem, 5vw, 4.5rem)` vertical padding
+(44–72px), cards `clamp(1.25rem, 1.8vw, 1.5rem)` (20–24px), and buttons are
+`44px` tall with `10px 20px` padding.
+
+## 3b. Stacking ladder
+
+`tokens.css` also owns every `z-index`. Bare numbers are not allowed outside
+the negative decoration scale.
+
+| Token | Value | Layer |
+| --- | --- | --- |
+| `--z-decoration` | `-1` | glows, orbs, pseudo-element fills |
+| `--z-base` | `1` | local stacking inside a card |
+| `--z-sticky` | `40` | sticky toolbars, filter bars |
+| `--z-floating` | `90` | to-top button |
+| `--z-header` | `100` | site header |
+| `--z-dropdown` | `110` | desktop Company menu |
+| `--z-progress` | `120` | scroll progress bar |
+| `--z-consent` | `140` | cookie card |
+| `--z-chat` | `160` | chat launcher and panel |
+| `--z-drawer` | `180` | mobile navigation drawer |
+| `--z-toast` | `220` | transient toast |
+| `--z-skip` | `300` | skip link |
 
 ### Checklist for a new component
 

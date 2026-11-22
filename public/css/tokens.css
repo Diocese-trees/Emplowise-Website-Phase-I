@@ -49,6 +49,14 @@
     --surface: #ffffff;
     --surface-2: #f6fafb;
     --surface-3: #eef5f7;
+    /* Semantic surface ladder: canvas < card < elevated. Theme.css re-points
+       all three for dark mode, so components never hardcode a background. */
+    --surface-canvas: #f4f9fb;
+    --surface-card: #ffffff;
+    --surface-elevated: #ffffff;
+    --border-subtle: #e4eaf1;
+    --ink-primary: #081b3e;
+    --ink-muted: #54637a;
     --overlay: rgba(8, 27, 62, 0.55);
     --scrim: rgba(5, 15, 38, 0.72);
     --glass: rgba(255, 255, 255, 0.72);
@@ -84,9 +92,25 @@
     --s-9: 6rem;
 
     /* Layout */
-    --shell: 1220px;
+    --shell: 1140px;
+    --prose: 65ch;
     --gutter: clamp(1.15rem, 4vw, 2.5rem);
-    --header-h: 68px;
+    --header-h: 64px;
+
+    /* Stacking ladder. Nothing in the site should use a bare number except
+       decorations, which stay on the negative scale. */
+    --z-decoration: -1;
+    --z-base: 1;
+    --z-sticky: 40;
+    --z-floating: 90;
+    --z-header: 100;
+    --z-dropdown: 110;
+    --z-progress: 120;
+    --z-consent: 140;
+    --z-chat: 160;
+    --z-drawer: 180;
+    --z-toast: 220;
+    --z-skip: 300;
 
     /* Geometry */
     --radius-xs: 8px;

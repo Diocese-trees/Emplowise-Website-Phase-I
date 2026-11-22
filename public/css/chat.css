@@ -6,7 +6,7 @@
     position: fixed;
     right: clamp(1rem, 3vw, 1.6rem);
     bottom: clamp(1rem, 3vw, 1.6rem);
-    z-index: 120;
+    z-index: var(--z-chat);
     font-family: var(--font-body);
 }
 

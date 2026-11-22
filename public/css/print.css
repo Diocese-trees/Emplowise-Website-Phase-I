@@ -64,8 +64,8 @@
         color: #000000;
     }
 
-    .rp-name { color: #000000; }
-    .rp-title { color: #000000; }
-    .rp-section h3 { color: #000000; border-color: #000000; }
+    .rp-name { color: var(--ink-primary); }
+    .rp-title { color: var(--ink-primary); }
+    .rp-section h3 { color: var(--ink-primary); border-color: var(--ink-primary); }
     .rp-entry-head span:last-child { color: #333333; }
 }
