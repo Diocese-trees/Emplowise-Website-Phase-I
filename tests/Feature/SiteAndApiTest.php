@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\AuditRequest;
 use App\Models\ChatMessage;
+use App\Services\EmplowiseAssistant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -299,6 +300,23 @@ final class SiteAndApiTest extends TestCase
 
         foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/student-hub'] as $fact) {
             $this->assertStringContainsString($fact, $js, 'Browser KB missing: '.$fact);
+        }
+
+        // The browser answers from its own copy of the fallback text, so every
+        // intent must stay byte-identical to the PHP service. A copy edit on
+        // one side alone used to ship silently.
+        $fallback = new \ReflectionMethod(EmplowiseAssistant::class, 'fallbackReply');
+        $assistant = app(EmplowiseAssistant::class);
+
+        foreach ([
+            'pricing', 'audit', 'student', 'tools', 'payroll', 'performance', 'policy',
+            'services', 'pending', 'contact', 'careers', 'why', 'who', 'where', 'when',
+            'greeting', 'thanks', 'general',
+        ] as $intent) {
+            $text = $fallback->invoke($assistant, $intent);
+            $literal = "'".str_replace(['\\', "'", "\n"], ['\\\\', "\\'", '\\n'], $text)."'";
+
+            $this->assertStringContainsString($literal, $js, 'Browser KB drifted from the server copy: '.$intent);
         }
     }
 

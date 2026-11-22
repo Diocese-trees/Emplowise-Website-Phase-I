@@ -101,6 +101,22 @@ runs the fixture inputs, deep-compares the JSON, and exits non-zero on the first
 difference. Regenerate the fixtures after any change to `StudentToolkit`, and
 fix the JavaScript until all three harnesses pass.
 
+The chat widget's intent routing is a port of `EmplowiseAssistant::detectIntent`,
+so it is checked the same way — the corpus comes from PHP and the browser is
+driven over CDP:
+
+```bash
+php tools/parity/generate-chat.php
+php artisan emplowise:export-static /tmp/chat-parity --base=http://127.0.0.1:8116
+php -S 0.0.0.0:8116 -t /tmp/chat-parity &
+chromium --headless=new --remote-debugging-port=9316 --no-sandbox --user-data-dir=/tmp/chat-parity-profile &
+node tools/parity/check-chat-routing.mjs
+```
+
+The canned replies live in `fallbackReply()` on the PHP side and in the `KB`
+object in `public/js/chat.js`. `SiteAndApiTest` asserts every intent is
+byte-identical on both sides, so a copy edit has to land in both places.
+
 ## Differences from the Laravel deployment
 
 - Audit requests are emailed, not written to `audit_requests`; the reference is

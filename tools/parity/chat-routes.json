@@ -1,0 +1,242 @@
+[
+    {
+        "message": "What do the packages cost?",
+        "previous": "",
+        "intent": "pricing"
+    },
+    {
+        "message": "How much is the Starter package per month?",
+        "previous": "",
+        "intent": "pricing"
+    },
+    {
+        "message": "What is included in the Business plan?",
+        "previous": "",
+        "intent": "pricing"
+    },
+    {
+        "message": "Do you have a free plan?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "Which HR services do you run?",
+        "previous": "",
+        "intent": "services"
+    },
+    {
+        "message": "How many HR services do you offer in total?",
+        "previous": "",
+        "intent": "services"
+    },
+    {
+        "message": "What are the three pillars of your HR service?",
+        "previous": "",
+        "intent": "services"
+    },
+    {
+        "message": "How does the engagement process work and how many stages are there?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "When does the review cycle happen?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "How long does onboarding take?",
+        "previous": "",
+        "intent": "when"
+    },
+    {
+        "message": "How much is the free audit?",
+        "previous": "",
+        "intent": "audit"
+    },
+    {
+        "message": "How does the free HR audit work?",
+        "previous": "",
+        "intent": "audit"
+    },
+    {
+        "message": "Can I book a meeting this week?",
+        "previous": "",
+        "intent": "audit"
+    },
+    {
+        "message": "What is in the Student Hub?",
+        "previous": "",
+        "intent": "student"
+    },
+    {
+        "message": "How does the ATS score work?",
+        "previous": "",
+        "intent": "tools"
+    },
+    {
+        "message": "Is the resume builder free?",
+        "previous": "",
+        "intent": "tools"
+    },
+    {
+        "message": "Do you store my resume or interview answers in your database?",
+        "previous": "",
+        "intent": "tools"
+    },
+    {
+        "message": "Are my interview answers saved anywhere?",
+        "previous": "",
+        "intent": "tools"
+    },
+    {
+        "message": "How many prompts are in the library?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "Who is Emplowise?",
+        "previous": "",
+        "intent": "who"
+    },
+    {
+        "message": "Where are you based? Can we visit an office?",
+        "previous": "",
+        "intent": "where"
+    },
+    {
+        "message": "Do you work onsite or remote?",
+        "previous": "",
+        "intent": "where"
+    },
+    {
+        "message": "Why should we choose you over an in-house HR person?",
+        "previous": "",
+        "intent": "why"
+    },
+    {
+        "message": "How do I contact you?",
+        "previous": "",
+        "intent": "contact"
+    },
+    {
+        "message": "Is there an email address or phone number?",
+        "previous": "",
+        "intent": "contact"
+    },
+    {
+        "message": "Are there any open roles?",
+        "previous": "",
+        "intent": "careers"
+    },
+    {
+        "message": "I want to apply for a job",
+        "previous": "",
+        "intent": "careers"
+    },
+    {
+        "message": "Do you handle payroll and tax?",
+        "previous": "",
+        "intent": "payroll"
+    },
+    {
+        "message": "What about leave and attendance?",
+        "previous": "",
+        "intent": "payroll"
+    },
+    {
+        "message": "How do you handle performance reviews?",
+        "previous": "",
+        "intent": "performance"
+    },
+    {
+        "message": "Do you write policies and SOPs?",
+        "previous": "",
+        "intent": "policy"
+    },
+    {
+        "message": "Do you guarantee we pass a compliance audit?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "Can you guarantee legal compliance for our payroll?",
+        "previous": "",
+        "intent": "policy"
+    },
+    {
+        "message": "Which details are still pending?",
+        "previous": "",
+        "intent": "pending"
+    },
+    {
+        "message": "Thanks, that helps",
+        "previous": "",
+        "intent": "thanks"
+    },
+    {
+        "message": "Hi there",
+        "previous": "",
+        "intent": "greeting"
+    },
+    {
+        "message": "What is the weather today?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "Do you have testimonials from clients?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "How many customers do you have?",
+        "previous": "",
+        "intent": "general"
+    },
+    {
+        "message": "How much is it?",
+        "previous": "pricing",
+        "intent": "pricing"
+    },
+    {
+        "message": "And for a bigger team?",
+        "previous": "pricing",
+        "intent": "pricing"
+    },
+    {
+        "message": "How do I start?",
+        "previous": "audit",
+        "intent": "audit"
+    },
+    {
+        "message": "Does it cost anything?",
+        "previous": "audit",
+        "intent": "general"
+    },
+    {
+        "message": "What about salary processing?",
+        "previous": "payroll",
+        "intent": "payroll"
+    },
+    {
+        "message": "Tell me more",
+        "previous": "services",
+        "intent": "services"
+    },
+    {
+        "message": "And the review part?",
+        "previous": "performance",
+        "intent": "performance"
+    },
+    {
+        "message": "Where exactly?",
+        "previous": "where",
+        "intent": "where"
+    },
+    {
+        "message": "When can we begin?",
+        "previous": "when",
+        "intent": "when"
+    }
+]

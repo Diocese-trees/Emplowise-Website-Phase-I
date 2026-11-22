@@ -27,11 +27,11 @@
         pricing: 'Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.',
         audit: 'The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.',
         student: 'Student Hub is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /student-hub and pick a tool.',
-        tools: 'The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub.',
+        tools: 'The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /student-hub, and nothing you paste is stored.',
         payroll: 'Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.',
         performance: 'Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.',
         policy: 'Policies and SOPs, plus legal and compliance support, are confirmed services.\nWe coordinate compliance, we do not promise legal outcomes.\nJurisdiction coverage is confirmed in writing after the free HR audit.',
-        services: 'Confirmed scope: recruitment, onboarding, records, leave and attendance, policies, payroll, compliance support, performance, employee relations, reporting, consultation, assessments, and a dedicated HR rep.\nAll of it is delivered remote.',
+        services: 'Three pillars hold fourteen confirmed services: Payroll, Performance Management, and Policy Making.\nScope runs from recruitment and onboarding to payroll, compliance, performance, records, reporting, and a dedicated HR rep.\nAll of it is delivered remote.',
         pending: 'Some details are confirmed in writing after the free HR audit: inclusions, recruitment fees, payroll tax scope, legal coverage, rep allocation, cadence, contract terms, and direct contact.\nWe list them as open rather than guessing.\nThe audit pins each one down.',
         contact: 'The Free HR Audit form is the only verified contact channel right now.\nDirect phone and inbox are confirmed in writing after the free HR audit.\nUse /free-hr-audit and we reply from there.',
         careers: 'Open roles are not published yet, so nothing is listed on this site.\nIf you want help getting hired, the Student Hub tools are free at /student-hub.',
@@ -44,43 +44,104 @@
         general: 'Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the Student Hub.\nIf it is not in our verified data, I point you to the free audit.'
     };
 
-    const RULES = [
-        [/thanks|thank you|shukriya|bye|goodbye/, 'thanks'],
-        [/price|cost|pkr|package|starter|business|enterprise|how much|budget|charge|quote|fee/, 'pricing'],
-        [/pending|tbd|not disclosed|not published|unclear|not confirmed/, 'pending'],
-        [/audit|free hr|book|meeting|talk to|sign up|onboard me|consultation|get started/, 'audit'],
-        [/student|internship|graduate|fresh grad|prompt library|linkedin/, 'student'],
-        [/resume|cv|ats|interview|cover letter/, 'tools'],
-        [/payroll|salary|tax|attendance|leave|onboarding|records|document/, 'payroll'],
-        [/performance|review|appraisal|conflict|manager|kpi|okr/, 'performance'],
-        [/policy|policies|sop|compliance|legal|contract|labour|labor/, 'policy'],
-        [/service|services|what do you do|what you do|recruit|hr support|offer/, 'services'],
-        [/contact|email|phone|whatsapp|reach you|number|inbox|address|office/, 'contact'],
-        [/job|career|hiring me|apply|vacancy|open role/, 'careers'],
-        [/why|different|better than|instead of|in-house|in house|whey/, 'why'],
-        [/who are you|who is|about you|about emplowise|what is emplowise|your team|founder|ceo|company/, 'who'],
-        [/where|location|based|city|onsite|on-site|pakistan|international/, 'where'],
-        [/when|timeline|how soon|start date|how long|duration|notice period/, 'when'],
-        [/\b(hi|hello|hey|salam|assalam|yo|sup)\b/, 'greeting']
-    ];
+    // Scoring mirrors EmplowiseAssistant::detectIntent: all rules are scored,
+    // single words match on a word boundary, multi-word phrases score double,
+    // a close tie falls back to the general intent, and the previous turn
+    // breaks a tie. Keep this list in step with the PHP service.
+    const RULES = {
+        thanks: ['thanks', 'thank you', 'shukriya', 'bye', 'goodbye'],
+        pricing: ['price', 'pricing', 'cost', 'pkr', 'package', 'packages', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee', 'per month'],
+        pending: ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed'],
+        audit: ['audit', 'free hr', 'free audit', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started'],
+        student: ['student', 'student hub', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
+        tools: ['resume', 'cv', 'ats', 'interview', 'cover letter'],
+        payroll: ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document'],
+        performance: ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr'],
+        policy: ['policy', 'policies', 'sop', 'compliance', 'legal', 'contract', 'labour', 'labor'],
+        services: ['service', 'services', 'what do you do', 'what you do', 'recruit', 'hr support', 'offer'],
+        contact: ['contact', 'email', 'phone', 'whatsapp', 'reach you', 'number', 'inbox', 'address', 'office'],
+        careers: ['job', 'career', 'hiring me', 'apply', 'vacancy', 'open role'],
+        why: ['why', 'different', 'better than', 'vs', 'instead of', 'in-house', 'in house'],
+        who: ['who are you', 'who is', 'about you', 'about emplowise', 'what is emplowise', 'your team', 'founder', 'ceo', 'company'],
+        where: ['where', 'location', 'based', 'city', 'onsite', 'on-site', 'pakistan', 'remote', 'international'],
+        when: ['when', 'timeline', 'how soon', 'start date', 'how long', 'duration', 'notice period']
+    };
 
-    function localIntent(text) {
-        const lower = String(text || '').toLowerCase();
-        for (let i = 0; i < RULES.length; i += 1) {
-            if (RULES[i][0].test(lower)) return RULES[i][1];
-        }
-        return 'general';
+    const GREETINGS = ['hi', 'hello', 'hey', 'salam', 'assalam', 'yo', 'sup'];
+
+    function matchersFor(phrases) {
+        return phrases.map(function (phrase) {
+            const escaped = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return {
+                phrase: phrase,
+                pattern: phrase.indexOf(' ') === -1
+                    ? new RegExp('\\b' + escaped + '\\b')
+                    : new RegExp(escaped)
+            };
+        });
     }
 
-    function localReply(text) {
-        return KB[localIntent(text)] || KB.general;
+    const COMPILED = {};
+    Object.keys(RULES).forEach(function (intent) {
+        COMPILED[intent] = matchersFor(RULES[intent]);
+    });
+    const COMPILED_GREETINGS = matchersFor(GREETINGS);
+
+    function localIntent(text, previous) {
+        const lower = String(text || '').trim().toLowerCase();
+        const wordCount = lower.split(/\s+/).filter(function (word) { return word.length > 0; }).length;
+        const scores = {};
+        const order = [];
+
+        const score = function (intent, matchers) {
+            let value = 0;
+            matchers.forEach(function (matcher) {
+                if (matcher.pattern.test(lower)) {
+                    value += matcher.phrase.indexOf(' ') === -1 ? 1 : 2;
+                }
+            });
+            if (value > 0) {
+                scores[intent] = value;
+                order.push(intent);
+            }
+        };
+
+        Object.keys(COMPILED).forEach(function (intent) { score(intent, COMPILED[intent]); });
+        if (wordCount <= 5) score('greeting', COMPILED_GREETINGS);
+
+        const known = Object.prototype.hasOwnProperty.call(RULES, previous || '')
+            || (previous === 'greeting' && wordCount <= 5);
+        if (previous && known) {
+            scores[previous] = (scores[previous] || 0) + (wordCount <= 8 ? 0.9 : 0.4);
+            if (order.indexOf(previous) === -1) order.push(previous);
+        }
+
+        if (order.length === 0) return 'general';
+
+        const sorted = order.slice().sort(function (a, b) {
+            if (scores[b] !== scores[a]) return scores[b] - scores[a];
+            return order.indexOf(a) - order.indexOf(b);
+        });
+        const top = scores[sorted[0]];
+        const second = sorted.length > 1 ? scores[sorted[1]] : 0;
+
+        if (second > 0 && top - second < 0.5) {
+            if (previous && scores[previous] === top) return previous;
+            return 'general';
+        }
+
+        return sorted[0];
+    }
+
+    function localReply(text, previous) {
+        return KB[localIntent(text, previous)] || KB.general;
     }
 
     // Answer from the bundled knowledge base. Used when there is no endpoint
     // (static host) or the endpoint fails, so the conversation keeps its shape.
     function replyLocally(message) {
-        const intent = localIntent(message);
-        const reply = clamp(localReply(message));
+        const intent = localIntent(message, previousIntent);
+        const reply = clamp(KB[intent] || KB.general);
         previousIntent = intent;
         append('assistant', reply);
         renderSuggestions(localSuggestions(intent));
@@ -235,11 +296,15 @@
         if (!suggestionsEl) return;
         suggestionsEl.innerHTML = '';
         (items || []).slice(0, 4).forEach(function (item) {
+            // Server replies send {label, query}; the local table uses pairs.
+            const label = Array.isArray(item) ? item[0] : item && item.label;
+            const query = Array.isArray(item) ? item[1] : item && item.query;
+            if (!label || !query) return;
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'quick-chip';
-            button.setAttribute('data-q', item.query);
-            button.textContent = item.label;
+            button.setAttribute('data-q', query);
+            button.textContent = label;
             suggestionsEl.appendChild(button);
         });
     }
@@ -374,6 +439,9 @@
         suggestionsEl.addEventListener('click', function (event) {
             const chip = event.target.closest('[data-q]');
             if (!chip) return;
+            // Sending replaces the chip, which would make the click-away
+            // handler below see a detached node and close the panel.
+            event.stopPropagation();
             sendMessage(chip.getAttribute('data-q'));
         });
     }
@@ -397,4 +465,7 @@
             scrollDown();
         });
     }
+
+    // Read-only seam for the routing parity harness. Nothing depends on it.
+    window.EmplowiseChat = { intent: localIntent, reply: localReply };
 })();
