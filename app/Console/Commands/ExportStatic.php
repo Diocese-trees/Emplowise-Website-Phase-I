@@ -190,6 +190,19 @@ final class ExportStatic extends Command
         // lives under /<repo>/, so every href and src needs that prefix.
         $html = preg_replace('#\b(href|src)="/(?!/)#', '$1="'.$base.'/', $html) ?? $html;
 
+        // srcset holds a comma-separated list of candidate URLs, which the
+        // href/src pass above does not touch. Without this the <picture>
+        // sources resolve against the domain root and 404 on project sites.
+        $html = preg_replace_callback(
+            '#(\bsrcset=")([^"]*)(")#',
+            static function (array $match) use ($base): string {
+                $list = preg_replace('#(^|,)(\s*)/(?!/)#', '$1$2'.$base.'/', $match[2]) ?? $match[2];
+
+                return $match[1].$list.$match[3];
+            },
+            $html,
+        ) ?? $html;
+
         // Directory indexes are served at /page/, so link to that form directly.
         // Keep any #fragment or ?query attached to the link.
         foreach (array_keys($this->pages) as $page) {

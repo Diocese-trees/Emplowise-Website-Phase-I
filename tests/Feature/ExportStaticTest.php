@@ -82,6 +82,16 @@ final class ExportStaticTest extends TestCase
         $this->assertStringNotContainsString('href="/css/', $home);
         $this->assertStringNotContainsString('src="/js/', $home);
 
+        // srcset is a comma-separated list, so it needs its own rewrite pass:
+        // a root-relative candidate would 404 on a project site.
+        $this->assertStringContainsString('srcset="https://example.github.io/demo/img/logo-primary-125.webp', $home);
+        $this->assertStringNotContainsString('srcset="/img/', $home);
+        $this->assertStringNotContainsString(', /img/', $home);
+
+        $team = (string) File::get($this->target.'/what-we-are/index.html');
+        $this->assertStringContainsString('srcset="https://example.github.io/demo/img/team/', $team);
+        $this->assertStringNotContainsString('srcset="/img/team/', $team);
+
         // Directory links keep their fragment, so /page#anchor becomes /page/#anchor.
         $this->assertStringContainsString('href="https://example.github.io/demo/what-we-do/#payroll"', $home);
         $this->assertStringContainsString('href="https://example.github.io/demo/emplostart/#prompts"', $home);
