@@ -78,9 +78,10 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_v('favicon.png') }}">
     <link rel="preload" href="/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/jakarta-fdb05bf0-latin.woff2" as="font" type="font/woff2" crossorigin>
-    {{-- Synchronous so data-theme is on <html> before the first paint; deferred
-         it would flash the light palette on every dark-mode visit. --}}
-    <script src="{{ asset_v('js/theme.js') }}"></script>
+    {{-- Inline so data-theme is on <html> before the first paint. Its exact
+         bytes are whitelisted by a SHA-256 hash in the CSP; see
+         App\Support\ThemeBootstrap. Toggles and storage live in theme.js. --}}
+    {!! \App\Support\ThemeBootstrap::tag() !!}
     <link rel="stylesheet" href="{{ asset_v('css/site.css') }}">
     @stack('styles')
     <script type="application/ld+json">
@@ -126,6 +127,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="{{ asset_v('js/theme.js') }}" defer></script>
 <script src="{{ asset_v('js/app.js') }}" defer></script>
 <script src="{{ asset_v('js/consent.js') }}" defer></script>
 <script src="{{ asset_v('js/chat.js') }}" defer></script>

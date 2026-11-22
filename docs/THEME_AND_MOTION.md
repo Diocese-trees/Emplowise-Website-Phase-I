@@ -6,9 +6,11 @@ animation.
 
 ## 1. How the theme is chosen
 
-`public/js/theme.js` is loaded **synchronously in `<head>`, before the
-stylesheet**. The CSP is `script-src 'self'`, so it has to be an external file,
-and deferring it would flash the light palette on every dark visit.
+A **single inline script** runs in `<head>`, before the stylesheet, and is the
+only executable inline script on the site. Its exact bytes live in
+`App\Support\ThemeBootstrap::SCRIPT` and are whitelisted in the CSP by SHA-256
+hash — not by loosening `script-src` to `'unsafe-inline'`. `theme.js` is loaded
+`defer` and only wires the toggles, labels and storage.
 
 | Step | Behaviour |
 | --- | --- |
@@ -17,8 +19,13 @@ and deferring it would flash the light palette on every dark visit.
 | 3 | otherwise light |
 
 Only dark sets an attribute: `<html data-theme="dark">`. The light theme is the
-absence of the attribute, which keeps every existing selector working. The meta
-`theme-color` is updated to `#081B3E` (light) or `#050F26` (dark, Midnight Navy).
+absence of the attribute, which keeps every existing selector working. Because
+the attribute is set before the stylesheet is parsed, there is no light flash on
+first paint, and the CSP hash is computed from the same constant the exporter
+and the middleware emit, so the tag and the policy cannot drift.
+
+The meta `theme-color` is updated to `#081B3E` (light) or `#050F26` (dark,
+Midnight Navy).
 
 `theme.js` also:
 

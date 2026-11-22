@@ -226,10 +226,23 @@ final class ExportStaticTest extends TestCase
             $html = (string) File::get($this->target.'/'.$page);
 
             $this->assertStringNotContainsString('style="', $html, $page.' has an inline style');
+            $this->assertStringContainsString(
+                \App\Support\ThemeBootstrap::tag(),
+                $html,
+                $page.' is missing the pre-paint theme bootstrap',
+            );
+            $this->assertStringContainsString(
+                "script-src 'self' ".\App\Support\ThemeBootstrap::hash(),
+                $html,
+                $page.' CSP meta does not whitelist the bootstrap hash',
+            );
+
+            // The hashed bootstrap is the only executable inline script.
+            $stripped = str_replace(\App\Support\ThemeBootstrap::tag(), '', $html);
             $this->assertDoesNotMatchRegularExpression(
                 '/<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>\s*\S/',
-                $html,
-                $page.' has inline script',
+                $stripped,
+                $page.' has an inline script other than the hashed theme bootstrap',
             );
         }
     }

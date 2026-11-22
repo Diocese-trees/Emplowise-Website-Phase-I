@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\ThemeBootstrap;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,15 @@ class SecurityHeaders
         $parts = [];
 
         foreach ((array) config('security.csp.directives', []) as $directive => $values) {
-            $parts[] = trim($directive.' '.implode(' ', (array) $values));
+            $values = (array) $values;
+
+            // The pre-paint theme bootstrap is inline; its exact bytes are
+            // whitelisted by hash instead of loosening script-src.
+            if ($directive === 'script-src') {
+                $values[] = ThemeBootstrap::hash();
+            }
+
+            $parts[] = trim($directive.' '.implode(' ', $values));
         }
 
         $reportUri = (string) config('security.csp.report_uri', '');

@@ -65,7 +65,7 @@ resources/views          Layout, 11 pages, chat partial
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 database/migrations      audit_requests, chat_messages
-tests/Feature            58 tests covering pages, APIs, exports and headers
+tests/Feature            60 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
 docs/                    hosting, static export, theme/motion, repo topology, screenshots
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history
@@ -194,7 +194,8 @@ base-uri 'self'; object-src 'none'; manifest-src 'self'; report-uri /api/csp-rep
 
 Supporting changes that made `style-src 'self'` and `font-src 'self'` possible:
 
-- Google Fonts were removed and self-hosted under `public/fonts` (`public/css/fonts.css`), so no third-party origin is needed.
+- Google Fonts were removed and self-hosted under `public/fonts` (`public/css/fonts.css`), so no third-party origin is needed. Only the latin subset ships; the copy is English only, so the latin-ext faces and their `.woff2` files were dropped.
+- The pre-paint theme bootstrap is the single inline script, allowed by a SHA-256 hash in `script-src` (see `App\Support\ThemeBootstrap`); `theme.js` is deferred and only handles toggles and storage.
 - The 69 inline `style="..."` attributes in the Blade views were extracted to generated utility classes in `public/css/inline.css`.
 
 ### Rollout order

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Support\ThemeBootstrap;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
@@ -278,7 +279,7 @@ final class ExportStatic extends Command
     private function cspMeta(): string
     {
         return '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; '
-            .'script-src \'self\'; style-src \'self\'; img-src \'self\' data:; font-src \'self\'; '
+            .'script-src \'self\' '.ThemeBootstrap::hash().'; style-src \'self\'; img-src \'self\' data:; font-src \'self\'; '
             .'connect-src \'self\' https://api.web3forms.com; '
             .'form-action \'self\' https://api.web3forms.com; base-uri \'self\'; object-src \'none\'">';
     }
@@ -290,6 +291,7 @@ final class ExportStatic extends Command
             .$this->cspMeta()
             .'<meta name="robots" content="noindex">'
             .'<title>Page not found | Emplowise</title>'
+            .ThemeBootstrap::tag()
             .'<link rel="stylesheet" href="'.$base.'/css/site.css">'
             .'</head><body>'
             .'<a class="skip-link" href="#main">Skip to content</a>'

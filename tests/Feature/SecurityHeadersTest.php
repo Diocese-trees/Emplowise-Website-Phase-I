@@ -28,6 +28,31 @@ class SecurityHeadersTest extends TestCase
         $this->assertStringContainsString('report-uri /api/csp-report', $policy);
     }
 
+    public function test_the_inline_theme_bootstrap_is_allowed_by_hash(): void
+    {
+        config(['security.csp.mode' => 'enforce']);
+
+        $response = $this->get('/')->assertOk();
+        $html = (string) $response->getContent();
+
+        // The bootstrap is the only executable inline script in the head.
+        $this->assertSame(1, preg_match_all('/<script>(.*?)<\/script>/s', $html, $matches));
+        $hash = "'sha256-".base64_encode(hash('sha256', $matches[1][0], true))."'";
+
+        $this->assertStringContainsString(
+            'script-src \'self\' '.$hash,
+            (string) $response->headers->get('Content-Security-Policy')
+        );
+    }
+
+    public function test_the_bootstrap_script_matches_the_registered_hash(): void
+    {
+        $this->assertSame(
+            "'sha256-".base64_encode(hash('sha256', \App\Support\ThemeBootstrap::SCRIPT, true))."'",
+            \App\Support\ThemeBootstrap::hash()
+        );
+    }
+
     public function test_report_only_mode_does_not_enforce(): void
     {
         config(['security.csp.mode' => 'report_only']);

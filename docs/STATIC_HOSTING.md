@@ -76,7 +76,9 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
 ## What the exporter changes in the HTML
 
 - Removes the CSRF meta tag and injects a CSP meta policy that allows
-  `https://api.web3forms.com` for `connect-src` and `form-action`.
+  `https://api.web3forms.com` for `connect-src` and `form-action`, and
+  whitelists the pre-paint theme bootstrap by SHA-256 hash
+  (`script-src 'self' 'sha256-…'`) instead of `'unsafe-inline'`.
 - Replaces the EmploStart endpoint attributes, so the page never fires calls
   to `/api/...` that can only fail.
 - Rewrites the booking form to `https://api.web3forms.com/submit`, adds the

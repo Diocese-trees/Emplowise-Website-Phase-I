@@ -6,6 +6,21 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Made the theme pre-paint safe without loosening the CSP. The palette is now
+  applied by a single inline script emitted from
+  `App\Support\ThemeBootstrap::SCRIPT`; the CSP (`script-src 'self'`) carries
+  its exact SHA-256 hash, appended by `SecurityHeaders::policy()` for Laravel
+  responses and by `ExportStatic::cspMeta()` for the static `<meta>`. `theme.js`
+  is `defer` and handles only toggles, labels and `localStorage`; the 404 page
+  gets the same bootstrap. The latin-ext `@font-face` blocks and their two
+  `.woff2` files were removed (English-only copy), so each weight is one font
+  request. `SecurityHeadersTest` recomputes the hash from the rendered `<head>`;
+  `ExportStaticTest` asserts the bootstrap and its hash on every page.
+  Measured on a local export: `/` 178.6 KB CSS+JS (site.css 134.5 KB), `/emplostart`
+  320.2 KB including `hub.css` and the toolkit; no `hub.css` or toolkit JS on any
+  other page. Headless Chromium under the static CSP: zero console errors on
+  `404.html`, `/`, `/emplostart/`, `/free-hr-audit/`; dark preference applies
+  before the stylesheet; toggle persists across reload. 60 tests, 760 assertions.
 - Locked the redesign workflow and recorded the baseline. `CLAUDE.md` was a
   byte-identical duplicate of the Laravel Boost placeholder `AGENTS.md` (both
   1,446 B) and is deleted; `AGENTS.md` is now the rulebook with the three exact
