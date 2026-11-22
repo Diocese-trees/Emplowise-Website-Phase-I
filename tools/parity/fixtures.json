@@ -878,6 +878,116 @@
                 "Aim for 220 to 900 words, one to two pages."
             ],
             "source": "local"
+        },
+        "arabic": {
+            "score": 68,
+            "verdict": "Promising, needs tailoring",
+            "breakdown": [
+                {
+                    "label": "Keyword coverage",
+                    "score": 55,
+                    "max": 55,
+                    "detail": "2 of 2 priority keywords found"
+                },
+                {
+                    "label": "Resume structure",
+                    "score": 5,
+                    "max": 25,
+                    "detail": "Standard sections a parser can label"
+                },
+                {
+                    "label": "Formatting hygiene",
+                    "score": 8,
+                    "max": 20,
+                    "detail": "Length, bullets, and parser safe layout"
+                }
+            ],
+            "title": "نبحث عن محللة بيانات. المتطلبات تشمل SQL و Excel و Power BI",
+            "title_match": true,
+            "matched": [
+                "sql excel",
+                "excel power"
+            ],
+            "missing": [],
+            "structure": [
+                {
+                    "label": "Contact email",
+                    "ok": true,
+                    "weight": 5,
+                    "hint": "Add a plain email address in the header, not inside an image."
+                },
+                {
+                    "label": "Phone or LinkedIn",
+                    "ok": false,
+                    "weight": 4,
+                    "hint": "Add a phone number or a LinkedIn URL in plain text."
+                },
+                {
+                    "label": "Experience section",
+                    "ok": false,
+                    "weight": 5,
+                    "hint": "Use the standard heading Experience."
+                },
+                {
+                    "label": "Education section",
+                    "ok": false,
+                    "weight": 3,
+                    "hint": "Add an Education section with degree and institution."
+                },
+                {
+                    "label": "Skills section",
+                    "ok": false,
+                    "weight": 4,
+                    "hint": "Add a Skills block with the exact tool names from the posting."
+                },
+                {
+                    "label": "Summary or objective",
+                    "ok": false,
+                    "weight": 4,
+                    "hint": "Open with a three line summary aimed at this role."
+                },
+                {
+                    "label": "Target title present",
+                    "ok": true,
+                    "weight": 0,
+                    "hint": "Put the exact job title from the posting in your header or summary."
+                }
+            ],
+            "format": [
+                {
+                    "label": "Readable length",
+                    "ok": false,
+                    "weight": 8,
+                    "hint": "Aim for 220 to 900 words, one to two pages."
+                },
+                {
+                    "label": "Bullet points used",
+                    "ok": false,
+                    "weight": 4,
+                    "hint": "Use simple dash bullets, at least three."
+                },
+                {
+                    "label": "No table layout",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Remove table and column layouts. Parsers read them out of order."
+                },
+                {
+                    "label": "No personal noise",
+                    "ok": true,
+                    "weight": 4,
+                    "hint": "Remove photo, date of birth, marital status, religion, and ID numbers."
+                }
+            ],
+            "fixes": [
+                "Add a phone number or a LinkedIn URL in plain text.",
+                "Use the standard heading Experience.",
+                "Add an Education section with degree and institution.",
+                "Add a Skills block with the exact tool names from the posting.",
+                "Open with a three line summary aimed at this role.",
+                "Aim for 220 to 900 words, one to two pages."
+            ],
+            "source": "local"
         }
     },
     "profile": {
@@ -947,6 +1057,24 @@
             ],
             "fixes": [
                 "Solid base. Now mirror three exact keywords from the job post you are targeting."
+            ],
+            "source": "local"
+        },
+        "arabic": {
+            "headlines": [
+                "محلل بيانات | structured delivery",
+                "محلل بيانات building measurable outcomes",
+                "محلل بيانات · structured delivery · open to early career"
+            ],
+            "summary": "أعمل على تنظيف البيانات وبناء لوحات المعلومات لفريق من خمسة أشخاص.",
+            "bullets": [
+                "حللت ١٢ تقريراً شهرياً [add one number]",
+                "حسّنت المبيعات ٢٥٪ [add one number]",
+                "عدلت سياسة الإجازات [add one number]",
+                "راجعت تقارير الفريق [add one number]"
+            ],
+            "fixes": [
+                "Add one number somewhere. Without a metric every claim reads the same."
             ],
             "source": "local"
         }
@@ -1032,6 +1160,10 @@
             "rounding": {
                 "resume": "Ali Raza\nKarachi | ali@example.com | +92 300 1234567\n\nSummary\nHR officer handling payroll, policy, hiring, onboarding, retention, and compliance for a 40 person company.\n\nExperience\nHR Officer - Northline\n- Ran payroll for 40 people every month.\n- Wrote the policy manual and the hiring pack.\n- Owned onboarding and retention work for two years.\n- Kept the compliance file current for two audits.\n\nEducation\nBBA Human Resources\n\nSkills\nPayroll, policy, hiring, onboarding, retention, compliance",
                 "job_description": "We need payroll and policy and hiring and onboarding and retention and compliance and training and review and records and attendance and grievance."
+            },
+            "arabic": {
+                "resume": "محللة بيانات\nكراتشي | ayesha@example.com\n\nالملخص\nمحللة بيانات بخبرة ثلاث سنوات في SQL و Excel.\n\nالخبرة\nمحللة بيانات - نورثلاين\n- بنت لوحات معلومات لثلاثة فرق.\n- نظفت بيانات ١٢٠٠ استبيان.\n\nالتعليم\nبكالوريوس علوم الحاسوب\n\nالمهارات\nSQL, Excel, Power BI",
+                "job_description": "نبحث عن محللة بيانات. المتطلبات تشمل SQL و Excel و Power BI وتنظيف البيانات وإعداد التقارير."
             }
         },
         "profile": {
@@ -1058,6 +1190,12 @@
                 "summary": "A people-first HR generalist with six years across payroll, policy, and onboarding — mostly for small teams in Karachi. I have owned the full employee life-cycle for a 40 person company: contracts, the staff handbook, the payroll calendar, and the review cycle. I rebuilt an onboarding pack that cut time-to-first-task from nine days to four, and I keep every process documented so nobody depends on my memory. I am looking for a role where HR is treated as a system, not a rescue service. I write plainly, I chase the details, and I am comfortable saying no to work that has no owner.",
                 "bullets": "Rebuilt the onboarding pack and cut time-to-first-task from 9 to 4 days\nOwned payroll for 40 people across two entities\nWrote the staff handbook with the team's managers",
                 "target_role": "HR Operations Manager"
+            },
+            "arabic": {
+                "headline": "محلل بيانات بخبرة ثلاث سنوات",
+                "summary": "أعمل على تنظيف البيانات وبناء لوحات المعلومات لفريق من خمسة أشخاص.",
+                "bullets": "• حللت ١٢ تقريراً شهرياً\n- حسّنت المبيعات ٢٥٪\u2028عدلت سياسة الإجازاتراجعت تقارير الفريق",
+                "target_role": "محلل بيانات"
             }
         }
     }

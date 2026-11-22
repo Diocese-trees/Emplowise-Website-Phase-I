@@ -16,8 +16,8 @@
     /* PHP trim() default characters: " \t\n\r\0\x0B" (no form feed). */
     var TRIM_ALL = /^[ \t\n\r\x00\x0B]+|[ \t\n\r\x00\x0B]+$/g;
     var TRIM_END = /[ \t\n\r\x00\x0B]+$/;
-    /* PCRE \R without /u: CRLF, LF, VT, FF or CR, matched atomically. */
-    var NEWLINE = /\r\n|[\n\v\f\r]/;
+    /* PCRE \R with /u: CRLF, LF, VT, FF, CR, NEL, LINE SEP and PARA SEP. */
+    var NEWLINE = /\r\n|[\n\v\f\r\u0085\u2028\u2029]/;
     var BULLET_MARKER = new RegExp('^' + WS + '*[-•*·]' + WS + '*');
     var ROLE_SEPARATOR = /[|·•,–—-]/;
 

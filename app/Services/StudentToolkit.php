@@ -219,7 +219,7 @@ final class StudentToolkit
      */
     public function optimizeProfile(string $headline, string $summary, string $bullets, string $targetRole = ''): array
     {
-        $lines = array_values(array_filter(array_map('trim', preg_split('/\R/', $bullets) ?: [])));
+        $lines = array_values(array_filter(array_map('trim', preg_split('/\R/u', $bullets) ?: [])));
         $local = $this->localProfile($headline, $summary, $lines, $targetRole);
 
         if (! $this->client->configured()) {
@@ -518,7 +518,7 @@ final class StudentToolkit
 
         // A phrase that appears once in the opening lines is usually the job
         // title or the core requirement, so frequency alone would lose it.
-        $intro = $this->normalise(implode(' ', array_slice(preg_split('/\R/', $jobDescription) ?: [], 0, 2)));
+        $intro = $this->normalise(implode(' ', array_slice(preg_split('/\R/u', $jobDescription) ?: [], 0, 2)));
         $intro = ' '.$intro.' ';
 
         foreach ($bigrams as $pair => $freq) {
@@ -645,7 +645,7 @@ final class StudentToolkit
 
     private function detectJobTitle(string $jobDescription): string
     {
-        $lines = preg_split('/\R/', trim($jobDescription)) ?: [];
+        $lines = preg_split('/\R/u', trim($jobDescription)) ?: [];
         $first = trim((string) ($lines[0] ?? ''));
 
         if ($first !== '' && str_word_count($first) <= 8 && ! preg_match('/[.!?]$/', $first)) {

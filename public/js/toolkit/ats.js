@@ -248,93 +248,36 @@
         return rtrim(strImWidth(value, limit)) + end;
     }
 
-    // preg_split('/\R/', $subject) without the /u flag: PCRE looks at BYTES, so
-    // the separators are CR, LF, \v, \f, the NEL byte 0x85, and CRLF as a pair.
-    // 0x85 also occurs as a continuation byte inside multi-byte characters, so
-    // PHP can split a character in half. Working on the UTF-8 bytes reproduces
-    // that; an orphaned part of a character is dropped here, and every caller
-    // feeds the pieces to normalise(), where those bytes become a space anyway.
+    // preg_split('/\R/u', $subject): CRLF, LF, VT, FF, CR, the NEL character
+    // U+0085, LINE SEPARATOR U+2028, and PARAGRAPH SEPARATOR U+2029. Splitting on
+    // code points keeps a multi-byte character intact, where the byte-mode
+    // pattern PHP used before could cut one in half.
     function splitBreaks(subject) {
-        var bytes = toUtf8(subject);
+        var text = String(subject == null ? '' : subject);
         var parts = [];
         var start = 0;
         var i = 0;
 
-        while (i < bytes.length) {
-            var byte = bytes[i];
+        while (i < text.length) {
+            var code = text.charCodeAt(i);
             var size = 0;
 
-            if (byte === 0x0D) size = bytes[i + 1] === 0x0A ? 2 : 1;
-            else if (byte === 0x0A || byte === 0x0B || byte === 0x0C || byte === 0x85) size = 1;
+            if (code === 0x0D) size = text.charCodeAt(i + 1) === 0x0A ? 2 : 1;
+            else if (code === 0x0A || code === 0x0B || code === 0x0C
+                || code === 0x85 || code === 0x2028 || code === 0x2029) size = 1;
 
             if (size === 0) {
                 i++;
                 continue;
             }
 
-            parts.push(fromUtf8(bytes.slice(start, i)));
+            parts.push(text.slice(start, i));
             i += size;
             start = i;
         }
 
-        parts.push(fromUtf8(bytes.slice(start)));
+        parts.push(text.slice(start));
         return parts;
-    }
-
-    function toUtf8(str) {
-        var bytes = [];
-        for (var i = 0; i < str.length; i++) {
-            var code = str.charCodeAt(i);
-
-            if (code < 0x80) {
-                bytes.push(code);
-            } else if (code < 0x800) {
-                bytes.push(0xC0 | (code >> 6), 0x80 | (code & 0x3F));
-            } else if (code >= 0xD800 && code < 0xDC00 && i + 1 < str.length
-                && str.charCodeAt(i + 1) >= 0xDC00 && str.charCodeAt(i + 1) < 0xE000) {
-                var pair = 0x10000 + ((code - 0xD800) << 10) + (str.charCodeAt(i + 1) - 0xDC00);
-                bytes.push(0xF0 | (pair >> 18), 0x80 | ((pair >> 12) & 0x3F), 0x80 | ((pair >> 6) & 0x3F), 0x80 | (pair & 0x3F));
-                i++;
-            } else {
-                bytes.push(0xE0 | (code >> 12), 0x80 | ((code >> 6) & 0x3F), 0x80 | (code & 0x3F));
-            }
-        }
-        return bytes;
-    }
-
-    function fromUtf8(bytes) {
-        var out = '';
-        var i = 0;
-
-        while (i < bytes.length) {
-            var byte = bytes[i];
-            var need = 0;
-            var code = 0;
-
-            if (byte < 0x80) { out += String.fromCharCode(byte); i++; continue; }
-            if (byte >= 0xC2 && byte <= 0xDF) { need = 1; code = byte & 0x1F; }
-            else if (byte >= 0xE0 && byte <= 0xEF) { need = 2; code = byte & 0x0F; }
-            else if (byte >= 0xF0 && byte <= 0xF4) { need = 3; code = byte & 0x07; }
-            else { i++; continue; } // orphaned continuation byte
-
-            if (i + need > bytes.length) break; // the character was cut off
-
-            var valid = true;
-            for (var n = 1; n <= need; n++) {
-                if (bytes[i + n] < 0x80 || bytes[i + n] > 0xBF) valid = false;
-                code = (code << 6) | (bytes[i + n] & 0x3F);
-            }
-            if (!valid) { i++; continue; }
-
-            if (code < 0x10000) {
-                out += String.fromCharCode(code);
-            } else {
-                out += String.fromCharCode(0xD800 + ((code - 0x10000) >> 10), 0xDC00 + ((code - 0x10000) & 0x3FF));
-            }
-            i += need + 1;
-        }
-
-        return out;
     }
 
     // str_word_count(), which is not what it looks like: a word is a run of

@@ -93,6 +93,14 @@ $fixtures = [
             'resume' => "Ali Raza\nKarachi | ali@example.com | +92 300 1234567\n\nSummary\nHR officer handling payroll, policy, hiring, onboarding, retention, and compliance for a 40 person company.\n\nExperience\nHR Officer - Northline\n- Ran payroll for 40 people every month.\n- Wrote the policy manual and the hiring pack.\n- Owned onboarding and retention work for two years.\n- Kept the compliance file current for two audits.\n\nEducation\nBBA Human Resources\n\nSkills\nPayroll, policy, hiring, onboarding, retention, compliance",
             'job_description' => 'We need payroll and policy and hiring and onboarding and retention and compliance and training and review and records and attendance and grievance.',
         ],
+        // U+0645 (م) contains the byte 0x85, so a byte-mode \R split used to cut
+        // the character in half, corrupt the detected title and make the JSON
+        // response unencodable. This case only became writable once the split
+        // moved to /u.
+        'arabic' => [
+            'resume' => "محللة بيانات\nكراتشي | ayesha@example.com\n\nالملخص\nمحللة بيانات بخبرة ثلاث سنوات في SQL و Excel.\n\nالخبرة\nمحللة بيانات - نورثلاين\n- بنت لوحات معلومات لثلاثة فرق.\n- نظفت بيانات ١٢٠٠ استبيان.\n\nالتعليم\nبكالوريوس علوم الحاسوب\n\nالمهارات\nSQL, Excel, Power BI",
+            'job_description' => "نبحث عن محللة بيانات. المتطلبات تشمل SQL و Excel و Power BI وتنظيف البيانات وإعداد التقارير.",
+        ],
     ],
     'profile' => [
         'weak' => [
@@ -118,6 +126,14 @@ $fixtures = [
             'summary' => 'A people-first HR generalist with six years across payroll, policy, and onboarding — mostly for small teams in Karachi. I have owned the full employee life-cycle for a 40 person company: contracts, the staff handbook, the payroll calendar, and the review cycle. I rebuilt an onboarding pack that cut time-to-first-task from nine days to four, and I keep every process documented so nobody depends on my memory. I am looking for a role where HR is treated as a system, not a rescue service. I write plainly, I chase the details, and I am comfortable saying no to work that has no owner.',
             'bullets' => "Rebuilt the onboarding pack and cut time-to-first-task from 9 to 4 days\nOwned payroll for 40 people across two entities\nWrote the staff handbook with the team's managers",
             'target_role' => 'HR Operations Manager',
+        ],
+        // Same Arabic byte trap, plus a LINE SEPARATOR and a NEL character,
+        // which \R matches once the pattern is Unicode-aware.
+        'arabic' => [
+            'headline' => 'محلل بيانات بخبرة ثلاث سنوات',
+            'summary' => 'أعمل على تنظيف البيانات وبناء لوحات المعلومات لفريق من خمسة أشخاص.',
+            'bullets' => "• حللت ١٢ تقريراً شهرياً\n- حسّنت المبيعات ٢٥٪\u{2028}عدلت سياسة الإجازات\u{0085}راجعت تقارير الفريق",
+            'target_role' => 'محلل بيانات',
         ],
     ],
 ];

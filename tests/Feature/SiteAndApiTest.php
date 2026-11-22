@@ -446,6 +446,31 @@ RESUME;
         $this->assertSame(0, $titleCheck['weight']);
     }
 
+    public function test_student_tools_accept_arabic_text_without_corrupting_it(): void
+    {
+        config(['ai.alibaba.api_key' => null]);
+
+        // U+0645 (م) contains the byte 0x85. A byte-mode /\R/ split used to cut
+        // the character in half, which left the JSON response unencodable and
+        // turned the whole endpoint into a 500.
+        $resume = "محللة بيانات\nكراتشي | ayesha@example.com\n\nالملخص\nمحللة بيانات بخبرة ثلاث سنوات في SQL و Excel.\n\nالخبرة\nمحللة بيانات - نورثلاين\n- بنت لوحات معلومات لثلاثة فرق.\n\nالمهارات\nSQL, Excel, Power BI";
+        $jobDescription = 'نبحث عن محللة بيانات. المتطلبات تشمل SQL و Excel و Power BI وتنظيف البيانات وإعداد التقارير.';
+
+        $this->postJson('/api/student/ats', [
+            'resume' => $resume,
+            'job_description' => $jobDescription,
+        ])->assertOk()->assertJsonStructure(['score', 'verdict', 'title', 'source']);
+
+        $profile = $this->postJson('/api/student/profile', [
+            'headline' => 'محلل بيانات بخبرة ثلاث سنوات',
+            'summary' => 'أعمل على تنظيف البيانات وبناء لوحات المعلومات لفريق من خمسة أشخاص.',
+            'bullets' => "• حللت ١٢ تقريراً شهرياً\n- حسّنت المبيعات ٢٥٪",
+        ])->assertOk();
+
+        // The bullet must survive whole; the old byte split dropped "حسّنت المبيعات ".
+        $this->assertStringContainsString('حسّنت المبيعات ٢٥٪', implode(' ', $profile->json('bullets')));
+    }
+
     public function test_profile_optimizer_rejects_empty_input_and_rewrites_weak_copy(): void
     {
         config(['ai.alibaba.api_key' => null]);
