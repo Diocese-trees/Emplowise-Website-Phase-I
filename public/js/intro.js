@@ -19,7 +19,11 @@
     var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     var slow = !!conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || ''));
 
-    if (seen || slow) return;
+    // ?intro=1 replays the sequence on demand: useful for demos, and for
+    // checking the timing after the once-per-session flag has been set.
+    var force = /(?:^|[?&])intro=1(?:&|$)/.test(window.location.search);
+
+    if ((seen && !force) || (slow && !force)) return;
 
     root.classList.add('intro-pending');
 

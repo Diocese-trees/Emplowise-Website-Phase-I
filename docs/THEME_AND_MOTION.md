@@ -171,7 +171,9 @@ stagger by `0.12 / 0.24 / 0.36 / 0.48s`. The hidden state only applies under
 never invisible without JS.
 
 **Intro** — `public/js/intro.js`, once per browser session
-(`sessionStorage['emplowise:intro']`), skipped on `saveData` or 2G. Timeline:
+(`sessionStorage['emplowise:intro']`), skipped on `saveData` or 2G. Append
+`?intro=1` to any URL to replay it regardless of the session flag — useful for
+demos and for re-checking the timing. Timeline:
 
 | Moment | Normal | Reduced motion |
 | --- | --- | --- |
@@ -187,11 +189,22 @@ can never stay covered.
 
 **Hero rotator** — `home.js` rotates words every 3800ms.
 
-**Reduced motion** — `base.css` collapses every animation and transition to
-~0.001ms and disables smooth scrolling; `pages.css` stops the marquee;
-`intro.css` zeroes the intro delays. If you add an animation, it inherits the
-global collapse for free, but do not add `animation-fill-mode` tricks that leave
-elements invisible once the duration is zeroed.
+**Reduced motion** — `prefers-reduced-motion: reduce` is treated as "no
+movement", not "no feedback". In that mode:
+
+- `base.css` sets `animation: none` on everything and restricts transitions to
+  colour, background, border, outline, opacity, shadow, fill and stroke at
+  0.18s. Transform, width and height are absent from that list, so they snap.
+  Smooth scrolling is off.
+- `app.js` does not add `html.js-anim`, so every `.reveal` is simply visible;
+  `pages.css` stops the marquee; `home.js` renders counters and stack bars at
+  their final values and disables the rotator and hero parallax;
+- the intro still appears, but its parts do not travel and `intro.js` holds it
+  for 240ms, exiting in 110ms.
+
+If you add an animation, it is invisible under reduce — good. If a component
+uses a transition to communicate state, use colour or opacity (which survive)
+rather than a transform, and never rely on motion alone.
 
 ## 5. Validating a theme change
 

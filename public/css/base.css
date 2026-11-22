@@ -256,10 +256,18 @@ strong { font-weight: 600; color: var(--navy); }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+
+    /* Stop looping animation and every kind of movement, but keep short
+       colour and opacity feedback: hover, focus and state changes still
+       register without travelling anywhere. Transform, width and height are
+       deliberately absent from the property list, so they snap instead of
+       sliding. */
     *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
+        animation: none !important;
+        transition-property: color, background-color, border-color, outline-color, opacity, box-shadow, fill, stroke !important;
+        transition-duration: 0.18s !important;
+        transition-timing-function: ease-out !important;
+        transition-delay: 0s !important;
     }
     .page-bg span { animation: none !important; }
 }

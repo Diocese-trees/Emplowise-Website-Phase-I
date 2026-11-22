@@ -4,7 +4,16 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
-## Unreleased — documentation pass
+## Unreleased
+
+- Reduced motion no longer flattens the whole interface: movement, loops and
+  the intro's travel are removed, but 0.18s colour, opacity and shadow fades
+  remain, so hover and focus still register. Reveals, the rotator and the hero
+  parallax stay disabled in that mode by design.
+- `?intro=1` replays the intro regardless of the once-per-session flag, for
+  demos and for checking the timing.
+
+## 2026-11-22 — documentation pass
 
 - Added `docs/THEME_AND_MOTION.md`: theme selection and persistence, the toggle
   contract, the token strategy, a dark-mode checklist, branding derivatives, and
