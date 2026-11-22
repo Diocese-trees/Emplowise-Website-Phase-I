@@ -6,6 +6,19 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Locked the redesign workflow and recorded the baseline. `CLAUDE.md` was a
+  byte-identical duplicate of the Laravel Boost placeholder `AGENTS.md` (both
+  1,446 B) and is deleted; `AGENTS.md` is now the rulebook with the three exact
+  Artisan commands, the test and parity commands, the SEO copy freeze, the
+  navy/teal + Montserrat/Plus Jakarta Sans brand lock, the read denylist, and the
+  edit -> bundle -> test -> docs -> commit loop. Baseline on tag
+  `pre-redesign-backup` (`b08d31b`): 58 tests / 742 assertions, SEO audit 9/9,
+  parity 6 ATS + 11 interview + 5 profile + 48 chat. Grep inventory for the
+  planned redesign: 270 hardcoded colour declarations outside
+  `tokens.css`/`theme.css`/generated bundles, 31 `z-index` rules (`300, 220,
+  140, 120 x2, 100, 95, 40, 1, -1, -2`), 20 `innerHTML`, 7 `localStorage`, and 3
+  `fetch(` sites, one root-relative `/api/audit` fallback in `audit.js`, and zero
+  `Student Hub` strings. Work branch: `feat/emplowise-redesign`.
 - Closed the static API boundary and made the keyless audit state actionable.
   Every `/api/*` route now has a client-side fallback that runs before any
   request: `chat.js` checks for `data-endpoint`, `student.js` checks each
