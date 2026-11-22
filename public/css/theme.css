@@ -582,9 +582,6 @@ html[data-theme="dark"] table.data th { background: var(--d-surface-2); color: v
 html[data-theme="dark"] table.data td { border-color: var(--d-line); }
 html[data-theme="dark"] table.data tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
 
-/* The intro over a dark page needs a touch more separation. */
-html[data-theme="dark"] .intro { background: radial-gradient(120% 90% at 50% 42%, rgba(6, 6, 7, 0.74), rgba(0, 0, 0, 0.95)); }
-
 /* ------------------------------------------------- home + legal (dark) */
 
 html[data-theme="dark"] .shortcut {

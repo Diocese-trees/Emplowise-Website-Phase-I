@@ -6,11 +6,21 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Removed the intro splash. `resources/views/partials/intro.blade.php`,
+  `public/css/intro.css` and `public/js/intro.js` are deleted; the layout no
+  longer includes the partial or loads the script, and `intro.css` is out of
+  the `site.css` manifest (bundle 139.7 KB → 132.8 KB). Dead references went
+  with it: the `intro-pending` / `emplowise:intro-done` branch in `consent.js`,
+  the dark `.intro` rule in `theme.css`, and the stale comment in
+  `consent.css`. The consent card now opens ~700ms after load on a first visit
+  instead of waiting for an intro event. Backup branch:
+  `backup/main-pre-intro-removal-2026-11-22` (at `bf37387`). README source
+  counts and `docs/THEME_AND_MOTION.md` updated; all 56 tests pass.
 - UX refresh: the landing page is now a map, the chrome is slimmer, and dark
   mode is true black.
   - **Cookie choice on arrival.** With no stored `emplowise:consent` value, the
-    preferences card opens by itself after the intro (with a 4.4s fallback), so
-    every first visit gets a choice. The floating `.consent-fab` pill, its CSS
+    preferences card opens by itself shortly after load (~700ms), so every first
+    visit gets a choice. The floating `.consent-fab` pill, its CSS
     and its JS timers were removed. Reopening lives in the footer's
     "Cookie settings" button.
   - **Legal pages.** `/terms` and `/privacy` are real pages driven by
@@ -72,8 +82,9 @@ each commit body carries the detail. Dates are the commit dates.
   the intro's travel are removed, but 0.18s colour, opacity and shadow fades
   remain, so hover and focus still register. Reveals, the rotator and the hero
   parallax stay disabled in that mode by design.
-- `?intro=1` replays the intro regardless of the once-per-session flag, for
-  demos and for checking the timing.
+- `?intro=1` replayed the intro regardless of the once-per-session flag, for
+  demos and for checking the timing. (Superseded: the intro has since been
+  removed, so the flag no longer does anything.)
 
 ## 2026-11-22 — documentation pass
 

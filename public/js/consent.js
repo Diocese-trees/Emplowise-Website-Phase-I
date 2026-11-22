@@ -166,18 +166,7 @@
         }, 700);
     }
 
-    if (document.documentElement.classList.contains('intro-pending')) {
-        var shown = false;
-        var reveal = function () {
-            if (shown) return;
-            shown = true;
-            afterIntro();
-        };
-        document.addEventListener('emplowise:intro-done', reveal, { once: true });
-        window.setTimeout(reveal, 4400);
-    } else {
-        afterIntro();
-    }
+    afterIntro();
 
     window.Emplowise = window.Emplowise || {};
     window.Emplowise.consent = {

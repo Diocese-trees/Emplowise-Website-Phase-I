@@ -80,8 +80,6 @@
     };
 @endphp
 <body class="{{ $bodyClass }}">
-@include('partials.intro')
-<script src="{{ asset_v('js/intro.js') }}"></script>
 
 <a class="skip-link" href="#main">{{ $ui['skip_link'] }}</a>
 

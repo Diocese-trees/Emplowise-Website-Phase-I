@@ -195,22 +195,12 @@ spring easing and a soft shadow; the icon scales/rotates slightly and the arrow
 slides 3px. All of it is transform/opacity, so it is cheap and it disappears
 under reduce.
 
-**Intro** — `public/js/intro.js`, once per browser session
-(`sessionStorage['emplowise:intro']`), skipped on `saveData` or 2G. Append
-`?intro=1` to any URL to replay it regardless of the session flag — useful for
-demos and for re-checking the timing. Timeline:
-
-| Moment | Normal | Reduced motion |
-| --- | --- | --- |
-| parts converge | 1.6s from 0.12s | delays zeroed |
-| hold before exit | 1650ms | 240ms |
-| exit (`is-leaving`) | 700ms | 110ms |
-| worst-case safety net | 4200ms | 4200ms |
-
-Total is ~2.5s from load. The CSS side lives in `intro.css` (overlay 0.7s, glow
-1.3s at 0.5s, flash 0.78s at 0.98s, sub-line 0.9s at 1.18s). It resolves with a
-`emplowise:intro-done` event, and `consent.js` has a 4400ms fallback so the page
-can never stay covered.
+**Intro** — removed. The splash overlay, `public/js/intro.js` and
+`public/css/intro.css` are gone; the page paints straight into the hero. The
+hero entrance described above is now the only load animation, and the consent
+card simply opens ~700ms after load on a first visit with no stored choice.
+There is no `intro-pending` class and no `emplowise:intro-done` event left in
+the codebase.
 
 **Hero rotator** — `home.js` rotates words every 3800ms.
 
@@ -223,9 +213,7 @@ movement", not "no feedback". In that mode:
   Smooth scrolling is off.
 - `app.js` does not add `html.js-anim`, so every `.reveal` is simply visible;
   `pages.css` stops the marquee; `home.js` renders counters and stack bars at
-  their final values and disables the rotator and hero parallax;
-- the intro still appears, but its parts do not travel and `intro.js` holds it
-  for 240ms, exiting in 110ms.
+  their final values and disables the rotator and hero parallax.
 
 If you add an animation, it is invisible under reduce — good. If a component
 uses a transition to communicate state, use colour or opacity (which survive)
@@ -235,10 +223,10 @@ rather than a transform, and never rely on motion alone.
 
 1. `php artisan test` — 56 tests, including static-export assertions.
 2. `php artisan emplowise:seo-audit` — nine marketing routes.
-3. Screenshot all eleven routes at 1440px in light and dark, with the intro and
-   consent dismissed (see `docs/screenshots/*-dark.jpg`). Check `/terms` and
+3. Screenshot all eleven routes at 1440px in light and dark, with the consent
+   card dismissed (see `docs/screenshots/*-dark.jpg`). Check `/terms` and
    `/privacy` too, plus one mobile capture at 390px.
 4. Sweep 320 / 768 / 1040 / 1041 / 1199 / 1200 / 1280 / 2560 for horizontal
    overflow in both themes. 1199 must show the top bar; 1200 must show the left
    rail with `body { padding-left: 184px }` and a fixed 184px header.
-5. Check the no-JS case: no visible toggle, no stuck intro, content readable.
+5. Check the no-JS case: no visible toggle, no overlay, content readable.

@@ -229,7 +229,7 @@ php artisan emplowise:bundle-css
 
 | Bundle | Loaded by | Sources, in cascade order |
 | --- | --- | --- |
-| `public/css/site.css` | every page | fonts, tokens, base, layout, components, pages, intro, consent, theme, chat, inline |
+| `public/css/site.css` | every page | fonts, tokens, base, layout, components, pages, consent, theme, chat, inline |
 | `public/css/hub.css` | `/emplostart` only | student, print |
 
 The manifest is `App\Support\CssBundles::MANIFESTS`. Rules that matter:
@@ -368,12 +368,12 @@ config/
   emplowise.php                 # all business content
   static.php                    # static base URL + Web3Forms key
 public/
-  css/  13 sources: tokens, base, layout, components, pages, theme, intro,
+  css/  12 sources: tokens, base, layout, components, pages, theme,
         consent, chat, student, print, fonts, inline
         plus the generated bundles site.css (loaded by every page) and
         hub.css (loaded only by /emplostart)
   js/   app.js (site + audit wizard), chat.js, student.js, theme.js,
-        intro.js, consent.js, faq.js, home.js, team.js, audit.js
+        consent.js, faq.js, home.js, team.js, audit.js
   js/toolkit/  interview.js, ats.js, profile.js (browser ports of StudentToolkit)
 resources/views/
   layouts/app.blade.php

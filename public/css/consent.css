@@ -1,6 +1,6 @@
 /* Cookie choices and social placeholders. The banner is a small card, not a
-   full-screen wall: it waits for the intro, remembers a choice, and comes back
-   from the footer link. */
+   full-screen wall: it opens shortly after load on a first visit without a
+   stored choice, and comes back from the footer link. */
 
 /* ------------------------------------------------------------------
    Social links
