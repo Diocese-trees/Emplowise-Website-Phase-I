@@ -543,6 +543,7 @@ html[data-theme="dark"] .hub-rail {
 }
 
 html[data-theme="dark"] .hub-tab:hover { background: rgba(124, 58, 237, 0.16); }
+html[data-theme="dark"] .hub-tab-num { color: var(--d-accent); }
 html[data-theme="dark"] .hub-tab-title { color: var(--d-ink); }
 html[data-theme="dark"] .hub-tab-desc { color: var(--d-ink-dim); }
 

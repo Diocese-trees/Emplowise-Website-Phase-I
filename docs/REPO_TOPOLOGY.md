@@ -137,6 +137,15 @@ opens without JavaScript on desktop, in the mobile drawer and in the left rail.
   `requestIdleCallback` slot (1200 ms timeout fallback). Reply rendering uses
   `textContent` and `createElement`; the only `innerHTML` writes are empty
   strings that clear a container.
+- **EmploStart tool rail** (`js/student.js`, `css/student.css`): five
+  `role="tab"` buttons with arrow/Home/End navigation. Below 1000px the rail is
+  `position: sticky` under the header in a five-column grid; below 760px it
+  becomes one horizontal scroll row (`scroll-snap-type: x proximity`, hidden
+  scrollbar) so the panel stays near the fold. `.hub-panel` scroll margins clear
+  the pinned rail. Resume rows and empty states are built with
+  `createElement`/`textContent` (no interpolated `innerHTML`), and the draft
+  uses guarded `localStorage` get/set/remove so blocked storage still leaves a
+  working builder.
 
 ## Visibility
 

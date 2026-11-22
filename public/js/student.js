@@ -642,31 +642,62 @@
         const DRAFT_KEY = 'emplowise_resume_draft_v1';
         let saveTimer = null;
 
+        function textInput(cls, label, placeholder, maxLength) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = cls;
+            input.setAttribute('aria-label', label);
+            input.placeholder = placeholder;
+            input.maxLength = maxLength;
+            return input;
+        }
+
+        function removeButton(label) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'remove-btn';
+            button.setAttribute('aria-label', label);
+            button.textContent = '\u00d7';
+            return button;
+        }
+
         function expTemplate() {
             const item = document.createElement('div');
             item.className = 'repeat-item';
-            item.innerHTML =
-                '<button type="button" class="remove-btn" aria-label="Remove this role">&times;</button>' +
-                '<div class="repeat-grid">' +
-                    '<input type="text" class="exp-role" aria-label="Role" placeholder="Role, e.g. Data Analyst Intern" maxlength="100">' +
-                    '<input type="text" class="exp-company" aria-label="Company" placeholder="Company" maxlength="100">' +
-                '</div>' +
-                '<input type="text" class="exp-dates" aria-label="Dates" placeholder="Jun 2025 to Aug 2025" maxlength="60">' +
-                '<textarea class="exp-bullets" aria-label="Bullet points" placeholder="One bullet per line. Start with an action verb." maxlength="1200"></textarea>';
+            item.appendChild(removeButton('Remove this role'));
+
+            const grid = document.createElement('div');
+            grid.className = 'repeat-grid';
+            grid.appendChild(textInput('exp-role', 'Role', 'Role, e.g. Data Analyst Intern', 100));
+            grid.appendChild(textInput('exp-company', 'Company', 'Company', 100));
+            item.appendChild(grid);
+
+            item.appendChild(textInput('exp-dates', 'Dates', 'Jun 2025 to Aug 2025', 60));
+
+            const bullets = document.createElement('textarea');
+            bullets.className = 'exp-bullets';
+            bullets.setAttribute('aria-label', 'Bullet points');
+            bullets.placeholder = 'One bullet per line. Start with an action verb.';
+            bullets.maxLength = 1200;
+            item.appendChild(bullets);
+
             return item;
         }
 
         function eduTemplate() {
             const item = document.createElement('div');
             item.className = 'repeat-item';
-            item.innerHTML =
-                '<button type="button" class="remove-btn" aria-label="Remove this education entry">&times;</button>' +
-                '<div class="repeat-grid">' +
-                    '<input type="text" class="edu-degree" aria-label="Degree" placeholder="Degree, e.g. BS Computer Science" maxlength="100">' +
-                    '<input type="text" class="edu-school" aria-label="Institution" placeholder="Institution" maxlength="100">' +
-                '</div>' +
-                '<input type="text" class="edu-dates" aria-label="Dates" placeholder="2022 to 2026" maxlength="60">' +
-                '<input type="text" class="edu-detail" aria-label="Relevant coursework or honours" placeholder="Relevant coursework or honours (optional)" maxlength="160">';
+            item.appendChild(removeButton('Remove this education entry'));
+
+            const grid = document.createElement('div');
+            grid.className = 'repeat-grid';
+            grid.appendChild(textInput('edu-degree', 'Degree', 'Degree, e.g. BS Computer Science', 100));
+            grid.appendChild(textInput('edu-school', 'Institution', 'Institution', 100));
+            item.appendChild(grid);
+
+            item.appendChild(textInput('edu-dates', 'Dates', '2022 to 2026', 60));
+            item.appendChild(textInput('edu-detail', 'Relevant coursework or honours', 'Relevant coursework or honours (optional)', 160));
+
             return item;
         }
 
@@ -860,6 +891,13 @@
             ]
         };
 
+        function emptyNote(node, text) {
+            const note = document.createElement('p');
+            note.className = 'rp-empty';
+            note.textContent = text;
+            node.appendChild(note);
+        }
+
         function renderResume() {
             const name = value('name') || 'Your Name';
             const title = value('title') || 'Target title';
@@ -882,7 +920,7 @@
                     return row.role || row.company || row.bullets;
                 });
                 if (!roles.length) {
-                    expBox.innerHTML = '<p class="rp-empty">Add at least one role.</p>';
+                    emptyNote(expBox, 'Add at least one role.');
                 } else {
                     roles.forEach(function (row) {
                         const entry = document.createElement('div');
@@ -920,7 +958,7 @@
                     return row.degree || row.school || row.detail;
                 });
                 if (!schools.length) {
-                    eduBox.innerHTML = '<p class="rp-empty">Add your degree or qualification.</p>';
+                    emptyNote(eduBox, 'Add your degree or qualification.');
                 } else {
                     schools.forEach(function (row) {
                         const entry = document.createElement('div');

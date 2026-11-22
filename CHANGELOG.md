@@ -6,6 +6,22 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Turned the EmploStart tool rail into a sticky segmented bar on small screens.
+  Below 1000px it pins under the header (`position: sticky`, `--z-sticky`) in a
+  five-column grid; below 760px it becomes one horizontal scroll row with
+  scroll snap, a hidden scrollbar and a bottom active underline, so the active
+  panel stays near the fold instead of sitting below a three-row tab grid.
+  `.hub-panel` gained scroll margins that clear the pinned rail, and dark mode
+  now paints inactive tab numbers with `--d-accent` (measured
+  `rgb(94,234,212)` on `rgba(10,10,11,0.9)`). Resume experience/education rows
+  and their empty states are now built with `createElement`/`textContent`
+  rather than templated `innerHTML`, and every remaining `innerHTML` write is
+  an empty-string clear. Verified at 360x640, 375x667, 1366x900 and 1440x900:
+  15/15 headless checks (no page overflow, pinned rail clears the header,
+  panel scroll margins, tab/hash switching, example load, hostile text rendered
+  as text, reset clearing storage, blocked-storage fallback, prompt filter) with
+  zero console errors; interview/ATS/profile parity 22/22 fixtures. 62 tests,
+  829 assertions.
 - Hardened the audit wizard and deferred the chat widget. The step label is
   now `aria-live="polite" aria-atomic="true"`, so moving between steps is
   announced; while a submission is in flight the form carries

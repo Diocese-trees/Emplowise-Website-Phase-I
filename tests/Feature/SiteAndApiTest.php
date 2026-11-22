@@ -154,6 +154,16 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringContainsString('@media print', $bundle);
         $this->assertStringContainsString('.resume-paper', $bundle);
 
+        // The tool rail becomes a sticky segmented bar below 1000px and a
+        // single scrollable row below 760px, with panel scroll margins that
+        // clear it.
+        $this->assertStringContainsString(
+            '.hub-rail{position: sticky;top: calc(var(--header-h) + 0.4rem);z-index: var(--z-sticky)',
+            $bundle
+        );
+        $this->assertStringContainsString('scroll-snap-type: x proximity', $bundle);
+        $this->assertStringContainsString('.hub-panel{scroll-margin-top: calc(var(--header-h) + 4.1rem)}', $bundle);
+
         $hub = (string) $this->get('/emplostart')->assertOk()->getContent();
         $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
 
