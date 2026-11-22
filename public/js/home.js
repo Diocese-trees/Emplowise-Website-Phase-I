@@ -62,7 +62,7 @@
             const next = document.createElement('b');
             next.textContent = words[wordIndex];
             rotator.replaceChildren(next);
-        }, 2600);
+        }, 3800);
     }
 
     const heroPanel = document.getElementById('hero-panel');

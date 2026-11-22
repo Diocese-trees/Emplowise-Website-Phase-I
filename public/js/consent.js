@@ -174,7 +174,7 @@
             afterIntro();
         };
         document.addEventListener('emplowise:intro-done', reveal, { once: true });
-        window.setTimeout(reveal, 3200);
+        window.setTimeout(reveal, 4400);
     } else {
         afterIntro();
     }

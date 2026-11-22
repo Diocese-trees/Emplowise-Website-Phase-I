@@ -61,6 +61,9 @@
     <link rel="icon" type="image/png" href="{{ asset_v('favicon.png') }}">
     <link rel="preload" href="/fonts/montserrat-e56e84e5-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/jakarta-fdb05bf0-latin.woff2" as="font" type="font/woff2" crossorigin>
+    {{-- Synchronous so data-theme is on <html> before the first paint; deferred
+         it would flash the light palette on every dark-mode visit. --}}
+    <script src="{{ asset_v('js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ asset_v('css/site.css') }}">
     @stack('styles')
     <script type="application/ld+json">
@@ -94,10 +97,15 @@
     <div class="shell header-inner">
         <a href="{{ route('home') }}" class="brand" aria-label="{{ $ui['logo_alt'] }}">
             {{-- Right-sized derivatives: the wordmark renders at 125x32, so a
-                 1056px PNG only cost bytes. WebP first, PNG fallback. --}}
-            <picture>
+                 1056px PNG only cost bytes. WebP first, PNG fallback. The dark
+                 variant uses the reverse (light) mark; CSS swaps them. --}}
+            <picture class="brand-logo brand-logo--light">
                 <source type="image/webp" srcset="{{ asset_v('img/logo-primary-125.webp') }} 1x, {{ asset_v('img/logo-primary-250.webp') }} 2x, {{ asset_v('img/logo-primary-375.webp') }} 3x">
                 <img src="{{ asset_v('img/logo-primary-375.png') }}" alt="Emplowise" width="375" height="96" decoding="async">
+            </picture>
+            <picture class="brand-logo brand-logo--dark">
+                <source type="image/webp" srcset="{{ asset_v('img/logo-reverse-125.webp') }} 1x, {{ asset_v('img/logo-reverse-250.webp') }} 2x, {{ asset_v('img/logo-reverse-375.webp') }} 3x">
+                <img src="{{ asset_v('img/logo-reverse-375.png') }}" alt="Emplowise" width="375" height="96" decoding="async">
             </picture>
         </a>
 
@@ -110,9 +118,27 @@
                     {{ $item['label'] }}
                 </a>
             @endforeach
+
+            {{-- The header toggle is desktop-only; in the drawer this row keeps
+                 the control reachable without crowding the 320px header. --}}
+            <button class="nav-theme" type="button" data-theme-toggle aria-pressed="false"
+                    data-label-dark="{{ $ui['theme_toggle_dark'] }}"
+                    data-label-light="{{ $ui['theme_toggle_light'] }}"
+                    data-text-dark="{{ $ui['theme_footer_dark'] }}"
+                    data-text-light="{{ $ui['theme_footer_light'] }}">
+                <x-icon name="moon" class="theme-glyph icon-moon" :size="17" />
+                <x-icon name="sun" class="theme-glyph icon-sun" :size="17" />
+                <span data-theme-text>{{ $ui['theme_footer_dark'] }}</span>
+            </button>
         </nav>
 
         <div class="header-actions">
+            <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"
+                    data-label-dark="{{ $ui['theme_toggle_dark'] }}"
+                    data-label-light="{{ $ui['theme_toggle_light'] }}">
+                <span class="theme-glyph icon-moon"><x-icon name="moon" :size="18" /></span>
+                <span class="theme-glyph icon-sun"><x-icon name="sun" :size="18" /></span>
+            </button>
             <a href="{{ route('free-hr-audit') }}" class="btn btn--primary btn--sm">{{ $ui['nav_audit_label'] }}</a>
             <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="{{ $ui['menu_open'] }}">
                 <span></span>
@@ -162,6 +188,15 @@
                 <p class="footer-meta">{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</p>
                 <p class="footer-meta">{{ config('emplowise.brand.expansion') }}</p>
                 <a class="footer-meta footer-mail" href="mailto:{{ config('emplowise.copy.contact.email') }}">{{ config('emplowise.copy.contact.email') }}</a>
+                <button class="footer-cookie footer-theme" type="button" data-theme-toggle aria-pressed="false"
+                        data-label-dark="{{ $ui['theme_toggle_dark'] }}"
+                        data-label-light="{{ $ui['theme_toggle_light'] }}"
+                        data-text-dark="{{ $ui['theme_footer_dark'] }}"
+                        data-text-light="{{ $ui['theme_footer_light'] }}">
+                    <x-icon name="moon" class="theme-glyph icon-moon" :size="15" />
+                    <x-icon name="sun" class="theme-glyph icon-sun" :size="15" />
+                    <span data-theme-text>{{ $ui['theme_footer_dark'] }}</span>
+                </button>
                 <button class="footer-cookie" type="button" data-consent-open>{{ $ui['consent_footer'] }}</button>
             </div>
         </div>

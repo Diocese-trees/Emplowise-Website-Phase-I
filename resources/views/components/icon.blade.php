@@ -56,6 +56,15 @@
         <path d="M12 7v5l3 2"/>
         @break
 
+    @case('sun')
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+        @break
+
+    @case('moon')
+        <path d="M20 14.2A8.2 8.2 0 1 1 9.8 4a6.6 6.6 0 0 0 10.2 10.2z"/>
+        @break
+
     @case('chip')
         <rect x="2.5" y="6" width="19" height="12" rx="2"/>
         <circle cx="12" cy="12" r="2.6"/>

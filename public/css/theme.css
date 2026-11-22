@@ -1,0 +1,578 @@
+/* Dark theme.
+   theme.js sets html[data-theme] before the first paint from the stored
+   choice, falling back to prefers-color-scheme. Only the light chrome flips:
+   the navy hero, section--navy, cta-band and footer already work on dark and
+   are left alone. */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* Semantic surfaces used by the override layer below. */
+    --d-page: #060d1a;
+    --d-surface: #0c1728;
+    --d-surface-2: #101d31;
+    --d-surface-3: #14243c;
+    --d-ink: #dbe6f4;
+    --d-ink-soft: #a7b9d1;
+    --d-ink-dim: #7f93ae;
+    --d-line: rgba(148, 197, 224, 0.16);
+    --d-line-strong: rgba(148, 197, 224, 0.3);
+    --d-accent: #5eead4;
+
+    /* Re-point the shared tokens that only ever describe light chrome. */
+    --line: var(--d-line);
+    --line-strong: var(--d-line-strong);
+    --surface-2: var(--d-surface-2);
+    --surface-3: var(--d-surface-3);
+    --ice: var(--d-surface-2);
+    --offwhite: var(--d-surface);
+    --sand: var(--d-surface-2);
+    --sand-line: var(--d-line);
+    --glass: rgba(12, 23, 40, 0.82);
+
+    /* Text ramp: same roles, inverted lightness. */
+    --slate: var(--d-ink);
+    --slate-700: #c2d2e4;
+    --slate-600: var(--d-ink-soft);
+    --slate-500: #93a7c1;
+    --slate-400: var(--d-ink-dim);
+    --slate-300: #5b6f8b;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 10px 30px -14px rgba(0, 0, 0, 0.7);
+    --shadow-lg: 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+}
+
+html[data-theme="dark"] body {
+    background: var(--d-page);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] body.page-ai { background: #0a0e15; }
+
+html[data-theme="dark"] .page-bg {
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+        radial-gradient(120% 90% at 50% -10%, #0b1626 0%, #081120 45%, #060d1a 100%);
+}
+
+html[data-theme="dark"] .page-bg span { opacity: 0.28; }
+
+/* ---------------------------------------------------------------- type */
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5 { color: #eaf2fc; }
+
+html[data-theme="dark"] strong { color: #f2f7fe; }
+
+html[data-theme="dark"] a { color: var(--d-accent); }
+html[data-theme="dark"] a:hover { color: #a7f3e6; }
+
+html[data-theme="dark"] ::selection { background: rgba(94, 234, 212, 0.32); color: #ffffff; }
+
+html[data-theme="dark"] :focus-visible { outline-color: var(--d-accent); }
+
+html[data-theme="dark"] ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
+
+/* -------------------------------------------------------------- branding */
+
+/* The primary wordmark is navy; on the dark page it needs the reverse mark.
+   Both live in the DOM so a theme switch is instant, and CSS picks one. */
+.brand .brand-logo--dark { display: none; }
+
+html[data-theme="dark"] .brand .brand-logo--light { display: none; }
+html[data-theme="dark"] .brand .brand-logo--dark { display: block; }
+
+/* ------------------------------------------------------------- sections */
+
+html[data-theme="dark"] .section:not(.section--navy),
+html[data-theme="dark"] .page-head {
+    background: transparent;
+    border-color: rgba(148, 197, 224, 0.1);
+}
+
+/* Alternating bands stay readable without hard-edged rectangles. */
+html[data-theme="dark"] .section--alt {
+    background: rgba(148, 197, 224, 0.035);
+}
+
+html[data-theme="dark"] .strip {
+    background: rgba(9, 17, 30, 0.86);
+    border-bottom-color: rgba(148, 197, 224, 0.12);
+}
+
+/* --------------------------------------------------------------- header */
+
+html[data-theme="dark"] .site-header {
+    background: rgba(7, 14, 26, 0.86);
+    border-bottom: 1px solid rgba(148, 197, 224, 0.12);
+}
+
+html[data-theme="dark"] .site-header.is-stuck {
+    background: rgba(7, 14, 26, 0.96);
+    box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="dark"] .nav-link { color: var(--d-ink-soft); }
+html[data-theme="dark"] .nav-link:hover,
+html[data-theme="dark"] .nav-link.is-current { color: #ffffff; }
+
+html[data-theme="dark"] .nav-toggle {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(148, 197, 224, 0.24);
+}
+
+html[data-theme="dark"] .nav-toggle span,
+html[data-theme="dark"] .nav-toggle span::before,
+html[data-theme="dark"] .nav-toggle span::after { background: #e6eefa; }
+
+@media (max-width: 1040px) {
+    html[data-theme="dark"] .site-header { background: rgba(7, 14, 26, 0.98); }
+    html[data-theme="dark"] .main-nav {
+        background: var(--d-surface);
+        border-color: var(--d-line);
+        box-shadow: var(--shadow-lg);
+    }
+}
+
+/* ------------------------------------------------------------ surfaces */
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card--flat,
+html[data-theme="dark"] .pillar,
+html[data-theme="dark"] .method-step,
+html[data-theme="dark"] .price-card,
+html[data-theme="dark"] .pos-card,
+html[data-theme="dark"] .acc-item,
+html[data-theme="dark"] .contact-card,
+html[data-theme="dark"] .auto-item,
+html[data-theme="dark"] .ai-module,
+html[data-theme="dark"] .stat--light,
+html[data-theme="dark"] .success-ref,
+html[data-theme="dark"] .table-wrap,
+html[data-theme="dark"] .team-window,
+html[data-theme="dark"] .team-tab.is-active,
+html[data-theme="dark"] .review-list,
+html[data-theme="dark"] .wizard {
+    background: var(--d-surface);
+    border-color: var(--d-line);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .card--flat {
+    background: linear-gradient(160deg, rgba(16, 29, 49, 0.9), rgba(11, 21, 37, 0.95));
+}
+
+html[data-theme="dark"] .pillar.is-open,
+html[data-theme="dark"] .acc-item.is-open {
+    background: linear-gradient(180deg, rgba(20, 36, 60, 0.95), rgba(12, 23, 40, 0.95));
+}
+
+html[data-theme="dark"] .pillar-arrow,
+html[data-theme="dark"] .method-step::before {
+    background: var(--d-surface-2);
+    border-color: var(--d-line);
+}
+
+html[data-theme="dark"] .price-card--featured {
+    background: linear-gradient(165deg, rgba(16, 44, 72, 0.96), rgba(9, 22, 40, 0.98));
+    border-color: rgba(94, 234, 212, 0.3);
+}
+
+html[data-theme="dark"] .team-window {
+    background: linear-gradient(180deg, rgba(14, 26, 44, 0.97), rgba(9, 17, 30, 0.97));
+}
+
+html[data-theme="dark"] .team-tabs { background: rgba(255, 255, 255, 0.04); }
+
+html[data-theme="dark"] .team-photo { background: var(--d-surface-3); }
+
+html[data-theme="dark"] .team-photo figcaption { background: rgba(4, 9, 17, 0.75); }
+
+/* ------------------------------------------------------------- controls */
+
+html[data-theme="dark"] .chip,
+html[data-theme="dark"] .filter-btn,
+html[data-theme="dark"] .btn--ghost,
+html[data-theme="dark"] .btn--light {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .chip:hover,
+html[data-theme="dark"] .filter-btn:hover,
+html[data-theme="dark"] .btn--ghost:hover {
+    background: rgba(94, 234, 212, 0.1);
+    border-color: rgba(94, 234, 212, 0.45);
+    color: #eafffb;
+}
+
+html[data-theme="dark"] .filter-btn.is-active {
+    background: var(--grad-teal);
+    border-color: transparent;
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .input,
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] textarea.input,
+html[data-theme="dark"] select.input,
+html[data-theme="dark"] .search-box input {
+    background: var(--d-surface-2);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .input::placeholder,
+html[data-theme="dark"] .field input::placeholder,
+html[data-theme="dark"] .field textarea::placeholder { color: #6f8299; }
+
+html[data-theme="dark"] .field label,
+html[data-theme="dark"] .field-label { color: var(--d-ink-soft); }
+
+html[data-theme="dark"] .search-box input:focus,
+html[data-theme="dark"] .input:focus,
+html[data-theme="dark"] .field input:focus,
+html[data-theme="dark"] .field select:focus,
+html[data-theme="dark"] .field textarea:focus {
+    background: #0a1626;
+    border-color: var(--d-accent);
+}
+
+html[data-theme="dark"] .btn--primary {
+    background: var(--grad-teal);
+    color: #ffffff;
+    border: 1px solid rgba(94, 234, 212, 0.35);
+    box-shadow: 0 14px 34px -18px rgba(20, 184, 166, 0.6);
+}
+
+html[data-theme="dark"] .btn--primary:hover {
+    color: #ffffff;
+    box-shadow: 0 18px 40px -16px rgba(20, 184, 166, 0.7);
+}
+
+/* --------------------------------------------------------------- toggles */
+
+/* Hidden until theme.js has run: without scripts the button cannot work, so
+   it should not take up header space or promise a state it cannot keep. */
+.theme-toggle { display: none; }
+
+html.js-theme .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+        border-color var(--dur-fast) var(--ease);
+}
+
+html.js-theme .theme-toggle:hover {
+    border-color: var(--teal);
+    color: var(--teal-deep);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+/* One glyph, two states: moon while the page is light (the action is "go
+   dark"), sun while it is dark. */
+.theme-glyph { display: none; line-height: 0; }
+
+html.js-theme .theme-glyph.icon-moon { display: inline-flex; }
+html[data-theme="dark"] .theme-glyph.icon-moon { display: none; }
+html[data-theme="dark"] .theme-glyph.icon-sun { display: inline-flex; }
+
+html[data-theme="dark"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .theme-toggle:hover {
+    background: rgba(94, 234, 212, 0.12);
+    border-color: rgba(94, 234, 212, 0.5);
+    color: var(--d-accent);
+}
+
+/* Below the nav breakpoint the drawer row takes over: the 320-380px header
+   has no room for a third control without shrinking the audit CTA. */
+@media (max-width: 1040px) {
+    html.js-theme .theme-toggle { display: none; }
+}
+
+/* Drawer row, styled like the nav links it follows. */
+.nav-theme { display: none; }
+
+@media (max-width: 1040px) {
+    html.js-theme .nav-theme {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-top: 0.2rem;
+        padding: 0.7rem;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: none;
+        color: var(--navy);
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    html.js-theme .nav-theme:hover { color: var(--teal-deep); }
+
+    html[data-theme="dark"] .nav-theme { color: var(--d-ink-soft); border-top-color: var(--d-line); }
+    html[data-theme="dark"] .nav-theme:hover { color: var(--d-accent); }
+}
+
+/* Footer twin: text with a glyph, sitting next to "Cookie settings". */
+.footer-theme { display: none; }
+
+html.js-theme .footer-theme {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ------------------------------------------------------- chat + consent */
+
+html[data-theme="dark"] .chat-panel {
+    background: rgba(11, 21, 37, 0.97);
+    border-color: var(--d-line);
+}
+
+html[data-theme="dark"] .chat-log {
+    background: radial-gradient(120% 60% at 100% 0%, rgba(94, 234, 212, 0.08), transparent 60%), var(--d-surface-2);
+}
+
+html[data-theme="dark"] .msg {
+    background: var(--d-surface-3);
+    border-color: var(--d-line);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .chat-form {
+    background: rgba(9, 17, 30, 0.95);
+    border-top-color: var(--d-line);
+}
+
+html[data-theme="dark"] .chat-form input {
+    background: var(--d-surface-2);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .chat-note { background: rgba(9, 17, 30, 0.95); color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .chat-suggestions,
+html[data-theme="dark"] .chat-quick { background: var(--d-surface-2); }
+
+html[data-theme="dark"] .quick-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--d-line-strong);
+    color: var(--d-accent);
+}
+
+html[data-theme="dark"] .consent {
+    background: rgba(12, 23, 40, 0.97);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .consent h2 { color: #eaf2fc; }
+html[data-theme="dark"] .consent-body { color: var(--d-ink-soft); }
+html[data-theme="dark"] .consent-opt-label { color: #eaf2fc; }
+html[data-theme="dark"] .consent-opt-desc,
+html[data-theme="dark"] .consent-note { color: var(--d-ink-dim); }
+html[data-theme="dark"] .consent-manage { color: var(--d-accent); }
+html[data-theme="dark"] .switch { background: rgba(255, 255, 255, 0.2); }
+html[data-theme="dark"] .switch:checked { background: var(--teal); }
+
+/* ------------------------------------------------------- misc surfaces */
+
+html[data-theme="dark"] .social-link {
+    background: var(--d-surface-2);
+    border-color: var(--d-line);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .social-link:hover { background: var(--d-surface-3); color: var(--d-accent); }
+
+html[data-theme="dark"] .toast {
+    background: rgba(20, 36, 60, 0.97);
+    color: #f2f7fe;
+}
+
+html[data-theme="dark"] .to-top {
+    background: rgba(20, 36, 60, 0.95);
+    border-color: rgba(94, 234, 212, 0.35);
+}
+
+html[data-theme="dark"] .skip-link { background: var(--d-surface-3); color: #ffffff; }
+
+html[data-theme="dark"] .breadcrumb,
+html[data-theme="dark"] .breadcrumb a,
+html[data-theme="dark"] .breadcrumb span { color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .footer-cookie { color: var(--d-accent); }
+
+/* The footer stays navy in both themes, so its link palette must not follow
+   the content-link accent; only the utility buttons keep the teal. */
+html[data-theme="dark"] .site-footer a { color: var(--text-on-dark); }
+html[data-theme="dark"] .site-footer a:hover { color: #ffffff; }
+html[data-theme="dark"] .footer-cookie,
+html[data-theme="dark"] .footer-theme { color: var(--d-accent); }
+html[data-theme="dark"] .footer-cookie:hover,
+html[data-theme="dark"] .footer-theme:hover { color: #a7f3e6; }
+
+/* Contact: the panel stays navy in both themes; the cards need their own
+   accents because teal-deep is a light-mode colour. */
+html[data-theme="dark"] .contact-email { color: #eaf2fc; }
+html[data-theme="dark"] .contact-step-num { color: var(--d-accent); }
+html[data-theme="dark"] .contact-step { border-top-color: rgba(94, 234, 212, 0.4); }
+html[data-theme="dark"] .contact-ai-pill {
+    border-color: rgba(94, 234, 212, 0.28);
+    background: rgba(94, 234, 212, 0.08);
+    color: var(--d-accent);
+}
+html[data-theme="dark"] .contact-copy-status { color: var(--d-accent); }
+html[data-theme="dark"] .contact-card-foot { color: var(--d-ink-dim); border-top-color: var(--d-line); }
+
+/* Pull quote + audit aside: light gradients that used to be fine only on a
+   light page. */
+html[data-theme="dark"] .pull-quote {
+    background: linear-gradient(150deg, rgba(20, 36, 60, 0.92), rgba(12, 23, 40, 0.96));
+    border-color: var(--d-line-strong);
+    color: #eaf2fc;
+}
+
+html[data-theme="dark"] .pull-quote cite { color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .aside-card {
+    background: linear-gradient(160deg, rgba(20, 36, 60, 0.92), rgba(12, 23, 40, 0.96));
+    border-color: var(--d-line);
+}
+
+html[data-theme="dark"] .aside-list { color: var(--d-ink-soft); }
+
+/* FAQ: the sticky toolbar is a white slab on light; the questions themselves
+   are navy text that disappears on a dark card. */
+html[data-theme="dark"] .faq-toolbar {
+    background: rgba(12, 23, 40, 0.94);
+    border-color: var(--d-line);
+}
+
+html[data-theme="dark"] .acc-trigger { color: #eaf2fc; }
+html[data-theme="dark"] .acc-trigger:hover { color: var(--d-accent); }
+html[data-theme="dark"] .acc-icon { background: rgba(94, 234, 212, 0.12); color: var(--d-accent); }
+html[data-theme="dark"] .acc-trigger[aria-expanded="true"] .acc-icon { background: var(--teal); color: #ffffff; }
+html[data-theme="dark"] .acc-item:hover { border-color: rgba(94, 234, 212, 0.35); }
+html[data-theme="dark"] .acc-item.is-open { border-color: rgba(94, 234, 212, 0.45); }
+html[data-theme="dark"] .acc-panel { color: var(--d-ink-soft); }
+
+/* Pricing: only the featured card set a light amount; the rest stayed navy. */
+html[data-theme="dark"] .price-amount { color: #eaf2fc; }
+html[data-theme="dark"] .price-name { color: var(--d-accent); }
+html[data-theme="dark"] .price-card--featured .price-amount { color: #ffffff; }
+
+/* EmploStart hub (student.css): rails, panels and result blocks. */
+html[data-theme="dark"] .hub-rail {
+    background: rgba(12, 23, 40, 0.9);
+    border-color: var(--d-line-strong);
+}
+
+html[data-theme="dark"] .hub-tab:hover { background: rgba(124, 58, 237, 0.16); }
+html[data-theme="dark"] .hub-tab-title { color: var(--d-ink); }
+html[data-theme="dark"] .hub-tab-desc { color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .panel-card {
+    background: rgba(12, 23, 40, 0.94);
+    border-color: var(--d-line-strong);
+}
+
+html[data-theme="dark"] .tool-status {
+    color: var(--d-accent);
+    background: rgba(94, 234, 212, 0.09);
+    border-color: rgba(94, 234, 212, 0.24);
+}
+
+html[data-theme="dark"] .question-text { color: #eaf2fc; }
+
+html[data-theme="dark"] .answer-box {
+    background: var(--d-surface-2);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .how-steps li { border-color: var(--d-line); }
+
+html[data-theme="dark"] .bar-row .bar-head { color: var(--d-ink); }
+html[data-theme="dark"] .bar-row .bar-head span:last-child { color: var(--d-ink-dim); }
+
+html[data-theme="dark"] .score-number {
+    background: linear-gradient(120deg, #f2f7fe, #c4b5fd 60%, #5eead4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+html[data-theme="dark"] .repeat-item { border-color: var(--d-line); }
+
+html[data-theme="dark"] .repeat-item input,
+html[data-theme="dark"] .repeat-item textarea {
+    background: var(--d-surface-3);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .repeat-item .remove-btn {
+    background: var(--d-surface-3);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink-dim);
+}
+
+html[data-theme="dark"] .prompt-card { background: var(--d-surface); border-color: var(--d-line); }
+
+html[data-theme="dark"] .result-text {
+    background: var(--d-surface-2);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+html[data-theme="dark"] .copy-btn {
+    background: var(--d-surface-3);
+    border-color: rgba(94, 234, 212, 0.3);
+    color: var(--d-accent);
+}
+
+html[data-theme="dark"] .copy-btn:hover { background: var(--grad-teal); color: #ffffff; border-color: transparent; }
+
+/* Tables read as paper rows on light; on dark they need their own lines. */
+html[data-theme="dark"] table.data th { background: var(--d-surface-2); color: var(--d-ink); }
+html[data-theme="dark"] table.data td { border-color: var(--d-line); }
+html[data-theme="dark"] table.data tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+
+/* The intro over a dark page needs a touch more separation. */
+html[data-theme="dark"] .intro { background: radial-gradient(120% 90% at 50% 42%, rgba(5, 12, 24, 0.72), rgba(3, 8, 16, 0.94)); }
+
+@media print {
+    html[data-theme="dark"] body { background: #ffffff; color: #000000; }
+}

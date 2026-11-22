@@ -957,6 +957,11 @@ a.footer-meta { display: inline-flex; align-items: center; }
 @media (max-width: 1080px) {
     .main-nav { gap: 0; }
     .nav-link { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+
+    /* At 1041-1080 the desktop nav and the new theme toggle share the row;
+       a tighter gap keeps the header on one line without moving the
+       breakpoint. */
+    .header-inner { gap: var(--s-3); }
 }
 
 @media (max-width: 980px) {

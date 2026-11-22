@@ -54,11 +54,11 @@
         }
 
         var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var hold = reduced ? 240 : 1050;
+        var hold = reduced ? 240 : 1650;
 
         window.setTimeout(function () {
             el.classList.add('is-leaving');
-            window.setTimeout(finish, reduced ? 110 : 420);
+            window.setTimeout(finish, reduced ? 110 : 700);
         }, hold);
     }
 
@@ -69,5 +69,5 @@
     }
 
     // Safety net: never leave the site covered if an animation event stalls.
-    window.setTimeout(finish, 3000);
+    window.setTimeout(finish, 4200);
 })();

@@ -24,6 +24,7 @@ final class CssBundles
             'pages.css',
             'intro.css',
             'consent.css',
+            'theme.css',
             'chat.css',
             'inline.css',
         ],
