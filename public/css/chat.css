@@ -26,7 +26,8 @@
     overflow: hidden;
     box-shadow: var(--shadow-navy), 0 0 0 0 rgba(94, 234, 212, 0.45);
     transition: transform var(--dur) var(--ease-spring), box-shadow var(--dur) var(--ease);
-    animation: chat-halo 3.6s ease-out infinite;
+    /* No idle animation: a looping box-shadow glow repaints the launcher on
+       every frame of every page. The halo is static; hover brightens it. */
 }
 
 .chat-launcher::after {
@@ -45,12 +46,6 @@
 
 .chat-launcher:hover::after { transform: translateX(120%); }
 
-@keyframes chat-halo {
-    0% { box-shadow: var(--shadow-navy), 0 0 0 0 rgba(94, 234, 212, 0.4); }
-    70% { box-shadow: var(--shadow-navy), 0 0 0 14px rgba(94, 234, 212, 0); }
-    100% { box-shadow: var(--shadow-navy), 0 0 0 0 rgba(94, 234, 212, 0); }
-}
-
 .chat-launcher .dot {
     width: 8px;
     height: 8px;
@@ -59,6 +54,12 @@
     flex: 0 0 auto;
     box-shadow: 0 0 10px var(--aqua);
     animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* Compositor-only pulse: transform and opacity, no paint per frame. */
+@keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.86); }
 }
 
 .chat-panel {

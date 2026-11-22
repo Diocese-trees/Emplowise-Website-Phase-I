@@ -25,7 +25,7 @@
             <div class="hero-actions ai-actions">
                 <button class="btn btn--teal" type="button" disabled aria-disabled="true">
                     {{ $copy['cta'] }}
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    <x-icon name="clock" :size="16" />
                 </button>
                 <a class="btn btn--ghost" href="{{ route('what-we-do') }}">{{ $copy['back_label'] }}</a>
             </div>
@@ -46,13 +46,13 @@
                         <span class="ai-module-icon" aria-hidden="true">
                             @switch($module['icon'])
                                 @case('payroll')
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10h.01M18 14h.01"/></svg>
+                                    <x-icon name="card" :size="22" />
                                     @break
                                 @case('performance')
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V7M16 16v-6M20 16v-2"/></svg>
+                                    <x-icon name="chart-bars" :size="22" />
                                     @break
                                 @default
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/><path d="M9.2 12.2l2 2 3.6-3.8"/></svg>
+                                    <x-icon name="shield-check" :size="22" />
                             @endswitch
                         </span>
                         <p class="ai-module-status">{{ $copy['module_status'] }}</p>

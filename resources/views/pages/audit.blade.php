@@ -162,7 +162,7 @@
 
                 <div class="success-panel" id="audit-success" role="status">
                     <span class="success-mark" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        <x-icon name="check" :size="26" :stroke="2.2" />
                     </span>
                     <p class="kicker s11">{{ $copy['success']['kicker'] }}</p>
                     <h2 class="s33">{{ $seo['h2'] }}</h2>
@@ -223,4 +223,8 @@
             </aside>
         </div>
     </section>
+
+@push('scripts')
+    <script src="{{ asset_v('js/audit.js') }}" defer></script>
+@endpush
 @endsection

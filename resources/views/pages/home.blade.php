@@ -33,7 +33,7 @@
                 <div class="hero-actions">
                     <a href="{{ route('free-hr-audit') }}" class="btn btn--teal">
                         {{ $copy['cta_primary'] }}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        <x-icon name="arrow-right" :size="16" />
                     </a>
                     <a href="{{ route('emplostart') }}" class="btn btn--outline-light">{{ $copy['cta_secondary'] }}</a>
                 </div>
@@ -62,7 +62,7 @@
                 <div class="stack-rows">
                     <div class="stack-row stack-row--payroll">
                         <span class="stack-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+                            <x-icon name="card" :size="18" />
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">{{ $copy['panel']['rows'][0]['label'] }}</span>
@@ -73,7 +73,7 @@
 
                     <div class="stack-row stack-row--performance">
                         <span class="stack-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+                            <x-icon name="chart-line" :size="18" />
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">{{ $copy['panel']['rows'][1]['label'] }}</span>
@@ -84,7 +84,7 @@
 
                     <div class="stack-row stack-row--policy">
                         <span class="stack-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+                            <x-icon name="file-check" :size="18" />
                         </span>
                         <span class="stack-body">
                             <span class="stack-label">{{ $copy['panel']['rows'][2]['label'] }}</span>
@@ -143,17 +143,17 @@
                                 <span class="pillar-badge">
                                     <span class="pillar-icon" aria-hidden="true">
                                         @if ($pillar['slug'] === 'payroll')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+                                            <x-icon name="card" :size="22" />
                                         @elseif ($pillar['slug'] === 'performance')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+                                            <x-icon name="chart-line" :size="22" />
                                         @else
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+                                            <x-icon name="file-check" :size="22" />
                                         @endif
                                     </span>
                                     <span class="pillar-num">{{ $pillar['number'] }}</span>
                                 </span>
                                 <span class="pillar-arrow" aria-hidden="true">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                    <x-icon name="arrow-right" :size="16" />
                                 </span>
                             </span>
                             <h3>{{ $pillar['name'] }}</h3>
@@ -214,7 +214,7 @@
                         <span class="price-capacity">{{ $package['capacity'] }}</span>
                         <span class="price-card-link">
                             {{ $copy['pricing']['link'] }}
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            <x-icon name="arrow-right" :size="15" />
                         </span>
                     </a>
                 @endforeach
@@ -252,4 +252,8 @@
             </div>
         </div>
     </section>
+
+@push('scripts')
+    <script src="{{ asset_v('js/home.js') }}" defer></script>
+@endpush
 @endsection

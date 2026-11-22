@@ -157,4 +157,8 @@
             </div>
         </div>
     </section>
+
+@push('scripts')
+    <script src="{{ asset_v('js/team.js') }}" defer></script>
+@endpush
 @endsection

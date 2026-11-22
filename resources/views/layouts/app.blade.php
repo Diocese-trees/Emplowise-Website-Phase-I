@@ -77,6 +77,9 @@
     };
 @endphp
 <body class="{{ $bodyClass }}">
+@include('partials.intro')
+<script src="{{ asset_v('js/intro.js') }}"></script>
+
 <a class="skip-link" href="#main">{{ $ui['skip_link'] }}</a>
 
 <div class="page-bg" aria-hidden="true">
@@ -84,14 +87,18 @@
     <span class="aurora-2"></span>
     <span class="aurora-3"></span>
 </div>
-<div class="grain" aria-hidden="true"></div>
 
 <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
 
 <header class="site-header" id="site-header">
     <div class="shell header-inner">
         <a href="{{ route('home') }}" class="brand" aria-label="{{ $ui['logo_alt'] }}">
-            <img src="{{ asset_v('img/logo-primary.png') }}" alt="Emplowise" width="1056" height="270" fetchpriority="high">
+            {{-- Right-sized derivatives: the wordmark renders at 125x32, so a
+                 1056px PNG only cost bytes. WebP first, PNG fallback. --}}
+            <picture>
+                <source type="image/webp" srcset="{{ asset_v('img/logo-primary-125.webp') }} 1x, {{ asset_v('img/logo-primary-250.webp') }} 2x, {{ asset_v('img/logo-primary-375.webp') }} 3x">
+                <img src="{{ asset_v('img/logo-primary-375.png') }}" alt="Emplowise" width="375" height="96" decoding="async">
+            </picture>
         </a>
 
         <nav class="main-nav" id="main-nav" aria-label="Primary">
@@ -122,9 +129,14 @@
     <div class="shell">
         <div class="footer-top">
             <div class="footer-brand">
-                <img src="{{ asset_v('img/logo-reverse.png') }}" alt="Emplowise" width="1056" height="270" loading="lazy">
+                <picture>
+                    <source type="image/webp" srcset="{{ asset_v('img/logo-reverse-102.webp') }} 1x, {{ asset_v('img/logo-reverse-204.webp') }} 2x, {{ asset_v('img/logo-reverse-306.webp') }} 3x">
+                    <img src="{{ asset_v('img/logo-reverse-306.png') }}" alt="Emplowise" width="306" height="78" loading="lazy" decoding="async">
+                </picture>
                 <p class="footer-note">{{ $ui['footer_note'] }}</p>
                 <a href="{{ route('free-hr-audit') }}" class="footer-cta">{{ $ui['nav_audit_label'] }}</a>
+                <p class="footer-title footer-title--social">{{ $ui['social_heading'] }}</p>
+                @include('partials.social-links', ['variant' => 'footer'])
             </div>
 
             <nav class="footer-col" aria-label="{{ $ui['footer_company_title'] }}">
@@ -150,6 +162,7 @@
                 <p class="footer-meta">{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</p>
                 <p class="footer-meta">{{ config('emplowise.brand.expansion') }}</p>
                 <a class="footer-meta footer-mail" href="mailto:{{ config('emplowise.copy.contact.email') }}">{{ config('emplowise.copy.contact.email') }}</a>
+                <button class="footer-cookie" type="button" data-consent-open>{{ $ui['consent_footer'] }}</button>
             </div>
         </div>
 
@@ -161,14 +174,16 @@
 </footer>
 
 @include('partials.chat')
+@include('partials.consent')
 
 <button class="to-top" id="to-top" type="button" aria-label="{{ $ui['back_to_top'] }}">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    <x-icon name="arrow-up" :size="18" />
 </button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="{{ asset_v('js/app.js') }}" defer></script>
+<script src="{{ asset_v('js/consent.js') }}" defer></script>
 <script src="{{ asset_v('js/chat.js') }}" defer></script>
 @stack('scripts')
 </body>

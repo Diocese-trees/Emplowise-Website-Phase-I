@@ -1667,30 +1667,6 @@ mark {
 
 .contact-copy-status.is-error { color: var(--danger); }
 
-.contact-socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-}
-
-.contact-social {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: var(--surface-2);
-    color: var(--navy);
-    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
-}
-
-.contact-social:hover {
-    color: var(--teal-deep);
-    border-color: rgba(13, 148, 136, 0.35);
-    transform: translateY(-2px);
-}
-
 .contact-micro {
     margin: var(--s-5) 0 0;
     padding-top: var(--s-4);

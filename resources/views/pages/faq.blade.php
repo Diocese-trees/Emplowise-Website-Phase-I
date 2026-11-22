@@ -23,7 +23,7 @@
         <div class="shell shell--narrow">
             <div class="faq-toolbar">
                 <div class="search-box" id="faq-search-box">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                    <x-icon name="search" :size="16" />
                     <label class="sr-only" for="faq-search">{{ $copy['search_label'] }}</label>
                     <input id="faq-search" type="search" placeholder="{{ $copy['search_placeholder'] }}" autocomplete="off">
                     <button type="button" class="search-clear" id="faq-clear" aria-label="{{ $copy['clear_search'] }}" hidden>&times;</button>
@@ -94,4 +94,8 @@
             </div>
         </div>
     </section>
+
+@push('scripts')
+    <script src="{{ asset_v('js/faq.js') }}" defer></script>
+@endpush
 @endsection

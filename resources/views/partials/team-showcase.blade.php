@@ -3,7 +3,7 @@
         <div class="team-window-bar">
             <span class="team-dots" aria-hidden="true"><i></i><i></i><i></i></span>
             <span class="team-window-url">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <x-icon name="lock" :size="13" />
                 {{ $team['window_title'] }}
             </span>
             <span class="team-window-meta">{{ $team['window_meta'] }}</span>
@@ -36,12 +36,17 @@
                          tabindex="0">
                     <figure class="team-photo">
                         {{-- TODO: replace this placeholder portrait with the confirmed team photo at the same 4:5 ratio. --}}
-                        <img src="{{ asset_v($profile['portrait']) }}"
-                             alt="{{ $profile['alt'] }}"
-                             width="800"
-                             height="1000"
-                             loading="lazy"
-                             decoding="async">
+                        <picture>
+                            <source type="image/webp"
+                                    srcset="{{ asset_v($profile['portrait_webp_small']) }} 420w, {{ asset_v($profile['portrait_webp']) }} 840w"
+                                    sizes="(max-width: 900px) 100vw, 420px">
+                            <img src="{{ asset_v($profile['portrait']) }}"
+                                 alt="{{ $profile['alt'] }}"
+                                 width="800"
+                                 height="1000"
+                                 loading="lazy"
+                                 decoding="async">
+                        </picture>
                         <figcaption><span>{{ $profile['num'] }}</span> {{ $profile['role'] }}</figcaption>
                     </figure>
 

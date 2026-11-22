@@ -437,7 +437,7 @@
 
                 <div class="prompt-toolbar">
                     <div class="search-box" id="prompt-search-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                        <x-icon name="search" :size="16" />
                         <label class="sr-only" for="prompt-search">{{ $copy['prompts']['search_label'] }}</label>
                         <input id="prompt-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="{{ $copy['prompts']['search_placeholder'] }}">
                         <button type="button" class="search-clear" id="prompt-clear" aria-label="{{ $copy['prompts']['clear_search'] }}" hidden>&times;</button>
