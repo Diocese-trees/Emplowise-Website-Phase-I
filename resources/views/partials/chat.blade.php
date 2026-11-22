@@ -1,6 +1,6 @@
 @php($chat = config('emplowise.copy.chat'))
 <div class="chat-root" id="chat-root" data-endpoint="{{ route('api.chat') }}">
-    <section class="chat-panel" id="chat-panel" aria-label="{{ $chat['aria_label'] }}" hidden>
+    <section class="chat-panel" id="chat-panel" role="dialog" aria-modal="true" aria-label="{{ $chat['aria_label'] }}" hidden>
         <header class="chat-head">
             <div class="chat-head-id">
                 <div class="chat-avatar" aria-hidden="true">E</div>

@@ -159,10 +159,7 @@ final class ExportStatic extends Command
             1,
         ) ?? $html;
 
-        $csp = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; '
-            .'script-src \'self\'; style-src \'self\'; img-src \'self\' data:; font-src \'self\'; '
-            .'connect-src \'self\' https://api.web3forms.com; '
-            .'form-action \'self\' https://api.web3forms.com; base-uri \'self\'; object-src \'none\'">';
+        $csp = $this->cspMeta();
 
         $html = preg_replace('/(<head>)/i', '$1'."\n    ".$csp, $html, 1) ?? $html;
 
@@ -219,20 +216,38 @@ final class ExportStatic extends Command
             .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.$urls.'</urlset>'."\n";
     }
 
+    private function cspMeta(): string
+    {
+        return '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; '
+            .'script-src \'self\'; style-src \'self\'; img-src \'self\' data:; font-src \'self\'; '
+            .'connect-src \'self\' https://api.web3forms.com; '
+            .'form-action \'self\' https://api.web3forms.com; base-uri \'self\'; object-src \'none\'">';
+    }
+
     private function notFound(string $base): string
     {
         return '<!doctype html><html lang="en"><head><meta charset="utf-8">'
             .'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            .$this->cspMeta()
             .'<meta name="robots" content="noindex">'
             .'<title>Page not found | Emplowise</title>'
             .'<link rel="stylesheet" href="'.$base.'/css/tokens.css">'
             .'<link rel="stylesheet" href="'.$base.'/css/base.css">'
             .'<link rel="stylesheet" href="'.$base.'/css/layout.css">'
             .'<link rel="stylesheet" href="'.$base.'/css/pages.css">'
-            .'</head><body><main class="shell not-found">'
+            .'</head><body>'
+            .'<a class="skip-link" href="#main">Skip to content</a>'
+            .'<header class="site-header"><div class="shell">'
+            .'<a class="brand" href="'.$base.'/">Emplowise</a>'
+            .'</div></header>'
+            .'<main id="main" tabindex="-1" class="shell not-found">'
             .'<h1>Page not found</h1><p>That page does not exist. '
             .'<a href="'.$base.'/">Go to the Emplowise home page</a>.</p>'
-            .'</main></body></html>'."\n";
+            .'</main>'
+            .'<footer class="site-footer"><div class="shell">'
+            .'<p class="footer-note">Emplowise HR Services</p>'
+            .'</div></footer>'
+            .'</body></html>'."\n";
     }
 
     private function write(string $path, string $contents): void

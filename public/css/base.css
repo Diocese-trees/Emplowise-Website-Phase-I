@@ -248,7 +248,8 @@ strong { font-weight: 600; color: var(--navy); }
     transition: top var(--dur) var(--ease);
 }
 
-.skip-link:focus { top: 1rem; color: var(--white); }
+.skip-link:focus,
+.skip-link:hover { top: 1rem; color: var(--white); }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }

@@ -39,22 +39,22 @@
                             <div class="field" data-field="contact_name">
                                 <label for="audit-name">{{ $copy['form']['name'] }}</label>
                                 <input id="audit-name" name="contact_name" type="text" autocomplete="name" enterkeyhint="next" maxlength="120" placeholder="Your full name" required>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                             <div class="field" data-field="company_name">
                                 <label for="audit-company">{{ $copy['form']['company'] }}</label>
                                 <input id="audit-company" name="company_name" type="text" autocomplete="organization" enterkeyhint="next" maxlength="160" placeholder="Company or venture name" required>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                             <div class="field" data-field="email">
                                 <label for="audit-email">{{ $copy['form']['email'] }}</label>
                                 <input id="audit-email" name="email" type="email" inputmode="email" autocomplete="email" enterkeyhint="next" maxlength="160" placeholder="you@company.com" required>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                             <div class="field" data-field="phone">
                                 <label for="audit-phone">{{ $copy['form']['phone'] }}</label>
                                 <input id="audit-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" maxlength="40" placeholder="+92 300 1234567" required>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                                         <option value="{{ $value }}">{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
 
                             <div class="field field--full" data-field="pain_points">
@@ -87,13 +87,13 @@
                                     @endforeach
                                 </div>
                                 <span class="hint">{{ $copy['pain_hint'] }}</span>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
 
                             <div class="field field--full" data-field="notes">
                                 <label for="audit-notes">{{ $copy['form']['notes'] }} <span class="muted">{{ $copy['form']['notes_optional'] }}</span></label>
                                 <textarea id="audit-notes" name="notes" autocomplete="off" enterkeyhint="enter" maxlength="1500" placeholder="Current tools, recent incidents, a policy that is out of date, a review cycle that stalled."></textarea>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                                        max="{{ now()->addDays(60)->toDateString() }}"
                                        required>
                                 <span class="hint">{{ str_replace(':date', now()->addDays(60)->format('d M Y'), $copy['form']['date_hint']) }}</span>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
                             <div class="field" data-field="preferred_slot">
                                 <label for="audit-slot">{{ $copy['form']['window'] }}</label>
@@ -121,7 +121,7 @@
                                         <option value="{{ $slot }}">{{ $slot }}</option>
                                     @endforeach
                                 </select>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
 
                             <div class="field field--full" data-field="consent">
@@ -129,7 +129,7 @@
                                     <input type="checkbox" name="consent" value="1" required>
                                     <span>{{ $copy['consent'] }}</span>
                                 </label>
-                                <span class="field-error"></span>
+                                <span class="field-error" role="alert"></span>
                             </div>
 
                             <div class="sr-only" aria-hidden="true">
@@ -147,7 +147,7 @@
                         <dl class="review-list" id="review-list"></dl>
 
                         <div class="field" data-field="submit">
-                            <p class="field-error" id="submit-error"></p>
+                            <p class="field-error" id="submit-error" role="alert"></p>
                         </div>
                     </div>
 

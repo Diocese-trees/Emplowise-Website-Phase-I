@@ -31,14 +31,17 @@
     </section>
 
     <div class="shell hub-shell">
-        <aside class="hub-rail" aria-label="Student tools">
+        <div class="hub-rail" role="tablist" aria-label="Student tools">
             @php($tabs = $copy['tabs'])
             @foreach ($tabs as $tab)
                 <button type="button"
                         class="hub-tab {{ $loop->first ? 'is-active' : '' }}"
+                        id="tab-{{ $tab['id'] }}"
                         data-hub-tab="{{ $tab['id'] }}"
+                        role="tab"
                         aria-selected="{{ $loop->first ? 'true' : 'false' }}"
-                        role="tab">
+                        aria-controls="panel-{{ $tab['id'] }}"
+                        tabindex="{{ $loop->first ? '0' : '-1' }}">
                     <span class="hub-tab-num">{{ $tab['num'] }}</span>
                     <span>
                         <span class="hub-tab-title">{{ $tab['title'] }}</span>
@@ -46,11 +49,11 @@
                     </span>
                 </button>
             @endforeach
-        </aside>
+        </div>
 
         <div>
             {{-- 01 Interview ------------------------------------------------- --}}
-            <section class="hub-panel is-active" id="panel-interview" data-hub-panel="interview" role="tabpanel">
+            <section class="hub-panel is-active" id="panel-interview" data-hub-panel="interview" role="tabpanel" aria-labelledby="tab-interview">
                 <div class="panel-head">
                     <div>
                         <h2>{{ $copy['interview']['heading'] }}</h2>
@@ -162,7 +165,7 @@
             </section>
 
             {{-- 02 ATS ------------------------------------------------------- --}}
-            <section class="hub-panel" id="panel-ats" data-hub-panel="ats" role="tabpanel">
+            <section class="hub-panel" id="panel-ats" data-hub-panel="ats" role="tabpanel" aria-labelledby="tab-ats">
                 <div class="panel-head">
                     <div>
                         <h2>{{ $seo['h2'] }}</h2>
@@ -252,7 +255,7 @@
             </section>
 
             {{-- 03 Resume builder ------------------------------------------- --}}
-            <section class="hub-panel" id="panel-resume" data-hub-panel="resume" role="tabpanel">
+            <section class="hub-panel" id="panel-resume" data-hub-panel="resume" role="tabpanel" aria-labelledby="tab-resume">
                 <div class="panel-head">
                     <div>
                         <h2>{{ $copy['resume']['heading'] }}</h2>
@@ -363,7 +366,7 @@
             </section>
 
             {{-- 04 Profile optimizer ---------------------------------------- --}}
-            <section class="hub-panel" id="panel-profile" data-hub-panel="profile" role="tabpanel">
+            <section class="hub-panel" id="panel-profile" data-hub-panel="profile" role="tabpanel" aria-labelledby="tab-profile">
                 <div class="panel-head">
                     <div>
                         <h2>{{ $copy['profile']['heading'] }}</h2>
@@ -424,7 +427,7 @@
             </section>
 
             {{-- 05 Prompt library ------------------------------------------ --}}
-            <section class="hub-panel" id="panel-prompts" data-hub-panel="prompts" role="tabpanel">
+            <section class="hub-panel" id="panel-prompts" data-hub-panel="prompts" role="tabpanel" aria-labelledby="tab-prompts">
                 <div class="panel-head">
                     <div>
                         <h2>{{ $copy['prompts']['heading'] }}</h2>

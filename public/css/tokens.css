@@ -24,7 +24,7 @@
     --violet: #7c3aed;
     --magenta: #d946ef;
     --amber: #f59e0b;
-    --amber-deep: #b45309;
+    --amber-deep: #92400e;
     --rose: #e11d48;
 
     /* Semantic */
@@ -37,7 +37,7 @@
     --slate: #16233c;
     --slate-700: #334155;
     --slate-600: #475569;
-    --slate-500: #64748b;
+    --slate-500: #54637a;
     --slate-400: #94a3b8;
     --slate-300: #cbd5e1;
     --line: #e4eaf1;
@@ -55,7 +55,7 @@
     --glass-dark: rgba(12, 32, 68, 0.55);
     --hairline-dark: rgba(148, 197, 224, 0.18);
     --text-on-dark: #c9d8ea;
-    --text-on-dark-soft: #93a9c4;
+    --text-on-dark-soft: #b9c9df;
 
     /* Gradients */
     --grad-brand: linear-gradient(118deg, #0d9488 0%, #0891b2 52%, #4f46e5 100%);

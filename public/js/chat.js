@@ -238,9 +238,39 @@
     }
 
     document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && !panel.hidden) {
+        if (panel.hidden) return;
+
+        if (event.key === 'Escape') {
             setOpen(false);
             launcher.focus({ preventScroll: true });
+            return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        // The panel is a modal dialog, so Tab has to stay inside it.
+        const items = Array.prototype.filter.call(
+            panel.querySelectorAll('button:not([disabled]), a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'),
+            function (el) { return el.offsetParent !== null || el === document.activeElement; }
+        );
+
+        if (items.length === 0) return;
+
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey) {
+            if (active === first || !panel.contains(active)) {
+                event.preventDefault();
+                last.focus();
+            }
+            return;
+        }
+
+        if (active === last) {
+            event.preventDefault();
+            first.focus();
         }
     });
 

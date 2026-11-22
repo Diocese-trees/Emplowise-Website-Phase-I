@@ -265,6 +265,9 @@
 
 .footer-links a {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
     transition: color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
 
@@ -918,7 +921,7 @@
 
 .breadcrumb a { color: var(--slate-500); }
 .breadcrumb a:hover { color: var(--teal-deep); }
-.breadcrumb span { color: var(--slate-300); }
+.breadcrumb span { color: var(--slate-500); }
 
 @media (max-width: 1080px) {
     .main-nav { gap: 0; }

@@ -109,6 +109,19 @@
         }
     }
 
+    function syncHash(id) {
+        if (!window.history || !window.history.replaceState) return;
+        window.history.replaceState(null, '', '#' + id);
+    }
+
+    function focusTabAt(index) {
+        if (!tabs.length) return;
+        const next = tabs[(index + tabs.length) % tabs.length];
+        activateTab(next.getAttribute('data-hub-tab'));
+        next.focus();
+        syncHash(next.getAttribute('data-hub-tab'));
+    }
+
     function activateTab(id) {
         if (!id) return;
         const target = panels.filter(function (panel) { return panel.getAttribute('data-hub-panel') === id; })[0];
@@ -117,6 +130,7 @@
             const active = tab.getAttribute('data-hub-tab') === id;
             tab.classList.toggle('is-active', active);
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            tab.setAttribute('tabindex', active ? '0' : '-1');
             if (active) revealTab(tab);
         });
         panels.forEach(function (panel) {
@@ -124,19 +138,41 @@
         });
     }
 
-    tabs.forEach(function (tab) {
+    tabs.forEach(function (tab, index) {
         tab.addEventListener('click', function () {
             const id = tab.getAttribute('data-hub-tab');
             activateTab(id);
-            if (window.history && window.history.replaceState) {
-                window.history.replaceState(null, '', '#' + id);
-            }
+            syncHash(id);
             // On narrow screens the rail wraps above the panel, so bring the
             // newly selected panel into view instead of leaving it offscreen.
             if (window.innerWidth <= 760) {
                 const panel = document.querySelector('[data-hub-panel="' + id + '"]');
                 if (panel) panel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
             }
+        });
+
+        tab.addEventListener('keydown', function (event) {
+            let target;
+            switch (event.key) {
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    target = index + 1;
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    target = index - 1;
+                    break;
+                case 'Home':
+                    target = 0;
+                    break;
+                case 'End':
+                    target = tabs.length - 1;
+                    break;
+                default:
+                    return;
+            }
+            event.preventDefault();
+            focusTabAt(target);
         });
     });
 
@@ -612,11 +648,11 @@
             item.innerHTML =
                 '<button type="button" class="remove-btn" aria-label="Remove this role">&times;</button>' +
                 '<div class="repeat-grid">' +
-                    '<input type="text" class="exp-role" placeholder="Role, e.g. Data Analyst Intern" maxlength="100">' +
-                    '<input type="text" class="exp-company" placeholder="Company" maxlength="100">' +
+                    '<input type="text" class="exp-role" aria-label="Role" placeholder="Role, e.g. Data Analyst Intern" maxlength="100">' +
+                    '<input type="text" class="exp-company" aria-label="Company" placeholder="Company" maxlength="100">' +
                 '</div>' +
-                '<input type="text" class="exp-dates" placeholder="Jun 2025 to Aug 2025" maxlength="60">' +
-                '<textarea class="exp-bullets" placeholder="One bullet per line. Start with an action verb." maxlength="1200"></textarea>';
+                '<input type="text" class="exp-dates" aria-label="Dates" placeholder="Jun 2025 to Aug 2025" maxlength="60">' +
+                '<textarea class="exp-bullets" aria-label="Bullet points" placeholder="One bullet per line. Start with an action verb." maxlength="1200"></textarea>';
             return item;
         }
 
@@ -626,11 +662,11 @@
             item.innerHTML =
                 '<button type="button" class="remove-btn" aria-label="Remove this education entry">&times;</button>' +
                 '<div class="repeat-grid">' +
-                    '<input type="text" class="edu-degree" placeholder="Degree, e.g. BS Computer Science" maxlength="100">' +
-                    '<input type="text" class="edu-school" placeholder="Institution" maxlength="100">' +
+                    '<input type="text" class="edu-degree" aria-label="Degree" placeholder="Degree, e.g. BS Computer Science" maxlength="100">' +
+                    '<input type="text" class="edu-school" aria-label="Institution" placeholder="Institution" maxlength="100">' +
                 '</div>' +
-                '<input type="text" class="edu-dates" placeholder="2022 to 2026" maxlength="60">' +
-                '<input type="text" class="edu-detail" placeholder="Relevant coursework or honours (optional)" maxlength="160">';
+                '<input type="text" class="edu-dates" aria-label="Dates" placeholder="2022 to 2026" maxlength="60">' +
+                '<input type="text" class="edu-detail" aria-label="Relevant coursework or honours" placeholder="Relevant coursework or honours (optional)" maxlength="160">';
             return item;
         }
 
