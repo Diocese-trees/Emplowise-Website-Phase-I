@@ -6,6 +6,14 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Final verification pass. Lighthouse (mobile and desktop) on `/`,
+  `/emplostart/` and `/free-hr-audit/` now scores 100 for accessibility, best
+  practices and SEO, with performance 95–100. Two fixes came out of it: links
+  inside `.form-status` are underlined (the keyless mailto link sat on the error
+  red with a 1.16:1 colour difference), and footer navigation links are
+  `min-height`/`min-width: 28px` so they clear the WCAG 2.2 target-size rule.
+  No horizontal overflow at 375px, and the footer capture shows the five-link
+  columns unchanged apart from the extra row height.
 - Release hygiene. Deleted the two placeholder tests
   (`tests/Feature/ExampleTest.php`, `tests/Unit/ExampleTest.php`) and the now
   empty `Unit` suite from `phpunit.xml`; the Feature suite is the contract (60

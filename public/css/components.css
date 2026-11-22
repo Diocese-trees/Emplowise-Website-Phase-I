@@ -572,6 +572,13 @@ textarea.input,
 
 .form-status.is-error { color: var(--danger); font-weight: 500; }
 .form-status.is-ok { color: var(--teal-deep); font-weight: 500; }
+/* Links inside a status line can sit on the error red; underline them so the
+   affordance does not rely on colour alone (Lighthouse link-in-text-block). */
+.form-status a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
 
 /* ------------------------------------------------------------------
    Accordion

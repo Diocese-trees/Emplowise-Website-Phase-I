@@ -338,7 +338,7 @@ a.footer-meta { display: inline-flex; align-items: center; }
     margin-bottom: 0.55rem;
 }
 
-.footer-links { display: grid; gap: 0.15rem; }
+.footer-links { display: grid; gap: 0.05rem; }
 
 .footer-links a,
 .footer-links span {
@@ -351,7 +351,8 @@ a.footer-meta { display: inline-flex; align-items: center; }
     position: relative;
     display: inline-flex;
     align-items: center;
-    min-height: 20px;
+    min-height: 28px;
+    min-width: 28px;
     transition: color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
 
