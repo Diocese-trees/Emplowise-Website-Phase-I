@@ -4,6 +4,18 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
+## v2.1 — CI repair (2026-11-22)
+
+- Tracked the database tree. `database/.gitignore` ignored everything, so the
+  migrations, `UserFactory` and `DatabaseSeeder` had never been committed: local
+  runs passed because the files sat on disk, while the first CI run cloned
+  without them and `RefreshDatabase` could not create `audit_requests` or
+  `chat_messages` (4 failures, 500 instead of 201/200). The ignore file now
+  covers only `*.sqlite`/`*.sqlite-journal`, and the five migrations, the
+  factory and the seeder are in the repository. Verified in a detached worktree
+  containing tracked files only: 60 tests pass, bundles are fresh, parity and
+  the keyless export smoke test pass.
+
 ## v2.0 — Executive redesign (2026-11-22)
 
 - Final verification pass. Lighthouse (mobile and desktop) on `/`,
