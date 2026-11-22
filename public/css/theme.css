@@ -343,14 +343,6 @@ html[data-theme="dark"] .theme-toggle:hover {
     html[data-theme="dark"] .nav-theme:hover { color: var(--d-accent); }
 }
 
-/* Footer twin: text with a glyph, sitting next to "Cookie settings". */
-.footer-theme { display: none; }
-
-html.js-theme .footer-theme {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
 
 /* ------------------------------------------------------- chat + consent */
 
@@ -432,16 +424,10 @@ html[data-theme="dark"] .breadcrumb,
 html[data-theme="dark"] .breadcrumb a,
 html[data-theme="dark"] .breadcrumb span { color: var(--d-ink-dim); }
 
-html[data-theme="dark"] .footer-cookie { color: var(--d-accent); }
-
 /* The footer stays navy in both themes, so its link palette must not follow
-   the content-link accent; only the utility buttons keep the teal. */
+   the content-link accent. */
 html[data-theme="dark"] .site-footer a { color: var(--text-on-dark); }
 html[data-theme="dark"] .site-footer a:hover { color: #ffffff; }
-html[data-theme="dark"] .footer-cookie,
-html[data-theme="dark"] .footer-theme { color: var(--d-accent); }
-html[data-theme="dark"] .footer-cookie:hover,
-html[data-theme="dark"] .footer-theme:hover { color: #a7f3e6; }
 
 /* Contact: the panel stays navy in both themes; the cards need their own
    accents because teal-deep is a light-mode colour. */

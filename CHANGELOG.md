@@ -6,6 +6,31 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Reworked the contact page's closing area and the shared footer:
+  - `footer_note` is now SEO-facing brand copy — human resource partner,
+    remote HR for teams of 5 to 100, free HR audit, HR Business Manager, and
+    retainers from PKR 40,000 — with the grammar of the draft fixed. It is the
+    same bio on every page, so `/contact` and the site footer read alike.
+  - The contact meta description was rewritten to 143 characters (within the
+    SEO audit's 135–155 range) and now matches the AI card's wording.
+  - Removed "Market: Pakistan" and the long-term expansion line from the
+    footer's Start here column, leaving the email as the single entry.
+  - The footer bottom is now copyright plus `footer_tagline`
+    ("People analytics without bias, so CEOs can set new standards."). The
+    previous scope disclaimer is gone.
+  - Removed the footer dark-mode and cookie buttons. Dark mode remains in the
+    header and the mobile drawer; cookie settings is a floating
+    `.consent-fab` pill that appears after 1.4s, hides after 7s, returns at
+    the end of the page, stays put while focused, and hides while the consent
+    card is open.
+  - The duplicate contact micro line ("Website is actively being built…") was
+    removed; `micro_copyright` and `micro_status` no longer exist.
+  - The closing AI card is compact at every breakpoint (max 56rem, 1.02–1.18rem
+    heading, 0.82rem body, 0.72rem chips) and reads "Ask your favourite GPT
+    about Emplowise". It remains the last block before the footer.
+  - Docs updated in `docs/THEME_AND_MOTION.md` and
+    `CONTENT_EDITING_GUIDE.md`; the contact test now checks the footer tagline
+    instead of the removed micro keys.
 - Reduced motion no longer flattens the whole interface: movement, loops and
   the intro's travel are removed, but 0.18s colour, opacity and shadow fades
   remain, so hover and focus still register. Reveals, the rotator and the hero

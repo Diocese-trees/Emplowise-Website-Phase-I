@@ -156,6 +156,51 @@
         close();
     });
 
+    // Floating button: it steps in after the page settles, leaves after a
+    // few seconds, and comes back at the end of the page or on keyboard focus.
+    var fab = document.querySelector('.consent-fab');
+    var fabTimer = null;
+    var fabVisible = false;
+
+    function hideFab() {
+        window.clearTimeout(fabTimer);
+        fabVisible = false;
+        if (fab) fab.classList.remove('is-visible');
+    }
+
+    function nearBottom() {
+        var doc = document.documentElement;
+        return window.innerHeight + window.scrollY >= doc.scrollHeight - 480;
+    }
+
+    function showFab(hold) {
+        if (!fab || !banner.hidden || fabVisible) return;
+        if (hold === 'footer' && !nearBottom()) return;
+        window.clearTimeout(fabTimer);
+        fabVisible = true;
+        fab.classList.add('is-visible');
+        fabTimer = window.setTimeout(hideFab, hold === 'footer' ? 6000 : (hold || 7000));
+    }
+
+    if (fab) {
+        fab.addEventListener('click', hideFab);
+        fab.addEventListener('focus', function () { window.clearTimeout(fabTimer); });
+        fab.addEventListener('blur', function () {
+            if (nearBottom()) showFab('footer');
+            else hideFab();
+        });
+
+        window.setTimeout(function () { showFab(7000); }, 1400);
+
+        window.addEventListener('scroll', function () {
+            if (nearBottom()) {
+                if (!fabVisible) showFab('footer');
+            } else if (fabVisible && document.activeElement !== fab) {
+                hideFab();
+            }
+        }, { passive: true });
+    }
+
     var stored = readStorage() || readCookie();
     sync(stored);
 

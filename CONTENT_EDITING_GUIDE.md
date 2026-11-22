@@ -46,9 +46,12 @@ Field labels, helper hints, and tool result headings live in the same `copy` blo
 `copy.layout` holds the navigation labels, the header CTA, the footer columns and the theme toggle:
 
 - `theme_toggle_dark` / `theme_toggle_light` are the screen-reader labels on the header and drawer buttons ("Switch to dark theme" / "Switch to light theme"). Keep them as instructions, not state names.
-- `theme_footer_dark` / `theme_footer_light` are the visible footer label, which names the mode the button will switch *to*.
+- `theme_footer_dark` / `theme_footer_light` are the visible drawer label, which names the mode the button will switch *to*.
+- `footer_note` is the brand bio under the footer logo. It is also the page's main descriptive paragraph on `/contact`, so keep it specific: who you serve, the headcount range, the free audit, and the published starting price.
+- `footer_tagline` is the line beside the copyright ("People analytics without bias, so CEOs can set new standards."). It replaces the old scope disclaimer; do not add a second legal paragraph unless counsel asks for one.
+- `consent_footer` labels the floating cookie button. The button appears after load, auto-hides, and returns at the end of the page.
 
-The toggle appears in the header above 1040px, as a row in the mobile drawer at 1040px and below, and in the footer meta always. Each button gets its label from the same two keys, so editing them once updates all three.
+The theme toggle appears in the header above 1040px and as a row in the mobile drawer at 1040px and below. The footer no longer carries a toggle, so editing the two keys updates both remaining controls.
 
 ## Student Hub and chat controls
 
@@ -64,20 +67,21 @@ Interview and ATS scores are calculated by the local engines first. A configured
 
 ## Contact Us
 
-The page deliberately has no form — the h1 promises "without a maze of forms" — so the only actions are the mailto link, the copy-email button and the route into the Free HR Audit. Keep it that way; if a contact form is ever required, the heading and the `micro_status` line have to change with it.
+The page deliberately has no form — the h1 promises "without a maze of forms" — so the only actions are the mailto link, the copy-email button and the route into the Free HR Audit. Keep it that way; if a contact form is ever required, the heading has to change with it.
 
 `copy.contact` is laid out in the order the page reads:
 
 | Block | Keys | Note |
 | --- | --- | --- |
 | Direct-line panel | `panel_kicker`, `panel_heading`, `panel_body`, `panel_email_cta`, `panel_audit_cta` | the navy panel at the top |
-| Facts | `fact_hours_label`, `fact_hours`, `fact_reply_label`, `fact_reply`, `fact_market_label`, `fact_market` | office hours, reply window, team base — keep the hours in step with the footer and the FAQ |
+| Facts | `fact_hours_label`, `fact_hours`, `fact_reply_label`, `fact_reply`, `fact_market_label`, `fact_market` | office hours, reply window, team base — keep the hours in step with the FAQ |
 | What happens next | `next_heading`, `next_body`, `next_steps` | three steps, each with `title` and `body`; the layout is built for three |
 | Email card | `email_heading`, `email_body`, `email`, `email_write`, `copy_label`, `copy_done`, `copy_fail` | `email` is used for the visible address and the `mailto:`; change it in one place only |
 | Socials card | `social_heading`, `social_body`, `social_note`, `social_pending`, `socials` | each entry is `label`, `icon`, `href`, `pending`; `pending` keeps the link inert and shows the `social_pending` note instead of navigating |
 | Resources card | `resources_heading`, `resources_note`, `resources` | each entry is `label` and `route` (a Laravel route name); keep it to the pages that exist |
-| AI shortcut | `ai_heading`, `ai_body`, `ai_query`, `ai_links` | each entry is `label` and a base `href`; the template appends the URL-encoded `ai_query`, so keep base URLs free of query strings |
-| Footer line | `micro_copyright`, `micro_status` | `micro_status` is the "actively being built" note |
+| AI shortcut | `ai_heading`, `ai_body`, `ai_query`, `ai_links` | each entry is `label` and a base `href`; the template appends the URL-encoded `ai_query`, so keep base URLs free of query strings. Rendered compact as the closing card. |
+
+The page has no separate footer line: it ends on the shared `site-footer`, which carries the copyright and `copy.layout.footer_tagline`.
 
 The social URLs are placeholders (`wa.me/923000000000`, the generic profile paths) until the real accounts exist; they are marked pending so the page does not present them as live.
 

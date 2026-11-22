@@ -122,12 +122,6 @@
                     </div>
                 </section>
             </div>
-
-            <p class="contact-micro">
-                <span>{{ $copy['micro_copyright'] }}</span>
-                <span class="contact-micro-sep" aria-hidden="true">|</span>
-                <span>{{ $copy['micro_status'] }}</span>
-            </p>
         </div>
     </section>
 @endsection

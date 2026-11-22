@@ -197,7 +197,9 @@
     position: relative;
     background: var(--grad-navy);
     color: var(--text-on-dark-soft);
-    padding: var(--s-7) 0 var(--s-4);
+    /* Extra bottom room so the floating consent button never sits on the
+       copyright line when the footer is fully in view. */
+    padding: var(--s-7) 0 calc(var(--s-4) + 2.75rem);
     overflow: hidden;
     isolation: isolate;
 }
@@ -265,10 +267,10 @@ a.footer-meta { display: inline-flex; align-items: center; }
 
 .footer-note {
     margin-top: var(--s-3);
-    font-size: 0.85rem;
-    line-height: 1.55;
+    font-size: 0.84rem;
+    line-height: 1.6;
     color: var(--text-on-dark-soft);
-    max-width: 32ch;
+    max-width: 46ch;
 }
 
 .footer-title {

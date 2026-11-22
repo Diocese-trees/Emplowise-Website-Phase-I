@@ -81,6 +81,11 @@
         <path d="M9.2 12.2l2 2 3.6-3.8"/>
         @break
 
+    @case('cookie')
+        <path d="M12 3a9 9 0 1 0 9 9 4.2 4.2 0 0 1-5.1-4.1A4.2 4.2 0 0 1 12 3z"/>
+        <path d="M8.5 9.5h.01M12.5 13.5h.01M8.5 15.5h.01M15.5 16h.01"/>
+        @break
+
     @case('check')
         <path d="M20 6 9 17l-5-5"/>
         @break

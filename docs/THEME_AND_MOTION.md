@@ -48,8 +48,7 @@ required attributes:
 - `aria-pressed` is `true` in dark mode; the two `data-label-*` strings become
   the `aria-label` (dark mode announces "Switch to light theme").
 - Optional: `data-text-dark` / `data-text-light` plus a `[data-theme-text]`
-  child, used by the drawer row and the footer button, which add a visible label
-  beside the icon.
+  child, used by the drawer row to add a visible label beside the icon.
 - The glyph state machine is CSS only: `.theme-glyph` is hidden, `.icon-moon`
   shows in light, `.icon-sun` shows in dark.
 
@@ -59,7 +58,10 @@ Placement, by breakpoint (all gated on `html.js-theme`):
 | --- | --- | --- |
 | Header actions | `.theme-toggle` (icon, 42px round) | only above 1040px |
 | Nav drawer row | `.nav-theme` inside `nav#main-nav` | only at 1040px and below |
-| Footer meta | `.footer-theme` before "Cookie settings" | always |
+
+The footer toggle was removed when the closing band was simplified: dark mode
+stays available in the header (desktop) and the drawer (everything narrower).
+Cookie settings moved to the floating `.consent-fab` button.
 
 The header control is desktop-only because it pushed the header into horizontal
 overflow just above the drawer breakpoint (1041px) once the audit CTA sat next

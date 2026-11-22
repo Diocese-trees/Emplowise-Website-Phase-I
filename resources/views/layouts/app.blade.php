@@ -185,25 +185,13 @@
 
             <div class="footer-col footer-col--meta">
                 <p class="footer-title">{{ $ui['footer_start_title'] }}</p>
-                <p class="footer-meta">{{ $ui['footer_market'] }} {{ config('emplowise.brand.market') }}</p>
-                <p class="footer-meta">{{ config('emplowise.brand.expansion') }}</p>
                 <a class="footer-meta footer-mail" href="mailto:{{ config('emplowise.copy.contact.email') }}">{{ config('emplowise.copy.contact.email') }}</a>
-                <button class="footer-cookie footer-theme" type="button" data-theme-toggle aria-pressed="false"
-                        data-label-dark="{{ $ui['theme_toggle_dark'] }}"
-                        data-label-light="{{ $ui['theme_toggle_light'] }}"
-                        data-text-dark="{{ $ui['theme_footer_dark'] }}"
-                        data-text-light="{{ $ui['theme_footer_light'] }}">
-                    <x-icon name="moon" class="theme-glyph icon-moon" :size="15" />
-                    <x-icon name="sun" class="theme-glyph icon-sun" :size="15" />
-                    <span data-theme-text>{{ $ui['theme_footer_dark'] }}</span>
-                </button>
-                <button class="footer-cookie" type="button" data-consent-open>{{ $ui['consent_footer'] }}</button>
             </div>
         </div>
 
         <div class="footer-bottom">
             <span>&copy; {{ date('Y') }} {{ config('emplowise.brand.legal_name') }}. {{ $ui['footer_rights'] }}</span>
-            <span class="footer-legal">{{ $ui['footer_legal'] }}</span>
+            <span class="footer-legal">{{ $ui['footer_tagline'] }}</span>
         </div>
     </div>
 </footer>
@@ -213,6 +201,14 @@
 
 <button class="to-top" id="to-top" type="button" aria-label="{{ $ui['back_to_top'] }}">
     <x-icon name="arrow-up" :size="18" />
+</button>
+
+{{-- Consent stays reachable without parking a permanent link in the footer:
+     the button steps in after load, steps out of the way, and returns when
+     the visitor reaches the end of the page. --}}
+<button class="consent-fab" type="button" data-consent-open>
+    <x-icon name="cookie" :size="16" />
+    <span>{{ $ui['consent_footer'] }}</span>
 </button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -281,8 +281,9 @@ final class SiteAndApiTest extends TestCase
 
         $this->assertStringContainsString('mailto:'.$copy['email'], $html);
         $this->assertStringContainsString('id="copy-email"', $html);
-        $this->assertStringContainsString($copy['micro_copyright'], $html);
-        $this->assertStringContainsString($copy['micro_status'], $html);
+        // The page closes on the shared footer: copyright plus the brand line.
+        $this->assertStringContainsString((string) date('Y'), $html);
+        $this->assertStringContainsString(config('emplowise.copy.layout.footer_tagline'), $html);
 
         foreach ($copy['resources'] as $resource) {
             $this->assertStringContainsString('href="'.route($resource['route'], [], false).'"', $html);
