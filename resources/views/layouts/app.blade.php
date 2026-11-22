@@ -22,7 +22,7 @@
             '@type' => ['Organization', 'ProfessionalService'],
             'name' => config('emplowise.brand.legal_name'),
             'url' => url('/'),
-            'description' => config('emplowise.mission.statement'),
+            'description' => config('emplowise.brand.description'),
             'areaServed' => ['@type' => 'Country', 'name' => config('emplowise.brand.market')],
             'knowsAbout' => array_column(config('emplowise.services'), 'name'),
             'hasOfferCatalog' => [
@@ -131,7 +131,7 @@
                 <p class="footer-title">{{ $ui['footer_company_title'] }}</p>
                 <div class="footer-links">
                     @foreach (config('emplowise.footer_company') as $item)
-                        <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
+                        <a href="{{ route($item['route']) }}{{ isset($item['hash']) ? '#'.$item['hash'] : '' }}">{{ $item['label'] }}</a>
                     @endforeach
                 </div>
             </nav>

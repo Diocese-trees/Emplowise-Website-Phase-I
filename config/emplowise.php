@@ -146,9 +146,9 @@ return [
         'what-we-are-building' => [
             'primary_keyword' => 'AI automation for HR',
             'secondary_keywords' => ['HR payroll automation', 'HR policy co-pilot'],
-            'title' => 'What We Are Building: AI Automation for HR | Emplowise',
+            'title' => 'Where AI Fits: AI Automation for HR in Pakistan | Emplowise',
             'description' => 'Emplowise is building AI automation for HR: a payroll engine, a performance insight layer, and a policy co-pilot. The division is pre-launch.',
-            'h1' => 'What we are building: AI automation for HR, in the open.',
+            'h1' => 'Where AI fits: AI automation for HR, in the open.',
             'h1_accent' => 'AI automation for HR',
             'h2' => 'Where AI automation for HR will plug in.',
             'intro' => 'Emplowise is building AI automation for HR. A payroll engine, a performance insight layer, and a policy co-pilot are in pre-launch, and this page shows the shape of the division.',
@@ -158,9 +158,10 @@ return [
     'brand' => [
         'name' => 'Emplowise',
         'legal_name' => 'Emplowise HR Services',
-        'essence' => 'Clarity built on structure.',
+        'essence' => 'Senior HR, without the senior hire.',
         'headline' => 'Remote HR Solutions for Growing Businesses',
         'subheadline' => 'Professional remote HR support for growing businesses.',
+        'description' => 'Remote HR for teams of 5 to 100 in Pakistan. Payroll, performance, and policy on one published monthly retainer.',
         'category' => 'HR outsourcing and managed HR services',
         'market' => 'Pakistan',
         'expansion' => 'International expansion planned long term',
@@ -175,8 +176,8 @@ return [
     ],
 
     'mission' => [
-        'statement' => 'Empower people. Simplify work. Build momentum.',
-        'body' => 'Emplowise exists so growing teams stop treating HR as paperwork that happens after the real work. We run the structure behind people operations, remote, so founders keep momentum and employees get clarity.',
+        'statement' => 'Everyone knows who owns what.',
+        'body' => 'Emplowise exists so growing teams stop treating HR as paperwork that happens after the real work. We run the structure behind people operations, remote, so founders keep momentum and employees get clarity. It starts with your yearly goals: the HR is built to deliver them before the next quarter.',
         'origin' => 'Emplowise started after its founder experienced the steep cost of outsourced HR while building an earlier startup. The gap was obvious. Informal HR on one side, expensive enterprise consultancies on the other. Emplowise was built to sit in between, as accessible remote HR for growing Pakistani businesses.',
     ],
 
@@ -616,7 +617,7 @@ return [
             'breadcrumb_home' => 'Home',
             'nav_audit_label' => 'Free HR Audit',
             'menu_open' => 'Open menu',
-            'footer_note' => 'Remote HR for growing businesses in Pakistan. One accountable team, published pricing, and scope you can read before you commit.',
+            'footer_note' => 'Senior HR, without the senior hire. Remote HR for teams of 5 to 100 in Pakistan, with published retainers from PKR 40,000, a named lead, and a scope you can read before work starts.',
             'footer_company_title' => 'Company',
             'footer_resources_title' => 'Resources',
             'footer_start_title' => 'Start here',
@@ -627,7 +628,7 @@ return [
         ],
 
         'contact' => [
-            'breadcrumb' => 'Contact',
+            'breadcrumb' => 'Contact Us',
             'kicker' => 'Reach the team',
             'ai_heading' => 'Ask an AI you already use about Emplowise',
             'ai_body' => 'Each button opens a new tab with a ready-made question. Use it for a second opinion before you talk to us.',
@@ -654,10 +655,10 @@ return [
             ],
             'resources_heading' => 'Resources',
             'resources' => [
-                ['label' => 'What We Are', 'route' => 'what-we-are'],
+                ['label' => 'Our Story', 'route' => 'what-we-are'],
                 ['label' => 'What We Do', 'route' => 'what-we-do'],
-                ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
-                ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
+                ['label' => 'Where\'s AI', 'route' => 'what-we-are-building'],
+                ['label' => 'Why Us', 'route' => 'why-emplowise'],
                 ['label' => 'EmploStart', 'route' => 'emplostart'],
                 ['label' => 'FAQ', 'route' => 'faq'],
                 ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],
@@ -667,7 +668,7 @@ return [
         ],
 
         'team' => [
-            'breadcrumb' => 'Team',
+            'breadcrumb' => 'Meet The Team',
             'kicker' => 'The people behind the work',
             'window_label' => 'Emplowise team showcase',
             'window_title' => 'team.emplowise',
@@ -718,7 +719,7 @@ return [
         ],
 
         'what-we-are-building' => [
-            'breadcrumb' => 'What We Are Building',
+            'breadcrumb' => 'Where\'s AI',
             'kicker' => 'Pre-launch division',
             'banner' => 'Emplowise AI Automation Division. Building soon.',
             'hero_sub' => 'Three modules are built and waiting on launch. The interfaces are real, the data is frozen, and nothing here pretends to be live.',
@@ -785,8 +786,8 @@ return [
 
         // === PAGE: HOME ===
         'home' => [
-            'kicker' => 'Remote HR, built on structure',
-            'hero_sub' => 'Get payroll, performance, and policy off your desk. One remote HR team, a dedicated representative, and retainers from PKR 40,000 a month.',
+            'kicker' => 'Remote HR for teams of 5 to 100',
+            'hero_sub' => 'Payroll, performance and policy, handled remotely by one named lead. Published retainers from PKR 40,000 a month. The free audit ends with a written gap list.',
             'rotator_prefix' => 'Currently running',
             'cta_primary' => 'Book a free HR audit',
             'cta_secondary' => 'Open the EmploStart',
@@ -850,7 +851,7 @@ return [
 
         // === PAGE: WHAT WE ARE ===
         'what-we-are' => [
-            'breadcrumb' => 'What We Are',
+            'breadcrumb' => 'Our Story',
             'why_kicker' => 'Why we exist',
             'category_line' => 'Category: :category. Market: :market. :expansion.',
             'quote_cite' => 'The Emplowise brand essence, 2026 Brand Kit',
@@ -926,7 +927,7 @@ return [
 
         // === PAGE: WHY EMPLOWISE ===
         'why-emplowise' => [
-            'breadcrumb' => 'Why Emplowise',
+            'breadcrumb' => 'Why Us',
             'kicker' => 'Published pricing and scope',
             'why' => [
                 'kicker' => 'The case for Emplowise',
@@ -1218,21 +1219,23 @@ return [
     ],
 
     'nav' => [
-        ['label' => 'What We Are', 'route' => 'what-we-are'],
-        ['label' => 'What We Do', 'route' => 'what-we-do'],
-        ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
-        ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
-        ['label' => 'Team', 'route' => 'what-we-are', 'hash' => 'team'],
+        ['label' => 'Meet Emplowise', 'route' => 'home'],
+        ['label' => 'Our Story', 'route' => 'what-we-are'],
+        ['label' => 'Meet The Team', 'route' => 'what-we-are', 'hash' => 'team'],
+        ['label' => 'Why Us', 'route' => 'why-emplowise'],
         ['label' => 'EmploStart', 'route' => 'emplostart'],
+        ['label' => 'Where\'s AI', 'route' => 'what-we-are-building'],
         ['label' => 'Contact Us', 'route' => 'contact'],
     ],
 
     // The footer repeats the primary links plus the action pages.
     'footer_company' => [
-        ['label' => 'What We Are', 'route' => 'what-we-are'],
+        ['label' => 'Meet Emplowise', 'route' => 'home'],
+        ['label' => 'Our Story', 'route' => 'what-we-are'],
         ['label' => 'What We Do', 'route' => 'what-we-do'],
-        ['label' => 'What We Are Building', 'route' => 'what-we-are-building'],
-        ['label' => 'Why Emplowise', 'route' => 'why-emplowise'],
+        ['label' => 'Meet The Team', 'route' => 'what-we-are', 'hash' => 'team'],
+        ['label' => 'Why Us', 'route' => 'why-emplowise'],
+        ['label' => 'Where\'s AI', 'route' => 'what-we-are-building'],
     ],
 
     'footer_resources' => [

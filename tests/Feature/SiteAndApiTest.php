@@ -108,8 +108,10 @@ final class SiteAndApiTest extends TestCase
         $this->assertSame(1, preg_match('/<nav class="main-nav".*?<\/nav>/s', $html, $nav));
         $this->assertLessThanOrEqual(7, substr_count($nav[0], '<a '), 'Header nav must fit on one laptop line');
         $this->assertStringNotContainsString('FAQ', $nav[0]);
-        $this->assertStringContainsString('What We Are', $nav[0]);
-        $this->assertStringContainsString('Team', $nav[0]);
+        $this->assertStringContainsString('Meet Emplowise', $nav[0]);
+        $this->assertStringContainsString('Our Story', $nav[0]);
+        $this->assertStringContainsString('Meet The Team', $nav[0]);
+        $this->assertStringContainsString("Where&#039;s AI", $nav[0]);
         $this->assertStringContainsString('EmploStart', $nav[0]);
         $this->assertStringContainsString('what-we-are#team', $nav[0]);
 
@@ -284,7 +286,7 @@ final class SiteAndApiTest extends TestCase
 
         foreach ($copy['resources'] as $resource) {
             $this->assertStringContainsString('href="'.route($resource['route'], [], false).'"', $html);
-            $this->assertStringContainsString($resource['label'], $html);
+            $this->assertStringContainsString(e($resource['label']), $html);
         }
 
         foreach ($copy['socials'] as $social) {

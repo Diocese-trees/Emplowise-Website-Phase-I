@@ -6,11 +6,11 @@ Every public sentence on the Emplowise site lives in `config/emplowise.php`. You
 
 | Page | URL | Config key |
 |---|---|---|
-| Home | `/` | `seo.home` and `copy.home` |
-| What We Are | `/what-we-are` | `seo.what-we-are` and `copy.what-we-are` |
+| Meet Emplowise | `/` | `seo.home` and `copy.home` |
+| Our Story | `/what-we-are` | `seo.what-we-are` and `copy.what-we-are` |
 | What We Do | `/what-we-do` | `seo.what-we-do` and `copy.what-we-do` |
-| Pricing | `/pricing` | `seo.pricing` and `copy.pricing` |
-| Student Hub | `/student-hub` | `seo.student-hub` and `copy.student-hub` |
+| Why Us | `/why-emplowise` | `seo.pricing` and `copy.pricing` |
+| EmploStart | `/emplostart` | `seo.student-hub` and `copy.student-hub` |
 | FAQ | `/faq` | `seo.faq`, `copy.faq`, and `faqs` |
 | Free HR Audit | `/free-hr-audit` | `seo.free-hr-audit` and `copy.free-hr-audit` |
 

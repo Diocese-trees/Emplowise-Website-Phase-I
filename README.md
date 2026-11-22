@@ -15,7 +15,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 9 pages: Home, What We Are, What We Do, What We Are Building, Why Emplowise, EmploStart, FAQ, Contact, Free HR Audit |
+| Public site | 9 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |

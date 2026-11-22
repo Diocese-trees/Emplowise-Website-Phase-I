@@ -11,7 +11,7 @@
                 <span aria-hidden="true">/</span>
                 <span>{{ $copy['breadcrumb'] }}</span>
             </nav>
-            <p class="kicker">{{ $brand['essence'] }}</p>
+            <p class="kicker">{{ rtrim($brand['essence'], '.') }}</p>
             @include('partials.seo-h1', ['seo' => $seo])
             <p class="lede">
                 {{ $seo['intro'] }}
