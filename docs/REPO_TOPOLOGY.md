@@ -119,6 +119,24 @@ opens without JavaScript on desktop, in the mobile drawer and in the left rail.
   channel, so every action is a `mailto:`; no `tel:` is invented. `.btn--sm`,
   contact chips, the email link and footer social buttons all meet the 44px
   target.
+- **Audit wizard** (`pages/audit.blade.php`, `js/audit.js`): four `.wizard-step`
+  sections with a `novalidate` form, so inline errors are the only validation
+  surface. `#wizard-label` is `aria-live="polite"` and updates as steps change;
+  each invalid control gets `aria-invalid` plus `aria-describedby` pointing at
+  its `.field-error` (which stays `role="alert"`), and the first invalid control
+  is focused. While a request is in flight the form carries `aria-busy="true"`
+  and the submit button is disabled and relabelled; drafts live in
+  `sessionStorage` (`emplowise_audit_draft`) behind `try`/`catch` with a guarded
+  `JSON.parse`. A keyless preview build never posts: it states that online
+  booking is not connected and offers the fallback `mailto:`.
+- **Chat widget** (`js/chat.js`): `window.EmplowiseChat.intent/reply` is exposed
+  as soon as the file evaluates (pure functions only), so the routing parity
+  harness can run without touching the DOM. All panel wiring (open/close,
+  focus trap, Escape, suggestions, send) is inside `bind()`, which runs on the
+  first launcher click, `pointerenter`, focus, `[data-open-chat]` click, or a
+  `requestIdleCallback` slot (1200 ms timeout fallback). Reply rendering uses
+  `textContent` and `createElement`; the only `innerHTML` writes are empty
+  strings that clear a container.
 
 ## Visibility
 

@@ -311,7 +311,7 @@
             const slot = fieldEl('preferred_slot');
             const notes = fieldValue('notes');
 
-            const pains = Array.prototype.slice.call(auditForm.querySelectorAll('[name="pain_points[]"]:checked')).map(function (input) {
+            const pains = Array.prototype.slice.call(form.querySelectorAll('[name="pain_points[]"]:checked')).map(function (input) {
                 const labelEl = input.closest('.check');
                 const text = labelEl ? labelEl.querySelector('span') : null;
                 return text ? text.textContent.trim() : input.value;
@@ -360,7 +360,7 @@
             draftTimer = window.setTimeout(writeDraft, 200);
         });
 
-        auditForm.addEventListener('submit', function (event) {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
             if (sending) return;
 
@@ -389,19 +389,20 @@
             }
             if (submitError) submitError.textContent = '';
             sending = true;
+            form.setAttribute('aria-busy', 'true');
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Submitting…';
             }
 
-            const data = new FormData(auditForm);
+            const data = new FormData(form);
             const headers = { 'Accept': 'application/json' };
 
             if (!staticMode) {
                 headers['X-CSRF-TOKEN'] = csrfToken;
             }
 
-            fetch(auditForm.getAttribute('data-endpoint') || window.location.pathname.replace(/\/free-hr-audit\/?$/, '/api/audit'), {
+            fetch(form.getAttribute('data-endpoint') || window.location.pathname.replace(/\/free-hr-audit\/?$/, '/api/audit'), {
                 method: 'POST',
                 headers: headers,
                 body: data,
@@ -427,8 +428,8 @@
                         let preferredSlot = result.body.preferred_slot;
 
                         if (staticMode) {
-                            const dateField = auditForm.querySelector('[name="preferred_date"]');
-                            const slotField = auditForm.querySelector('[name="preferred_slot"]');
+                            const dateField = form.querySelector('[name="preferred_date"]');
+                            const slotField = form.querySelector('[name="preferred_slot"]');
                             const stamp = new Date();
                             const ymd = String(stamp.getFullYear()).slice(-2)
                                 + String(stamp.getMonth() + 1).padStart(2, '0')
@@ -454,7 +455,7 @@
                         if (document.getElementById('success-slot')) {
                             document.getElementById('success-slot').textContent = preferredSlot || 'Pending';
                         }
-                        auditForm.hidden = true;
+                        form.hidden = true;
                         if (status) {
                             status.classList.remove('is-error');
                             status.textContent = '';
@@ -529,6 +530,7 @@
                 })
                 .finally(function () {
                     sending = false;
+                    form.removeAttribute('aria-busy');
                     if (submitBtn) {
                         submitBtn.disabled = false;
                         submitBtn.textContent = submitLabel;
@@ -536,7 +538,7 @@
                 });
         });
 
-        auditForm.addEventListener('keydown', function (event) {
+        form.addEventListener('keydown', function (event) {
             if (event.key !== 'Enter') return;
             const el = event.target;
             if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'BUTTON')) return;

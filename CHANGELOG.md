@@ -6,6 +6,24 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Hardened the audit wizard and deferred the chat widget. The step label is
+  now `aria-live="polite" aria-atomic="true"`, so moving between steps is
+  announced; while a submission is in flight the form carries
+  `aria-busy="true"` and the button is disabled and relabelled, and both clear
+  in `finally`. The wizard now refers to its own `form` node throughout rather
+  than the module-level lookup (seven call sites), and the new
+  `test_audit_wizard_exposes_progress_and_autocomplete_hooks` locks the
+  `novalidate`, `aria-live`, four-step and autofill contract. Chat wiring
+  moved inside `bind()`: nothing touches the panel on first paint, and binding
+  happens on the first launcher click, `pointerenter`, focus, a
+  `[data-open-chat]` click, or an idle slot (`requestIdleCallback` with a
+  1200 ms `setTimeout` fallback). `window.EmplowiseChat.intent/reply` is still
+  assigned immediately, so the parity harness is unaffected. Verified on a
+  keyless export and a send-mode copy: 21/21 headless Chromium checks
+  (inline-error focus, draft restore, keyless preview never posts, busy state
+  during a 700 ms delayed send, success panel, lazy chat open and local reply,
+  zero console errors on `/`, `/emplostart/`, `/student-hub/` and the audit),
+  plus 48/48 chat routing cases. 62 tests, 826 assertions.
 - Rebuilt the team showcase as an honest card. The simulated macOS window bar
   (traffic-light dots, fake `team.emplowise` URL, meta label) and the two
   rotated stacked-card layers behind it are gone, along with their CSS and the

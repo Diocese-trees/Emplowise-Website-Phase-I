@@ -65,7 +65,7 @@ resources/views          Layout, 11 pages, chat partial
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 database/migrations      audit_requests, chat_messages
-tests/Feature            61 tests covering pages, APIs, exports and headers
+tests/Feature            62 tests covering pages, APIs, exports and headers
 deploy/                  Dockerfile, nginx, apache, entrypoint
 docs/                    hosting, static export, theme/motion, repo topology, screenshots
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history
@@ -405,8 +405,12 @@ Coverage in `tests/Feature/`:
 - every public page returns `200`
 - pricing renders the confirmed tiers and comparison guardrails
 - FAQ renders all four categories
-- audit: validation errors, successful persistence, email normalisation, honeypot rejection
-- chat: local fallback reply plus two `chat_messages` rows
+- audit: validation errors, successful persistence, email normalisation,
+  honeypot rejection, and the inline-error wizard contract (`aria-live`
+  progress, `novalidate`, autofill hints)
+- chat: local fallback reply plus two `chat_messages` rows; the widget binds
+  lazily on first interaction or idle, while `window.EmplowiseChat` stays
+  available immediately for the routing parity harness
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned

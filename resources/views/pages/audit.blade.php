@@ -26,7 +26,7 @@
             <div>
                 <form class="wizard" id="audit-form" data-endpoint="{{ route('api.audit.store') }}" data-fallback-email="{{ config('emplowise.copy.contact.email') }}" novalidate>
                     <div class="wizard-head">
-                        <span class="wizard-step-label" id="wizard-label">Step 1 of 4 · Contact</span>
+                        <span class="wizard-step-label" id="wizard-label" aria-live="polite" aria-atomic="true">Step 1 of 4 · Contact</span>
                         <span class="wizard-dots" id="wizard-dots" aria-hidden="true"><i class="is-current"></i><i></i><i></i><i></i></span>
                         <span class="wizard-step-label" id="wizard-count">01 / 04</span>
                     </div>

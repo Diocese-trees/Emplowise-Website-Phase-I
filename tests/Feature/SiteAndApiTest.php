@@ -336,6 +336,25 @@ final class SiteAndApiTest extends TestCase
         $this->assertStringContainsString('aspect-ratio: 4 / 5', $css);
     }
 
+    public function test_audit_wizard_exposes_progress_and_autocomplete_hooks(): void
+    {
+        $html = (string) $this->get('/free-hr-audit')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, 'id="audit-form"'));
+        $this->assertSame(4, preg_match_all('/class="wizard-step(?: is-active)?"/', $html));
+        $this->assertStringContainsString('id="wizard-label" aria-live="polite"', $html);
+        $this->assertStringContainsString('id="wizard-next"', $html);
+        $this->assertStringContainsString('id="wizard-submit"', $html);
+
+        // Autofill hooks stay on the four contact fields, and the wizard ships
+        // with novalidate so the inline errors are the single source of truth.
+        $this->assertMatchesRegularExpression('/id="audit-form"[^>]*novalidate/', $html);
+        foreach (['name', 'organization', 'email', 'tel'] as $token) {
+            $this->assertStringContainsString('autocomplete="'.$token.'"', $html);
+        }
+        $this->assertStringContainsString('name="website"', $html);
+    }
+
     public function test_what_we_are_building_page_is_monochrome_and_prelaunch(): void
     {
         $copy = config('emplowise.copy.what-we-are-building');

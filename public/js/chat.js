@@ -137,19 +137,6 @@
         return KB[localIntent(text, previous)] || KB.general;
     }
 
-    // Answer from the bundled knowledge base. Used when there is no endpoint
-    // (static host) or the endpoint fails, so the conversation keeps its shape.
-    function replyLocally(message) {
-        const intent = localIntent(message, previousIntent);
-        const reply = clamp(KB[intent] || KB.general);
-        previousIntent = intent;
-        append('assistant', reply);
-        renderSuggestions(localSuggestions(intent));
-        history.push({ role: 'user', content: message });
-        history.push({ role: 'assistant', content: reply });
-        history = history.slice(-8);
-    }
-
     const LOCAL_SUGGESTIONS = {
         pricing: [
             ['What is included', 'What is included in the packages?'],
@@ -201,301 +188,347 @@
         }
     }
 
-    const introNode = log.querySelector('.msg');
-    const introText = introNode ? introNode.textContent : '';
+    // Pure functions only, so the routing parity harness can call them the
+    // moment this file evaluates. No DOM work happens until boot().
+    window.EmplowiseChat = { intent: localIntent, reply: localReply };
 
-    let sessionId = readSession();
-    let history = [];
-    let previousIntent = '';
-    let sending = false;
-    let typingEl = null;
+    let bound = false;
 
-    const compact = window.matchMedia('(max-width: 520px)');
+    // The widget is inert until someone reaches for it: none of the panel
+    // wiring below runs on first paint. A launcher click, an "open chat"
+    // button, or an idle slot is the trigger.
+    function boot() {
+        if (bound) return;
+        bound = true;
+        bind();
+    }
 
-    function setOpen(open) {
-        panel.hidden = !open;
-        launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
-        if (open) {
-            if (compact.matches && window.Emplowise && window.Emplowise.lockScroll) {
-                window.Emplowise.lockScroll('chat');
+    function bind() {
+        const introNode = log.querySelector('.msg');
+        const introText = introNode ? introNode.textContent : '';
+
+        let sessionId = readSession();
+        let history = [];
+        let previousIntent = '';
+        let sending = false;
+        let typingEl = null;
+
+        const compact = window.matchMedia('(max-width: 520px)');
+
+        function setOpen(open) {
+            panel.hidden = !open;
+            launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open) {
+                if (compact.matches && window.Emplowise && window.Emplowise.lockScroll) {
+                    window.Emplowise.lockScroll('chat');
+                }
+                window.setTimeout(function () { input.focus(); }, 60);
+                scrollDown();
+            } else if (window.Emplowise && window.Emplowise.unlockScroll) {
+                window.Emplowise.unlockScroll('chat');
             }
-            window.setTimeout(function () { input.focus(); }, 60);
-            scrollDown();
-        } else if (window.Emplowise && window.Emplowise.unlockScroll) {
-            window.Emplowise.unlockScroll('chat');
         }
-    }
 
-    launcher.addEventListener('click', function () {
-        setOpen(panel.hidden);
-    });
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-            setOpen(false);
-            launcher.focus({ preventScroll: true });
+        launcher.addEventListener('click', function () {
+            setOpen(panel.hidden);
         });
-    }
 
-    document.addEventListener('keydown', function (event) {
-        if (panel.hidden) return;
-
-        if (event.key === 'Escape') {
-            setOpen(false);
-            launcher.focus({ preventScroll: true });
-            return;
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function () {
+                setOpen(false);
+                launcher.focus({ preventScroll: true });
+            });
         }
 
-        if (event.key !== 'Tab') return;
+        document.addEventListener('keydown', function (event) {
+            if (panel.hidden) return;
 
-        // The panel is a modal dialog, so Tab has to stay inside it.
-        const items = Array.prototype.filter.call(
-            panel.querySelectorAll('button:not([disabled]), a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'),
-            function (el) { return el.offsetParent !== null || el === document.activeElement; }
-        );
+            if (event.key === 'Escape') {
+                setOpen(false);
+                launcher.focus({ preventScroll: true });
+                return;
+            }
 
-        if (items.length === 0) return;
+            if (event.key !== 'Tab') return;
 
-        const first = items[0];
-        const last = items[items.length - 1];
-        const active = document.activeElement;
+            // The panel is a modal dialog, so Tab has to stay inside it.
+            const items = Array.prototype.filter.call(
+                panel.querySelectorAll('button:not([disabled]), a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'),
+                function (el) { return el.offsetParent !== null || el === document.activeElement; }
+            );
 
-        if (event.shiftKey) {
-            if (active === first || !panel.contains(active)) {
+            if (items.length === 0) return;
+
+            const first = items[0];
+            const last = items[items.length - 1];
+            const active = document.activeElement;
+
+            if (event.shiftKey) {
+                if (active === first || !panel.contains(active)) {
+                    event.preventDefault();
+                    last.focus();
+                }
+                return;
+            }
+
+            if (active === last) {
                 event.preventDefault();
-                last.focus();
+                first.focus();
             }
-            return;
-        }
-
-        if (active === last) {
-            event.preventDefault();
-            first.focus();
-        }
-    });
-
-    // Click away to dismiss the panel, returning focus to the launcher.
-    document.addEventListener('click', function (event) {
-        if (panel.hidden) return;
-        if (panel.contains(event.target) || launcher.contains(event.target)) return;
-        setOpen(false);
-        launcher.focus({ preventScroll: true });
-    });
-
-    function scrollDown() {
-        log.scrollTop = log.scrollHeight;
-    }
-
-    function linkify(text, node) {
-        const pattern = /(\/free-hr-audit|\/emplostart)/g;
-        let last = 0;
-        let match = pattern.exec(text);
-
-        while (match !== null) {
-            if (match.index > last) {
-                node.appendChild(document.createTextNode(text.slice(last, match.index)));
-            }
-            const link = document.createElement('a');
-            link.href = match[1];
-            link.textContent = match[1];
-            link.className = 'chat-link';
-            node.appendChild(link);
-            last = match.index + match[1].length;
-            match = pattern.exec(text);
-        }
-
-        if (last < text.length) {
-            node.appendChild(document.createTextNode(text.slice(last)));
-        }
-    }
-
-    function append(role, text) {
-        const bubble = document.createElement('div');
-        bubble.className = 'msg' + (role === 'user' ? ' msg--user' : '');
-        if (role === 'assistant') {
-            linkify(String(text || ''), bubble);
-        } else {
-            bubble.textContent = text;
-        }
-        log.appendChild(bubble);
-        scrollDown();
-        return bubble;
-    }
-
-    function renderSuggestions(items) {
-        if (!suggestionsEl) return;
-        suggestionsEl.innerHTML = '';
-        (items || []).slice(0, 4).forEach(function (item) {
-            // Server replies send {label, query}; the local table uses pairs.
-            const label = Array.isArray(item) ? item[0] : item && item.label;
-            const query = Array.isArray(item) ? item[1] : item && item.query;
-            if (!label || !query) return;
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'quick-chip';
-            button.setAttribute('data-q', query);
-            button.textContent = label;
-            suggestionsEl.appendChild(button);
         });
-    }
 
-    function showTyping() {
-        if (typingEl) return;
-        typingEl = document.createElement('div');
-        typingEl.className = 'msg msg--typing';
-        typingEl.setAttribute('aria-hidden', 'true');
-        for (let i = 0; i < 3; i += 1) {
-            typingEl.appendChild(document.createElement('i'));
-        }
-        log.appendChild(typingEl);
-        scrollDown();
-    }
+        // Click away to dismiss the panel, returning focus to the launcher.
+        document.addEventListener('click', function (event) {
+            if (panel.hidden) return;
+            if (panel.contains(event.target) || launcher.contains(event.target)) return;
+            setOpen(false);
+            launcher.focus({ preventScroll: true });
+        });
 
-    function hideTyping() {
-        if (!typingEl) return;
-        typingEl.remove();
-        typingEl = null;
-    }
-
-    function setBusy(busy) {
-        sending = busy;
-        if (sendBtn) {
-            sendBtn.disabled = busy;
-            sendBtn.textContent = busy ? '…' : sendLabel;
-        }
-    }
-
-    function sendMessage(text) {
-        const message = (text || '').trim();
-        if (sending) return;
-        if (message.length < 2) {
-            append('assistant', 'Give me a little more than that. Two words minimum.');
-            return;
-        }
-        if (message.length > 800) {
-            append('assistant', 'That is over the 800 character limit. Trim it and try again.');
-            return;
+        function scrollDown() {
+            log.scrollTop = log.scrollHeight;
         }
 
-        append('user', message);
-        input.value = '';
-        showTyping();
-        setBusy(true);
+        function linkify(text, node) {
+            const pattern = /(\/free-hr-audit|\/emplostart)/g;
+            let last = 0;
+            let match = pattern.exec(text);
 
-        // A static build has no chat endpoint; skip the request entirely.
-        if (!endpoint) {
-            hideTyping();
-            replyLocally(message);
-            setBusy(false);
-            input.focus();
-            return;
-        }
-
-        const payload = {
-            message: message,
-            session_id: sessionId || null,
-            previous_intent: previousIntent || null,
-            history: history.slice(-8)
-        };
-
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrf
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify(payload)
-        })
-            .then(function (response) {
-                return response.json().catch(function () { return {}; }).then(function (body) {
-                    return { ok: response.ok, status: response.status, body: body };
-                });
-            })
-            .then(function (result) {
-                hideTyping();
-                if (!result.ok) {
-                    if (result.status === 429) {
-                        append('assistant', 'Slow down a second. Too many messages at once. Try again in a minute.');
-                    } else if (result.status === 422) {
-                        append('assistant', 'That message did not pass validation. Keep it under 800 characters and try again.');
-                    } else if (result.status === 419) {
-                        append('assistant', 'Your session expired. Reload the page and send that again.');
-                    } else if (result.status >= 500 || result.status === 404 || result.status === 405 || result.status === 501) {
-                        replyLocally(message);
-                    } else {
-                        append('assistant', 'That request did not go through. Try once more.');
-                    }
-                    return;
+            while (match !== null) {
+                if (match.index > last) {
+                    node.appendChild(document.createTextNode(text.slice(last, match.index)));
                 }
+                const link = document.createElement('a');
+                link.href = match[1];
+                link.textContent = match[1];
+                link.className = 'chat-link';
+                node.appendChild(link);
+                last = match.index + match[1].length;
+                match = pattern.exec(text);
+            }
 
-                if (result.body.session_id) {
-                    sessionId = result.body.session_id;
-                    writeSession(sessionId);
-                }
+            if (last < text.length) {
+                node.appendChild(document.createTextNode(text.slice(last)));
+            }
+        }
 
-                previousIntent = result.body.intent || localIntent(message);
-                append('assistant', clamp(result.body.reply || localReply(message)));
-                renderSuggestions(result.body.suggestions || localSuggestions(previousIntent));
-                history.push({ role: 'user', content: message });
-                history.push({ role: 'assistant', content: result.body.reply || '' });
-                history = history.slice(-8);
-            })
-            .catch(function () {
+        function append(role, text) {
+            const bubble = document.createElement('div');
+            bubble.className = 'msg' + (role === 'user' ? ' msg--user' : '');
+            if (role === 'assistant') {
+                linkify(String(text || ''), bubble);
+            } else {
+                bubble.textContent = text;
+            }
+            log.appendChild(bubble);
+            scrollDown();
+            return bubble;
+        }
+
+        function renderSuggestions(items) {
+            if (!suggestionsEl) return;
+            suggestionsEl.innerHTML = '';
+            (items || []).slice(0, 4).forEach(function (item) {
+                // Server replies send {label, query}; the local table uses pairs.
+                const label = Array.isArray(item) ? item[0] : item && item.label;
+                const query = Array.isArray(item) ? item[1] : item && item.query;
+                if (!label || !query) return;
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quick-chip';
+                button.setAttribute('data-q', query);
+                button.textContent = label;
+                suggestionsEl.appendChild(button);
+            });
+        }
+
+        // Answer from the bundled knowledge base. Used when there is no
+        // endpoint (static host) or the endpoint fails, so the conversation
+        // keeps its shape.
+        function replyLocally(message) {
+            const intent = localIntent(message, previousIntent);
+            const reply = clamp(KB[intent] || KB.general);
+            previousIntent = intent;
+            append('assistant', reply);
+            renderSuggestions(localSuggestions(intent));
+            history.push({ role: 'user', content: message });
+            history.push({ role: 'assistant', content: reply });
+            history = history.slice(-8);
+        }
+
+        function showTyping() {
+            if (typingEl) return;
+            typingEl = document.createElement('div');
+            typingEl.className = 'msg msg--typing';
+            typingEl.setAttribute('aria-hidden', 'true');
+            for (let i = 0; i < 3; i += 1) {
+                typingEl.appendChild(document.createElement('i'));
+            }
+            log.appendChild(typingEl);
+            scrollDown();
+        }
+
+        function hideTyping() {
+            if (!typingEl) return;
+            typingEl.remove();
+            typingEl = null;
+        }
+
+        function setBusy(busy) {
+            sending = busy;
+            if (sendBtn) {
+                sendBtn.disabled = busy;
+                sendBtn.textContent = busy ? '…' : sendLabel;
+            }
+        }
+
+        function sendMessage(text) {
+            const message = (text || '').trim();
+            if (sending) return;
+            if (message.length < 2) {
+                append('assistant', 'Give me a little more than that. Two words minimum.');
+                return;
+            }
+            if (message.length > 800) {
+                append('assistant', 'That is over the 800 character limit. Trim it and try again.');
+                return;
+            }
+
+            append('user', message);
+            input.value = '';
+            showTyping();
+            setBusy(true);
+
+            // A static build has no chat endpoint; skip the request entirely.
+            if (!endpoint) {
                 hideTyping();
                 replyLocally(message);
-            })
-            .finally(function () {
                 setBusy(false);
                 input.focus();
-            });
-    }
-
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        sendMessage(input.value);
-    });
-
-    if (quick) {
-        quick.addEventListener('click', function (event) {
-            const chip = event.target.closest('[data-q]');
-            if (!chip) return;
-            sendMessage(chip.getAttribute('data-q'));
-        });
-    }
-
-    if (suggestionsEl) {
-        suggestionsEl.addEventListener('click', function (event) {
-            const chip = event.target.closest('[data-q]');
-            if (!chip) return;
-            // Sending replaces the chip, which would make the click-away
-            // handler below see a detached node and close the panel.
-            event.stopPropagation();
-            sendMessage(chip.getAttribute('data-q'));
-        });
-    }
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
-            log.innerHTML = '';
-            if (introText) {
-                const intro = document.createElement('div');
-                intro.className = 'msg';
-                intro.textContent = introText;
-                log.appendChild(intro);
+                return;
             }
-            history = [];
-            previousIntent = '';
-            sessionId = '';
-            writeSession('');
-            renderSuggestions([]);
-            input.value = '';
-            input.focus();
-            scrollDown();
+
+            const payload = {
+                message: message,
+                session_id: sessionId || null,
+                previous_intent: previousIntent || null,
+                history: history.slice(-8)
+            };
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(payload)
+            })
+                .then(function (response) {
+                    return response.json().catch(function () { return {}; }).then(function (body) {
+                        return { ok: response.ok, status: response.status, body: body };
+                    });
+                })
+                .then(function (result) {
+                    hideTyping();
+                    if (!result.ok) {
+                        if (result.status === 429) {
+                            append('assistant', 'Slow down a second. Too many messages at once. Try again in a minute.');
+                        } else if (result.status === 422) {
+                            append('assistant', 'That message did not pass validation. Keep it under 800 characters and try again.');
+                        } else if (result.status === 419) {
+                            append('assistant', 'Your session expired. Reload the page and send that again.');
+                        } else if (result.status >= 500 || result.status === 404 || result.status === 405 || result.status === 501) {
+                            replyLocally(message);
+                        } else {
+                            append('assistant', 'That request did not go through. Try once more.');
+                        }
+                        return;
+                    }
+
+                    if (result.body.session_id) {
+                        sessionId = result.body.session_id;
+                        writeSession(sessionId);
+                    }
+
+                    previousIntent = result.body.intent || localIntent(message);
+                    append('assistant', clamp(result.body.reply || localReply(message)));
+                    renderSuggestions(result.body.suggestions || localSuggestions(previousIntent));
+                    history.push({ role: 'user', content: message });
+                    history.push({ role: 'assistant', content: result.body.reply || '' });
+                    history = history.slice(-8);
+                })
+                .catch(function () {
+                    hideTyping();
+                    replyLocally(message);
+                })
+                .finally(function () {
+                    setBusy(false);
+                    input.focus();
+                });
+        }
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            sendMessage(input.value);
         });
+
+        if (quick) {
+            quick.addEventListener('click', function (event) {
+                const chip = event.target.closest('[data-q]');
+                if (!chip) return;
+                sendMessage(chip.getAttribute('data-q'));
+            });
+        }
+
+        if (suggestionsEl) {
+            suggestionsEl.addEventListener('click', function (event) {
+                const chip = event.target.closest('[data-q]');
+                if (!chip) return;
+                // Sending replaces the chip, which would make the click-away
+                // handler below see a detached node and close the panel.
+                event.stopPropagation();
+                sendMessage(chip.getAttribute('data-q'));
+            });
+        }
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                log.innerHTML = '';
+                if (introText) {
+                    const intro = document.createElement('div');
+                    intro.className = 'msg';
+                    intro.textContent = introText;
+                    log.appendChild(intro);
+                }
+                history = [];
+                previousIntent = '';
+                sessionId = '';
+                writeSession('');
+                renderSuggestions([]);
+                input.value = '';
+                input.focus();
+                scrollDown();
+            });
+        }
     }
 
-    // Read-only seam for the routing parity harness. Nothing depends on it.
-    window.EmplowiseChat = { intent: localIntent, reply: localReply };
+    // Capture phase so the binding lands before the same click reaches the
+    // launcher's own handler (including the programmatic .click() that
+    // app.js fires for [data-open-chat] buttons).
+    document.addEventListener('click', function (event) {
+        const target = event.target;
+        if (!target || !target.closest) return;
+        if (target.closest('#chat-launcher, [data-open-chat]')) boot();
+    }, true);
+
+    launcher.addEventListener('pointerenter', boot, { once: true });
+    launcher.addEventListener('focus', boot, { once: true });
+
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(boot, { timeout: 2500 });
+    } else {
+        window.setTimeout(boot, 1200);
+    }
 })();
