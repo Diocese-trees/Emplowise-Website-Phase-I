@@ -379,6 +379,7 @@ resources/views/
   layouts/app.blade.php
   partials/chat.blade.php
   pages/*.blade.php
+  errors/404.blade.php          # dynamic 404; the static build mirrors it as 404.html
 routes/web.php
 tools/parity/                   # PHP-generated fixtures + Node parity harnesses
 tests/Feature/                  # page, API, header and static-export tests

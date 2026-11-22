@@ -6,6 +6,15 @@ each commit body carries the detail. Dates are the commit dates.
 
 ## Unreleased
 
+- Added a real 404 page. `resources/views/errors/404.blade.php` extends
+  `layouts.app` and shows a 404 kicker, one `<h1>`, and links to Home, the Free
+  HR Audit and Contact. A missing route now returns 404 with the full site
+  chrome instead of a bare error. `ExportStatic::notFound()` was aligned to the
+  same three links; the command already wrote `404.html` at the build root, so
+  GitHub Pages serves it for unknown paths. Verified: dynamic 404 is 404 with one
+  h1 and all three links; exported `404.html` carries base-prefixed links; 56
+  tests pass. Backup branch: `backup/main-pre-404-page-2026-11-22` (at
+  `2401958`). README views tree updated.
 - Inlined the SEO `<h1>`. `resources/views/partials/seo-h1.blade.php` is deleted;
   every template in `resources/views/pages/` now renders its own `<h1>` from
   `$seo['h1']` and `$seo['h1_accent']` with the same markup, so each page has
