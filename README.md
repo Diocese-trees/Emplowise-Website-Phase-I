@@ -3,7 +3,7 @@
 **Remote HR services website, grounded AI assistant and a launcher for EmploStart, a free career app for early career candidates.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. EmploStart lives in its own static app repo, linked from `/emplostart`, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. EmploStart lives in its own static app repo, linked from `/emplostart`, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The private 1:1 mirror of this repo — every branch, tag and `gh-pages`, never authored in — is described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![CI](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml/badge.svg)](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml)

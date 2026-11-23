@@ -14,8 +14,8 @@ repo authors, and the product repo ships EmploStart.
 The main site consumes the Docs repo outputs: `brand-tokens/tokens.css` lands
 in `public/css/tokens.css`, and `exports/*.docx|*.pptx` land in
 `public/downloads/`. `scripts/sync.py check` fails when the copies drift. The
-rest of this document describes the original/copy mirror workflow that predates
-the split and still applies to the main site.
+rest of this document describes the main site itself; the mirror workflow above
+applies to it.
 
 ## The main site and its private mirror
 
