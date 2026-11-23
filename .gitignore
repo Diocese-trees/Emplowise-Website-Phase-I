@@ -36,3 +36,8 @@ Thumbs.db
 
 # Local capture set; regenerate with a browser, never ship the binaries
 /docs/screenshots/
+
+# Brand-kit generator environment; the tooling is isolated from the site
+/tools/brand-kit/.venv/
+/tools/brand-kit/node_modules/
+/tools/brand-kit/__pycache__/

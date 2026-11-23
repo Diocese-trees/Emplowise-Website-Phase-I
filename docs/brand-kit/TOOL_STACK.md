@@ -101,7 +101,7 @@ travels with the page. The limitation is documented in `README.md` and in
 | Browser parity | `node tools/parity/check-{interview,ats,profile}.mjs` | 11 + 6 + 5 fixtures |
 | JS syntax | `node --check` on every script | all files in `public/js` |
 | Bundle freshness | `emplowise:bundle-css` then `git diff --exit-code` | `site.css`, `hub.css` |
-| Office files | `python tools/brand-kit/verify-office.py` | 6 DOCX + 1 PPTX, size, OOXML, logo, no raw Markdown or `[To Verify]` |
+| Office files | `python tools/brand-kit/verify-office.py` | 6 DOCX + 1 PPTX, size, OOXML, logo, no raw Markdown or verification notes |
 
 `composer.json` also ships `laravel/pint` for style, `phpunit/phpunit` 12.5,
 `mockery/mockery`, `nunomaduro/collision` and `fakerphp/faker` as dev

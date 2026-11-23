@@ -97,7 +97,7 @@ sources disagree, the higher tier is used and the conflict is written down.
 
 ### Public-render sanitization
 
-`[To Verify: ...]` is an internal marker. It is permitted only in:
+A verification note is an internal marker written as a square-bracketed `To Verify:` followed by the open question. It is permitted only in:
 
 - `docs/brand-kit/*.md` internal Verification sections,
 - `PITCH_DECK.md` speaker notes and evidence lines,
@@ -176,7 +176,7 @@ rules, not preferences.
 | Channel | Ground | Length | Call to action | Never |
 | --- | --- | --- | --- | --- |
 | Website page | White or ice, dark mode supported | 600 to 1,200 words | Free HR audit | New SEO copy on a frozen page |
-| Website showcase | White, ice or navy panel | 900 to 1,800 words | Download the document, then audit | Raw `[To Verify]`, inline script |
+| Website showcase | White, ice or navy panel | 900 to 1,800 words | Download the document, then audit | Unresolved verification notes, inline script |
 | PPTX deck | Navy, white, mist, deep teal | 8 slides, 18 words per answer | Book the audit | Slide screenshots, stock imagery |
 | DOCX report | White with mist banding | 4 to 12 pages | Audit or contact | A claim with no tier |
 | Free HR Audit output | White | 2 pages | Confirm the audit window | Percentages with no baseline |
@@ -215,7 +215,7 @@ document's cover note.
 
 Two extra gates for anything public:
 
-- **Public-render check.** Search the artefact for `[To Verify`, `TODO` and
-  placeholder names. Any hit blocks the release.
+- **Public-render check.** Search the artefact for `To Verify` markers, unfinished
+  placeholders and sample names. Any hit blocks the release.
 - **Evidence check.** Every number traces to a tier 1 to 3 source or is labelled
   as a target rather than a result.
