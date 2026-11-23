@@ -84,6 +84,49 @@ final class SiteAndApiTest extends TestCase
         }
     }
 
+    public function test_emplostart_launcher_maps_the_14_prompt_letters_and_the_three_intake_lanes(): void
+    {
+        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
+        $url = (string) config('emplowise.emplostart_url');
+
+        // Every letter of EMPLOWISE x START is on the page with its prompt id.
+        $letters = [
+            'P01' => 'E', 'P02' => 'M', 'P03' => 'P', 'P04' => 'L', 'P05' => 'O',
+            'P06' => 'W', 'P07' => 'I', 'P08' => 'S', 'P09' => 'E', 'P10' => 'S',
+            'P11' => 'T', 'P12' => 'A', 'P13' => 'R', 'P14' => 'T',
+        ];
+
+        $this->assertSame(14, substr_count($html, 'class="launcher-prompt"'));
+
+        foreach ($letters as $id => $letter) {
+            $this->assertMatchesRegularExpression(
+                '#<span class="launcher-prompt-id">'.$id.'</span>\s*<span class="launcher-prompt-letter"><span class="sr-only">Letter</span>'.$letter.'</span>#',
+                $html,
+                $id.' should render next to the letter '.$letter
+            );
+        }
+
+        // The two tracks are headings, not prose, and each one links out.
+        foreach (['EMPLOWISE', 'START'] as $track) {
+            $this->assertStringContainsString('<h3>'.$track.'</h3>', $html);
+        }
+
+        $this->assertSame(
+            2,
+            substr_count($html, 'href="'.e($url).'#library" target="_blank" rel="noopener"'),
+            'Each track should deep link to the app library in a new tab'
+        );
+
+        foreach (config('emplowise.copy.emplostart.intake_lanes') as $lane) {
+            $this->assertStringContainsString('<h3>'.e($lane['title']).'</h3>', $html);
+        }
+
+        // The launcher describes the intake but loads none of the app engine.
+        foreach (['prompt-library', 'candidate-vault', 'intake-engine', 'js/toolkit'] as $forbidden) {
+            $this->assertStringNotContainsString($forbidden, $html);
+        }
+    }
+
     public function test_stylesheets_ship_as_one_bundle(): void
     {
         $hub = (string) $this->get('/emplostart')->assertOk()->getContent();

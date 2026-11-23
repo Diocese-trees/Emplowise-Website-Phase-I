@@ -2895,6 +2895,164 @@ body.page-ai { background: var(--surface-canvas); }
 }
 
 /* ------------------------------------------------------------------
+   EmploStart launcher: 14-prompt library and 3-lane intake
+------------------------------------------------------------------- */
+
+.launcher-library {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-5);
+}
+
+.launcher-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+    padding: clamp(1.1rem, 1.6vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-xs);
+}
+
+.launcher-track-range {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    color: var(--teal);
+}
+
+.launcher-track h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-primary);
+}
+
+.launcher-track-promise {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+}
+
+.launcher-prompt-list {
+    display: grid;
+    gap: 0.1rem;
+    margin: var(--s-3) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.launcher-prompt {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.launcher-prompt:last-child {
+    border-bottom: 1px solid var(--line);
+}
+
+.launcher-prompt-id {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+}
+
+.launcher-prompt-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+    background: var(--surface-card);
+}
+
+.launcher-prompt-title {
+    min-width: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-primary);
+    overflow-wrap: anywhere;
+}
+
+.launcher-track-link {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    text-decoration: none;
+}
+
+.launcher-track-link:hover { gap: 0.6rem; }
+
+.launcher-lanes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.launcher-lane {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+    padding: clamp(1.1rem, 1.6vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-xs);
+}
+
+.launcher-lane-num {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    color: var(--teal);
+}
+
+.launcher-lane h3 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.launcher-lane p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+}
+
+.launcher-lane-detail {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.84rem;
+}
+
+/* ------------------------------------------------------------------
    Fair jobs and fair wages pledge (deep teal ground, white text)
 ------------------------------------------------------------------- */
 
@@ -2965,11 +3123,31 @@ body.page-ai { background: var(--surface-canvas); }
 @media (max-width: 1000px) {
     .launcher-modules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .launcher-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .launcher-library { grid-template-columns: 1fr; }
+    .launcher-lanes { grid-template-columns: 1fr; }
     .pledge-points { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
     .launcher-modules,
     .launcher-stats,
+    .launcher-library,
+    .launcher-lanes { grid-template-columns: 1fr; }
+
     .pledge-points { grid-template-columns: 1fr; }
+
+    .launcher-track,
+    .launcher-lane { padding: 1rem; }
+
+    .launcher-prompt {
+        gap: 0.5rem;
+        padding: 0.55rem 0;
+    }
+
+    .launcher-prompt-title { font-size: 0.85rem; }
+
+    .launcher-track-link {
+        min-height: 44px;
+        font-size: 0.66rem;
+    }
 }

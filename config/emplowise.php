@@ -1282,6 +1282,35 @@ return [
             'launch_cta' => 'Open EmploStart',
             'launch_secondary' => 'See the six modules',
             'launch_note' => 'Opens the standalone app in a new tab. Nothing installs, and no account is needed.',
+            'library_kicker' => '14 prompt letters',
+            'library_heading' => 'The EMPLOWISE and START prompt library: 14 letters, 14 prompts.',
+            'library_lede' => 'Every letter in the name stands for one prompt, and the 14 prompts cover the whole journey from a first skills inventory to a signed offer or a planned pivot. Each prompt has its own id, so you can come back to it later.',
+            'library_tracks' => [
+                ['name' => 'EMPLOWISE', 'range' => 'P01–P09', 'promise' => 'Get shortlisted and into the interview'],
+                ['name' => 'START', 'range' => 'P10–P14', 'promise' => 'Ace interviews, land fair offers, and pivot'],
+            ],
+            'library_link' => 'Open the 14-prompt library',
+            'intake_kicker' => 'Three ways in',
+            'intake_heading' => 'Start with a questionnaire, your LinkedIn profile, or your CV.',
+            'intake_lede' => 'The app opens with one question: how do you want to start? Each lane collects the same readiness picture from a different source and saves it to your own device.',
+            'intake_lanes' => [
+                [
+                    'title' => 'Diagnostic test and questionnaire',
+                    'desc' => 'Answer 12 plain questions about your work, evidence, and targets. It takes about 2 to 3 minutes.',
+                    'detail' => 'You get one of four readiness bands, plus the prompts that fit that band. There is no pass or fail, only a starting point.',
+                ],
+                [
+                    'title' => 'LinkedIn profile and gap questions',
+                    'desc' => 'Paste your LinkedIn URL and the profile text you want reviewed, then answer follow up questions.',
+                    'detail' => 'The app works only from what you paste. It does not visit LinkedIn or scrape your profile, and it asks you what is missing instead of guessing.',
+                ],
+                [
+                    'title' => 'CV upload or PDF-paste repair',
+                    'desc' => 'Upload a .docx, .txt, or .md file, or paste text out of a PDF that will not read cleanly.',
+                    'detail' => 'Extraction happens in your browser. You see a parse preview and confirm it before anything is saved.',
+                ],
+            ],
+            'intake_note' => 'Each lane writes to a candidate vault that stays in your browser. Nothing is uploaded. Shared PC mode is session only: closing the tab wipes the vault.',
             'where_kicker' => 'What runs where',
             'where_heading' => 'Local by default. AI only when you choose it.',
             'where_lede' => 'The app is built so the useful work happens in your browser. Artificial intelligence is an optional extra, never the default.',
@@ -1452,7 +1481,7 @@ return [
      * Office files; routes point at the HTML editions where one exists.
      */
     'docs_index' => [
-        'intro' => 'Seven downloadable documents and three live editions, grouped by the question they answer. Every file is editable and every figure is traceable to the site configuration.',
+        'intro' => 'Eight downloadable documents and three live editions, grouped by the question they answer. Every file is editable and every figure is traceable to the site configuration.',
         'groups' => [
             [
                 'id' => 'brand',
@@ -1503,6 +1532,20 @@ return [
                         'download_label' => 'Download the deck',
                         'route' => 'pitch-deck',
                         'route_label' => 'Read the deck',
+                    ],
+                ],
+            ],
+            [
+                'id' => 'employability',
+                'kicker' => 'Employability',
+                'heading' => 'The free career library candidates actually use.',
+                'intro' => 'The EMPLOWISE x START 14-prompt library, the three intake lanes, and the local candidate vault that powers EmploStart.',
+                'items' => [
+                    [
+                        'title' => 'Prompt Library 2026',
+                        'desc' => 'Fourteen prompts, one per letter, plus the three intake lanes and the private vault rules.',
+                        'path' => 'downloads/Emplowise-Start-Prompt-Library-2026.docx',
+                        'download_label' => 'Download the prompt library',
                     ],
                 ],
             ],

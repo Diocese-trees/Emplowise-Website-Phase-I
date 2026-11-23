@@ -4,6 +4,33 @@
 @section('meta_description', $seo['description'])
 
 @section('content')
+    @php
+        // Mirrors the EMPLOWISE x START library shipped in the standalone
+        // EmploStart app. Kept inline in this view, and above the sections, so
+        // the launcher stays a plain link out: it loads no app code and no app
+        // data files.
+        $promptLibrary = [
+            'EMPLOWISE' => [
+                ['id' => 'P01', 'letter' => 'E', 'title' => 'Evidence & Career Inventory'],
+                ['id' => 'P02', 'letter' => 'M', 'title' => 'Market Value Assessment'],
+                ['id' => 'P03', 'letter' => 'P', 'title' => 'Positioning & JD Semantic Decoder'],
+                ['id' => 'P04', 'letter' => 'L', 'title' => 'LinkedIn & Digital Profile Architect'],
+                ['id' => 'P05', 'letter' => 'O', 'title' => 'Optimized Human & ATS Resume Strategist'],
+                ['id' => 'P06', 'letter' => 'W', 'title' => 'Work Proof & Portfolio Case Studies'],
+                ['id' => 'P07', 'letter' => 'I', 'title' => 'Instant Parser-Safe ATS Export'],
+                ['id' => 'P08', 'letter' => 'S', 'title' => 'Strategic Outreach, Referrals & Cover Letters'],
+                ['id' => 'P09', 'letter' => 'E', 'title' => 'Error & Rejection Diagnostics'],
+            ],
+            'START' => [
+                ['id' => 'P10', 'letter' => 'S', 'title' => 'Structured Interview & Claim Defensibility'],
+                ['id' => 'P11', 'letter' => 'T', 'title' => 'Take-Home, Case & 30-60-90 Day Pitch'],
+                ['id' => 'P12', 'letter' => 'A', 'title' => 'Ask & Fair-Wage Offer Negotiation'],
+                ['id' => 'P13', 'letter' => 'R', 'title' => 'Reskilling, Credentials & Scholarship ROI'],
+                ['id' => 'P14', 'letter' => 'T', 'title' => 'Trajectory: Career Pivot, Reimagination & Venture'],
+            ],
+        ];
+    @endphp
+
     <section class="page-head launcher-head">
         <div class="shell">
             <p class="kicker">{{ $copy['kicker'] }}</p>
@@ -53,6 +80,68 @@
                     </li>
                 @endforeach
             </ol>
+        </div>
+    </section>
+
+    <section class="section" id="prompt-letters" aria-labelledby="prompt-letters-heading">
+        <div class="shell">
+            <div class="section-head section-head--split">
+                <div>
+                    <p class="kicker">{{ $copy['library_kicker'] }}</p>
+                    <h2 id="prompt-letters-heading">{{ $copy['library_heading'] }}</h2>
+                </div>
+                <p class="lede">{{ $copy['library_lede'] }}</p>
+            </div>
+
+            <div class="launcher-library">
+                @foreach ($copy['library_tracks'] as $track)
+                    <article class="launcher-track">
+                        <p class="launcher-track-range">{{ $track['range'] }}</p>
+                        <h3>{{ $track['name'] }}</h3>
+                        <p class="launcher-track-promise">{{ $track['promise'] }}</p>
+
+                        <ol class="launcher-prompt-list">
+                            @foreach ($promptLibrary[$track['name']] as $prompt)
+                                <li class="launcher-prompt">
+                                    <span class="launcher-prompt-id">{{ $prompt['id'] }}</span>
+                                    <span class="launcher-prompt-letter"><span class="sr-only">Letter</span>{{ $prompt['letter'] }}</span>
+                                    <span class="launcher-prompt-title">{{ $prompt['title'] }}</span>
+                                </li>
+                            @endforeach
+                        </ol>
+
+                        <a class="launcher-track-link" href="{{ $emplostartUrl }}#library" target="_blank" rel="noopener">
+                            {{ $copy['library_link'] }}
+                            <x-icon name="arrow-right" :size="14" />
+                        </a>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="section section--tight" id="intake" aria-labelledby="intake-heading">
+        <div class="shell">
+            <div class="section-head section-head--split">
+                <div>
+                    <p class="kicker">{{ $copy['intake_kicker'] }}</p>
+                    <h2 id="intake-heading">{{ $copy['intake_heading'] }}</h2>
+                </div>
+                <p class="lede">{{ $copy['intake_lede'] }}</p>
+            </div>
+
+            <ol class="launcher-lanes">
+                @foreach ($copy['intake_lanes'] as $index => $lane)
+                    <li class="launcher-lane">
+                        <span class="launcher-lane-num">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                        <h3>{{ $lane['title'] }}</h3>
+                        <p>{{ $lane['desc'] }}</p>
+                        <p class="launcher-lane-detail">{{ $lane['detail'] }}</p>
+                    </li>
+                @endforeach
+            </ol>
+
+            <p class="launcher-note small muted">{{ $copy['intake_note'] }}</p>
         </div>
     </section>
 

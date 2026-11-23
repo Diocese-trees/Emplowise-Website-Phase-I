@@ -152,6 +152,7 @@ final class ExportStaticTest extends TestCase
             'Emplowise-Company-Profile-2026.docx',
             'Emplowise-Pitch-Deck-2026.pptx',
             'Emplowise-Portfolio-2026.docx',
+            'Emplowise-Start-Prompt-Library-2026.docx',
             'Emplowise-Tool-Stack-2026.docx',
             'Emplowise-Website-Breakdown-2026.docx',
         ];
