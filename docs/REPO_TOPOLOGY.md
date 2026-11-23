@@ -9,7 +9,7 @@ repo authors, and the product repo ships EmploStart.
 | `Emplowise-Website-Phase-I` (main) | B2B conversion site, the `/emplostart` launcher, the showcase pages and the `/docs` hub | `gh-pages` → GitHub Pages |
 | `Emplowise-Docs` (staged in `_staging/Emplowise-Docs/`) | Single source of truth for `.md`, canonical `brand-tokens/`, DOCX/PPTX generators, built `exports/`, sync scripts | internal |
 | `EmploStart` (staged in `_staging/EmploStart/`) | Standalone, permanently free career utility with a deterministic Non-AI default and opt-in AI | its own GitHub Pages site |
-| `Emplowise-repo-qodar-ai-work-in-progress` | Private full mirror for work in progress | nothing (publisher disabled) |
+| `Emplowise-repo-qodar-ai-work-in-progress` | Private 1:1 mirror of the main site: every branch, tag and `gh-pages` | nothing (publisher disabled) |
 
 The main site consumes the Docs repo outputs: `brand-tokens/tokens.css` lands
 in `public/css/tokens.css`, and `exports/*.docx|*.pptx` land in
@@ -19,69 +19,71 @@ the split and still applies to the main site.
 
 ## The main site and its private mirror
 
-The site lives in two GitHub repositories. They share history, but only one
-publishes the site, and only one is written by a bot.
+The site lives in two GitHub repositories. The original publishes; the copy is an
+exact replica, so a clone of it works on its own with no reference back to the
+original.
 
-| | Original (source of truth) | Copy (work in progress) |
+| | Original (source of truth) | Copy (1:1 mirror) |
 | --- | --- | --- |
 | URL | https://github.com/Diocese-trees/Emplowise-Website-Phase-I | https://github.com/Diocese-trees/Emplowise-repo-qodar-ai-work-in-progress |
 | Visibility | public | private |
 | Published by | `.github/workflows/publish-static.yml` → `gh-pages` → GitHub Pages | nothing (publisher disabled) |
-| `main` written by | maintainers, via pull request or direct push | the sync workflow, plus maintainers on any other branch |
+| `main` written by | maintainers, via pull request or direct push | the mirror run only |
 
-The copy is a full mirror, not a fork: it holds all branches and tags, so its
-clone works on its own, and nothing about the original depends on it.
-
-## Continuous integration
-
-`.github/workflows/ci.yml` runs on pushes to `main`, on pull requests and by
-manual dispatch. It fails if the regenerated `site.css` differs from the
-committed bundle, checks JavaScript syntax, runs `emplowise:seo-audit` and the
-Feature suite, and renders a keyless static export with `index.html`, `404.html`,
-the audit form and the CSP meta asserted. It has read-only permissions; only
-`publish-static.yml` writes `gh-pages`.
+The copy is a full mirror, not a fork: `main`, `gh-pages`, every branch and
+every tag match the original by commit id. Nothing is authored in the copy. A
+mirror run replaces `main` and `gh-pages`, adds refs that are missing and
+**deletes refs the original does not have**.
 
 ## Keeping the copy in sync
 
-`.github/workflows/sync-from-upstream.yml` runs **every two hours at :23** and on
-demand. Each run:
-
-1. checks out the copy's `main` and fetches the original as a read-only
-   `upstream`;
-2. stops if `main` already contains upstream's head;
-3. tags the copy's current head `backup/pre-sync-<UTC stamp>` and pushes that tag;
-4. merges upstream with a merge commit — `--no-ff`, never a reset or force push;
-5. aborts the merge and pushes nothing if the two sides conflict;
-6. pushes `main`.
-
-Only `main` is touched. Other branches in the copy are yours and are never read
-or written by the workflow. The job also refuses to run outside this repository,
-and `concurrency` prevents overlapping runs.
-
-Manual run, including a no-change dry run:
+A mirror run is a `--mirror` clone of the original followed by a `--mirror`
+push to the copy:
 
 ```bash
-gh workflow run sync-from-upstream.yml \
+rm -rf /tmp/emplowise-mirror.git
+git clone --mirror https://github.com/Diocese-trees/Emplowise-Website-Phase-I.git /tmp/emplowise-mirror.git
+git -C /tmp/emplowise-mirror.git push --mirror https://github.com/Diocese-trees/Emplowise-repo-qodar-ai-work-in-progress.git
+```
+
+`push --mirror` is a forced update by design: it rewrites `main`, moves
+`gh-pages`, and prunes branches and tags that no longer exist upstream. That is
+what makes the copy 1:1; it is also why nothing is ever committed there.
+
+Verify the result from any clone that has a `wip` remote. Both diffs must be
+empty:
+
+```bash
+diff <(git ls-remote --heads origin | sort) <(git ls-remote --heads wip | sort)
+diff <(git ls-remote --tags origin | sed 's/\^{}//' | sort -u) \
+     <(git ls-remote --tags wip | sed 's/\^{}//' | sort -u)
+```
+
+The read-only CI workflow runs in the copy on every mirrored `main` and is
+expected to match the original's result. The publisher stays disabled as a
+repository setting, so it survives each ref update:
+
+```bash
+gh workflow disable "Publish static site" \
   --repo Diocese-trees/Emplowise-repo-qodar-ai-work-in-progress
-
-gh workflow run sync-from-upstream.yml \
-  --repo Diocese-trees/Emplowise-repo-qodar-ai-work-in-progress \
-  -f dry_run=true
 ```
 
-### Why pushes to the copy's `main` are rejected
+### Work in progress belongs in the original
 
-Because the bot commits merges, the copy's `main` is always ahead of the
-original's `main` by at least the workflow file. A local `main` is therefore
-never a fast-forward against it, and `git push wip main` fails by design. Push
-work-in-progress to a **branch** instead:
+Because a mirror run deletes refs the original does not have, a branch pushed
+only to the copy disappears on the next run. Push experiments to the original:
 
 ```bash
-git push wip my-experiment        # a branch, not main
+git push origin my-experiment
 ```
 
-To bring such a branch back into the original later, open a pull request from
-the copy to the original, or cherry-pick locally and push to `origin`.
+If an experiment already exists only in the copy, move it upstream before the
+next mirror:
+
+```bash
+git fetch wip my-experiment
+git push origin refs/remotes/wip/my-experiment:refs/heads/my-experiment
+```
 
 ## Working with both repositories
 
@@ -90,16 +92,17 @@ The maintainer clone has two remotes:
 | Remote | Points at | Use |
 | --- | --- | --- |
 | `origin` | the original | normal work; `git push origin main` publishes |
-| `wip` | the copy | WIP branches only |
-
-To inspect the copy or restore a pre-sync snapshot (list the tags first with
-`git tag --list 'backup/pre-sync-*'`):
+| `wip` | the copy | read-only inspection only; never push |
 
 ```bash
 git fetch wip --tags
-git switch --detach backup/pre-sync-<stamp>   # read-only view
-git switch -c rescue backup/pre-sync-<stamp>  # or a branch to work from
+git log --oneline wip/main -5          # inspect the mirror
+git diff --stat wip/main origin/main   # must be empty after a mirror run
 ```
+
+To restore a lost ref, use the `backup/*` tags on the original (for example
+`backup/pre-showcase-push-20261123-004151`) or the maintainer's bundle backups.
+The copy is not a recovery source: it always follows the original.
 
 ## The publisher is disabled in the copy
 
