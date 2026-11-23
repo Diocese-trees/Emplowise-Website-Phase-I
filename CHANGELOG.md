@@ -35,6 +35,10 @@ same release line.
   state fourteen pages, 62 tests and 922 assertions, twelve bundle sources and
   three CI parity harnesses. Rebuilt the six DOCX files and the eight-slide PPTX
   through the verified pipeline.
+- Release hygiene. Tagged the pre-merge `main` `backup/pre-showcase-push-20261123-004151`,
+  wrote a verified git bundle and a worktree archive outside the repository,
+  then fast-forwarded `main` to the release commit and pushed `main`, the
+  release tag and the backup tag to `origin`.
 
 Release scorecard (local export, 2026-11-23):
 
