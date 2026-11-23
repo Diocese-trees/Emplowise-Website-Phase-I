@@ -18,7 +18,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 6-module free utility: pivot planner, reimagination lab and market assessment in build; ATS score, mock interview, resume builder, profile optimiser and 14-prompt library live |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
-| Brand kit | 7 Markdown sources in `docs/brand-kit/`, 6 editable DOCX and 1 PPTX in `public/downloads/`, see [`docs/brand-kit/README.md`](docs/brand-kit/README.md) |
+| Brand kit | Canonical sources and generators live in `Emplowise-Docs`; this repo ships the synced 6 DOCX and 1 PPTX in `public/downloads/` and a mirror of `docs/brand-kit/`, see [`docs/README.md`](docs/README.md) |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
 | Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
 
@@ -28,6 +28,7 @@ The public site serves a live [`/docs`](https://diocese-trees.github.io/Emplowis
 
 | Document | Answers |
 | --- | --- |
+| [`docs/README.md`](docs/README.md) | How documentation, brand tokens and Office exports are authored in `Emplowise-Docs` and synced here |
 | [`docs/brand-kit/README.md`](docs/brand-kit/README.md) | Deliverable table, Office rebuild steps, Open Evidence Ledger |
 | [`docs/brand-kit/BRAND_KIT.md`](docs/brand-kit/BRAND_KIT.md) | Logo, colour, type and surface rules for 2026 |
 | [`docs/brand-kit/BRANDING_GUIDELINES.md`](docs/brand-kit/BRANDING_GUIDELINES.md) | Voice, evidence tiers, UI rules, channel matrix, evaluation rubric |

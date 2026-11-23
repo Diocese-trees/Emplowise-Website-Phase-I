@@ -1,6 +1,25 @@
 # Repository topology
 
-The project lives in two GitHub repositories. They share history, but only one
+The project is being split into three cooperating repositories, plus the
+private mirror used for work in progress. The main site publishes, the Docs
+repo authors, and the product repo ships EmploStart.
+
+| Repo | Role | Publishes |
+| --- | --- | --- |
+| `Emplowise-Website-Phase-I` (main) | B2B conversion site, the `/emplostart` launcher, the showcase pages and the `/docs` hub | `gh-pages` → GitHub Pages |
+| `Emplowise-Docs` (staged in `_staging/Emplowise-Docs/`) | Single source of truth for `.md`, canonical `brand-tokens/`, DOCX/PPTX generators, built `exports/`, sync scripts | internal |
+| `EmploStart` (staged in `_staging/EmploStart/`) | Standalone, permanently free career utility with a deterministic Non-AI default and opt-in AI | its own GitHub Pages site |
+| `Emplowise-repo-qodar-ai-work-in-progress` | Private full mirror for work in progress | nothing (publisher disabled) |
+
+The main site consumes the Docs repo outputs: `brand-tokens/tokens.css` lands
+in `public/css/tokens.css`, and `exports/*.docx|*.pptx` land in
+`public/downloads/`. `scripts/sync.py check` fails when the copies drift. The
+rest of this document describes the original/copy mirror workflow that predates
+the split and still applies to the main site.
+
+## The main site and its private mirror
+
+The site lives in two GitHub repositories. They share history, but only one
 publishes the site, and only one is written by a bot.
 
 | | Original (source of truth) | Copy (work in progress) |
@@ -116,15 +135,17 @@ opens without JavaScript on desktop, in the mobile drawer and in the left rail.
 ## Interactive components
 
 - **Showcase pages** (`pages/company-profile.blade.php`, `pages/portfolio.blade.php`,
-  `pages/pitch-deck.blade.php`, `css/showcase.css`): three long-form pages share
-  one stylesheet. Each starts with a sticky jump navigation whose offset follows
-  the desktop rail and the mobile header, plus a download link to its Word or
-  PowerPoint file. The deck adds a sticky `01 / 08` counter, 44px prev and next
-  controls, an `aria-pressed` presentation mode and a deferred `js/deck.js` that
-  handles arrows, Escape, an IntersectionObserver and reduced motion. Slides
-  declare their own ground colours, so dark mode cannot invert them, and print
-  is A4 landscape with one slide per page. No showcase page carries a
-  `[To Verify]` marker.
+  `pages/pitch-deck.blade.php`, `pages/docs.blade.php`, `css/showcase.css`):
+  four long-form surfaces share one stylesheet. Each starts with a sticky jump
+  navigation whose offset follows the desktop rail and the mobile header, plus a
+  download link to its Word or PowerPoint file. The `/docs` hub indexes every
+  deliverable, with a live-edition ghost button for the three commercial routes
+  and an editable download for each document. The deck adds a sticky `01 / 08`
+  counter, 44px prev and next controls, an `aria-pressed` presentation mode and a
+  deferred `js/deck.js` that handles arrows, Escape, an IntersectionObserver and
+  reduced motion. Slides declare their own ground colours, so dark mode cannot
+  invert them, and print is A4 landscape with one slide per page. No showcase
+  page carries a `[To Verify]` marker.
 - **Team showcase** (`partials/team-showcase.blade.php`): one card with a
   `role="tablist"` row and three tabpanels. No simulated browser chrome or
   stacked-card props; placeholder portraits render an initials monogram
