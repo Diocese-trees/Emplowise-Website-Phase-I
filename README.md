@@ -13,13 +13,31 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 11 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy |
+| Public site | 11 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy. Three showcase pages (`/company-profile`, `/portfolio`, `/pitch-deck`) are added in the brand-kit release |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
+| Brand kit | 7 Markdown sources in `docs/brand-kit/`, 6 editable DOCX and 1 PPTX in `public/downloads/`, see [`docs/brand-kit/README.md`](docs/brand-kit/README.md) |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
 | Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
+
+## Documentation index
+
+| Document | Answers |
+| --- | --- |
+| [`docs/brand-kit/README.md`](docs/brand-kit/README.md) | Deliverable table, Office rebuild steps, Open Evidence Ledger |
+| [`docs/brand-kit/BRAND_KIT.md`](docs/brand-kit/BRAND_KIT.md) | Logo, colour, type and surface rules for 2026 |
+| [`docs/brand-kit/BRANDING_GUIDELINES.md`](docs/brand-kit/BRANDING_GUIDELINES.md) | Voice, evidence tiers, UI rules, channel matrix, evaluation rubric |
+| [`docs/brand-kit/COMPANY_PROFILE.md`](docs/brand-kit/COMPANY_PROFILE.md) | Commercial profile sourced from `config/emplowise.php` |
+| [`docs/brand-kit/PORTFOLIO.md`](docs/brand-kit/PORTFOLIO.md) | Repo-evidenced work, with no invented clients |
+| [`docs/brand-kit/PITCH_DECK.md`](docs/brand-kit/PITCH_DECK.md) | Eight-slide WH deck with speaker notes |
+| [`docs/brand-kit/WEBSITE_BREAKDOWN.md`](docs/brand-kit/WEBSITE_BREAKDOWN.md) | Route matrix, partial inventory, module specs, CSP posture |
+| [`docs/brand-kit/TOOL_STACK.md`](docs/brand-kit/TOOL_STACK.md) | Verified versions and the Phase II upgrade ledger |
+| [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md) | GitHub Pages build, Web3Forms key, keyless fallback |
+| [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md) | The original repository and the private mirror |
+| [`docs/THEME_AND_MOTION.md`](docs/THEME_AND_MOTION.md) | Dark mode, tokens, motion timings, reduced motion |
+| [`CONTENT_EDITING_GUIDE.md`](CONTENT_EDITING_GUIDE.md) | Editing `config/emplowise.php` without breaking SEO |
 
 ## Repository layout
 
@@ -28,13 +46,15 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 11 pages, chat partial
+resources/views          Layout, 11 pages, chat partial, team showcase
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
+public/downloads         Editable DOCX/PPTX deliverables (brand-kit release)
 database/migrations      audit_requests, chat_messages
 tests/Feature            60 tests covering pages, APIs, exports and headers
+docs/brand-kit           Brand, commercial and technical Markdown sources
+tools/brand-kit          Isolated Python generators for the Office files
 deploy/                  Dockerfile, nginx, apache, entrypoint
-docs/                    hosting, static export, theme/motion, repo topology
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history
 ```
 
