@@ -242,7 +242,7 @@ left.
 
 Headline: *Shipped platform, not promised platform*
 
-- **What is shipped.** Eleven pages, five career tools, an audit wizard and a
+- **What is shipped.** Fourteen pages, five career tools, an audit wizard and a
   grounded assistant.
 - **Who engaged.** No named client study yet; the proof is the shipped
   repository.

@@ -110,7 +110,8 @@
         request()->routeIs('contact') => 'page-contact',
         request()->routeIs('what-we-are') => 'page-team',
         request()->routeIs('what-we-are-building') => 'page-ai',
-        request()->routeIs('company-profile', 'portfolio', 'pitch-deck') => 'page-showcase',
+        request()->routeIs('pitch-deck') => 'page-showcase page-deck',
+        request()->routeIs('company-profile', 'portfolio') => 'page-showcase',
         default => '',
     };
 @endphp

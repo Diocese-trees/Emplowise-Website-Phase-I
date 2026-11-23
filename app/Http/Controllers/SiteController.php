@@ -151,6 +151,8 @@ final class SiteController extends Controller
             'seo' => config('emplowise.seo.pitch-deck'),
             'page' => config('emplowise.showcase_pages.pitch-deck'),
             'brand' => config('emplowise.brand'),
+            'packages' => config('emplowise.packages'),
+            'methodology' => config('emplowise.methodology'),
         ]);
     }
 
