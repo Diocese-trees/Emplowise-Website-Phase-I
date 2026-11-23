@@ -72,5 +72,12 @@ jobs:
           test -f build/static/index.html
           test -f build/static/404.html
           test -f build/static/free-hr-audit/index.html
+          test -f build/static/company-profile/index.html
+          test -f build/static/portfolio/index.html
+          test -f build/static/pitch-deck/index.html
+          test -f build/static/css/showcase.css
+          test -f build/static/js/deck.js
+          test -f build/static/downloads/Emplowise-Pitch-Deck-2026.pptx
+          grep -q 'name="robots" content="noindex,follow"' build/static/pitch-deck/index.html
           grep -q 'data-audit-nokey="1"' build/static/free-hr-audit/index.html
           grep -q "script-src 'self' 'sha256-" build/static/index.html

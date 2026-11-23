@@ -261,6 +261,63 @@ final class SiteAndApiTest extends TestCase
         $this->assertCount(count($routes), array_unique($descriptions));
     }
 
+    public function test_showcase_pages_render_with_downloads_and_no_internal_markers(): void
+    {
+        $pages = [
+            '/company-profile' => [
+                'key' => 'company-profile',
+                'download' => 'Emplowise-Company-Profile-2026.docx',
+                'entry' => 'word/document.xml',
+            ],
+            '/portfolio' => [
+                'key' => 'portfolio',
+                'download' => 'Emplowise-Portfolio-2026.docx',
+                'entry' => 'word/document.xml',
+            ],
+            '/pitch-deck' => [
+                'key' => 'pitch-deck',
+                'download' => 'Emplowise-Pitch-Deck-2026.pptx',
+                'entry' => 'ppt/presentation.xml',
+            ],
+        ];
+
+        $titles = [];
+
+        foreach ($pages as $path => $page) {
+            $html = (string) $this->get($path)->assertOk()->getContent();
+            $seo = config('emplowise.seo.'.$page['key']);
+            $showcase = config('emplowise.showcase_pages.'.$page['key']);
+
+            $this->assertSame(1, substr_count($html, '<h1'), $path.' should carry exactly one h1');
+            $this->assertStringContainsString('<title>'.e($seo['title']).'</title>', $html, $path);
+            $this->assertStringContainsString('name="robots" content="'.e($showcase['robots']).'"', $html, $path);
+            $this->assertStringNotContainsString('[To Verify', $html, $path.' leaks an internal marker');
+            $this->assertMatchesRegularExpression(
+                '#href="/downloads/'.preg_quote($page['download'], '#').'\?v=\d+"[^>]*download#',
+                $html,
+                $path.' should link its download with the download attribute',
+            );
+
+            $file = public_path('downloads/'.$page['download']);
+            $this->assertFileExists($file);
+
+            $zip = new \ZipArchive();
+            $this->assertTrue($zip->open($file) === true, $page['download'].' is not a readable Office package');
+            $this->assertNotFalse($zip->locateName($page['entry']), $page['download'].' is missing '.$page['entry']);
+            $zip->close();
+
+            $titles[] = $seo['title'];
+        }
+
+        $this->assertCount(count($pages), array_unique($titles), 'Showcase titles must stay unique');
+
+        // The footer links all three pages under the shared Company and Resources groups.
+        $footer = (string) $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('href="'.route('company-profile', [], false).'"', $footer);
+        $this->assertStringContainsString('href="'.route('portfolio', [], false).'"', $footer);
+        $this->assertStringContainsString('href="'.route('pitch-deck', [], false).'"', $footer);
+    }
+
     public function test_seo_audit_command_passes_for_the_shipped_config(): void
     {
         $this->artisan('emplowise:seo-audit')->assertSuccessful();

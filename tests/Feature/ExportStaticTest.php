@@ -45,6 +45,9 @@ final class ExportStaticTest extends TestCase
             'free-hr-audit/index.html',
             'terms/index.html',
             'privacy/index.html',
+            'company-profile/index.html',
+            'portfolio/index.html',
+            'pitch-deck/index.html',
         ];
 
         foreach ($pages as $page) {
@@ -105,6 +108,67 @@ final class ExportStaticTest extends TestCase
 
         $hub = (string) File::get($this->target.'/emplostart/index.html');
         $this->assertStringContainsString('href="https://example.github.io/demo/css/hub.css', $hub);
+    }
+
+    public function test_it_exports_the_showcase_pages_assets_and_downloads(): void
+    {
+        $this->artisan('emplowise:export-static', [
+            'path' => $this->target,
+            '--base' => 'https://example.github.io/demo',
+            '--audit-key' => 'test-key',
+        ])->assertSuccessful();
+
+        $pages = [
+            'company-profile' => 'Emplowise-Company-Profile-2026.docx',
+            'portfolio' => 'Emplowise-Portfolio-2026.docx',
+            'pitch-deck' => 'Emplowise-Pitch-Deck-2026.pptx',
+        ];
+
+        foreach ($pages as $page => $download) {
+            $html = (string) File::get($this->target.'/'.$page.'/index.html');
+
+            $this->assertStringContainsString('https://example.github.io/demo/css/showcase.css', $html, $page);
+            $this->assertStringNotContainsString('[To Verify', $html, $page.' leaks an internal marker');
+            $this->assertStringNotContainsString('href="/downloads/', $html, $page.' keeps a root-relative download');
+            $this->assertStringContainsString(
+                'href="https://example.github.io/demo/downloads/'.$download,
+                $html,
+                $page.' download must resolve under the base path',
+            );
+        }
+
+        $deck = (string) File::get($this->target.'/pitch-deck/index.html');
+        $portfolio = (string) File::get($this->target.'/portfolio/index.html');
+
+        $this->assertStringContainsString('https://example.github.io/demo/js/deck.js', $deck);
+        $this->assertStringNotContainsString('js/deck.js', $portfolio, 'deck.js must stay on the deck page');
+        $this->assertStringContainsString('name="robots" content="noindex,follow"', $deck);
+        $this->assertFileExists($this->target.'/css/showcase.css');
+        $this->assertFileExists($this->target.'/js/deck.js');
+
+        $downloads = [
+            'Emplowise-Branding-Guidelines-2026.docx',
+            'Emplowise-Brand-Kit-2026.docx',
+            'Emplowise-Company-Profile-2026.docx',
+            'Emplowise-Pitch-Deck-2026.pptx',
+            'Emplowise-Portfolio-2026.docx',
+            'Emplowise-Tool-Stack-2026.docx',
+            'Emplowise-Website-Breakdown-2026.docx',
+        ];
+
+        $this->assertCount(count($downloads), File::files($this->target.'/downloads'));
+
+        foreach ($downloads as $download) {
+            $path = $this->target.'/downloads/'.$download;
+            $this->assertFileExists($path);
+            $this->assertGreaterThan(10000, (int) filesize($path), $download.' looks empty');
+            $this->assertSame('PK', substr((string) File::get($path), 0, 2), $download.' is not a zip-based Office file');
+        }
+
+        $sitemap = (string) File::get($this->target.'/sitemap.xml');
+        $this->assertStringContainsString('https://example.github.io/demo/company-profile/', $sitemap);
+        $this->assertStringContainsString('https://example.github.io/demo/portfolio/', $sitemap);
+        $this->assertStringNotContainsString('/pitch-deck/', $sitemap);
     }
 
     public function test_static_pages_drop_the_api_and_use_local_engines(): void

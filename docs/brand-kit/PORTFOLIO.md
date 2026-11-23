@@ -34,7 +34,7 @@ sentence in one config file so the two builds cannot drift.
 
 **Capabilities.**
 
-- 11 public routes rendered by `SiteController`, all data from
+- 14 public routes rendered by `SiteController`, all data from
   `config/emplowise.php`.
 - A strict CSP with a single hashed inline script, self-hosted fonts, and no
   third-party origins.
@@ -48,7 +48,7 @@ sentence in one config file so the two builds cannot drift.
   pairings.
 
 **Repo proof.** `routes/web.php`, `resources/views/`, `public/css/`,
-`public/js/`, `tests/Feature/` (60 tests, 827 assertions),
+`public/js/`, `tests/Feature/` (62 tests, 922 assertions),
 `.github/workflows/publish-static.yml`, `docs/STATIC_HOSTING.md`.
 
 ### A2. EmploStart toolkit and parity engine
@@ -129,10 +129,10 @@ are real, inspectable and relevant to how the platform is maintained.
 
 | System | What it does | Proof |
 | --- | --- | --- |
-| Static export pipeline | Renders 11 pages, five redirect documents, a 404, sitemap, robots and a CSP meta; rewrites every asset, canonical and download URL for a project subpath | `app/Console/Commands/ExportStatic.php`, `tests/Feature/ExportStaticTest.php` |
-| CSS bundle pipeline | Concatenates and minifies two bundles from 13 sources, checked in because the static host ships `public/` as is | `app/Support/CssBundles.php`, `php artisan emplowise:bundle-css` |
+| Static export pipeline | Renders 14 pages, five redirect documents, a 404, sitemap, robots and a CSP meta; rewrites every asset, canonical and download URL for a project subpath | `app/Console/Commands/ExportStatic.php`, `tests/Feature/ExportStaticTest.php` |
+| CSS bundle pipeline | Concatenates and minifies two bundles from 12 sources, checked in because the static host ships `public/` as is | `app/Support/CssBundles.php`, `php artisan emplowise:bundle-css` |
 | SEO copy audit | Enforces title and description length, unique keywords, keyword placement, banned words, em dashes and the confirmed pricing facts | `app/Console/Commands/EmplowiseSeoAudit.php` |
-| CI gate | Bundle freshness, JS syntax, SEO audit, 60 tests, three parity harnesses, keyless export smoke test | `.github/workflows/ci.yml` |
+| CI gate | Bundle freshness, JS syntax, SEO audit, 62 tests, three parity harnesses (chat routing runs locally against Chromium), keyless export smoke test | `.github/workflows/ci.yml` |
 | Dual deployment | A public original and a private mirror with a documented one-way sync and backup tags | `docs/REPO_TOPOLOGY.md` |
 | Security headers | CSP with a hashed inline bootstrap, HSTS on HTTPS only, COOP/CORP, nosniff, frame denial, CSP reporting | `app/Http/Middleware/SecurityHeaders.php`, `tests/Feature/SecurityHeadersTest.php` |
 | Theme bootstrap | One inline script, hashed into the CSP, so dark mode paints before first paint without `unsafe-inline` | `app/Support/ThemeBootstrap.php` |

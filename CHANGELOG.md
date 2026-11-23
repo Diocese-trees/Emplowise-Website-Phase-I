@@ -4,6 +4,52 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
+## v2.1 — Brand kit and showcase pages (2026-11-23)
+
+Tag: `v2.1-brand-kit-and-showcase`. The CI repair below shipped earlier in the
+same release line.
+
+- Added three long-form pages on one shared stylesheet: `/company-profile`
+  (company facts, buying situations, scope, method, services, pricing,
+  leadership), `/portfolio` (evidence policy, four shipped artifacts, systems
+  table, case-study standard) and `/pitch-deck` (eight grounded slides). Each
+  page carries its own download, a sticky jump navigation that clears the
+  desktop rail and the mobile header, and no `[To Verify]` marker.
+- Made the deck interactive in 3.0 KB of deferred JavaScript: a live `01 / 08`
+  counter with `aria-live`, 44px prev/next buttons, an `aria-pressed`
+  presentation mode, arrow and Escape keys, an IntersectionObserver scroll sync
+  and reduced-motion awareness. Every slide pins its own ground colours, so
+  dark mode cannot invert navy or white slides. Print is A4 landscape with one
+  slide per page; the page head and ambient background are dropped.
+- Extended the static export to fourteen pages, added `css/showcase.css` and
+  `js/deck.js` to the copied assets, kept `/pitch-deck` on `noindex,follow` and
+  out of the sitemap, and left the five legacy redirects in place.
+- Linked Company Profile, Portfolio and Pitch Deck from the shared footer
+  groups. The header Company dropdown keeps its four marketing routes.
+- Added Feature coverage for the three routes (unique titles, one `h1` each,
+  no internal markers, readable DOCX/PPTX packages) and for the export (showcase
+  assets, seven downloads, base-prefixed links, sitemap exclusion). The CI smoke
+  test now asserts the three pages, the showcase assets and the deck `noindex`.
+- Reconciled the documents with the built site: PORTFOLIO, PITCH_DECK,
+  TOOL_STACK, THEME_AND_MOTION, README, STATIC_HOSTING and REPO_TOPOLOGY now
+  state fourteen pages, 62 tests and 922 assertions, twelve bundle sources and
+  three CI parity harnesses. Rebuilt the six DOCX files and the eight-slide PPTX
+  through the verified pipeline.
+
+Release scorecard (local export, 2026-11-23):
+
+| Check | Result |
+| --- | --- |
+| Pages | 14 rendered, 5 redirects, 404, robots, sitemap (13 entries) |
+| SEO audit | 12 configured routes, all titles and descriptions in range |
+| Feature suite | 62 tests, 922 assertions |
+| Parity | interview 11/11, ATS 6/6, profile 5/5, chat routing 48/48 |
+| CSS bundles | `site.css` 133.5 KB, `hub.css` 19.4 KB, both fresh |
+| Showcase assets | `showcase.css` 25.3 KB, `deck.js` 3.0 KB deferred |
+| Office files | 6 DOCX + 1 PPTX, `verify-office` pass, 55.8–80.1 KB |
+| Downloads | 7 files copied with base-prefixed links |
+| Accessibility | One `h1` per page, visible focus, 44px controls, AA contrast on every slide ground |
+
 ## v2.1 — CI repair (2026-11-22)
 
 - Tracked the database tree. `database/.gitignore` ignored everything, so the

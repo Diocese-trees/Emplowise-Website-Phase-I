@@ -115,6 +115,16 @@ opens without JavaScript on desktop, in the mobile drawer and in the left rail.
 
 ## Interactive components
 
+- **Showcase pages** (`pages/company-profile.blade.php`, `pages/portfolio.blade.php`,
+  `pages/pitch-deck.blade.php`, `css/showcase.css`): three long-form pages share
+  one stylesheet. Each starts with a sticky jump navigation whose offset follows
+  the desktop rail and the mobile header, plus a download link to its Word or
+  PowerPoint file. The deck adds a sticky `01 / 08` counter, 44px prev and next
+  controls, an `aria-pressed` presentation mode and a deferred `js/deck.js` that
+  handles arrows, Escape, an IntersectionObserver and reduced motion. Slides
+  declare their own ground colours, so dark mode cannot invert them, and print
+  is A4 landscape with one slide per page. No showcase page carries a
+  `[To Verify]` marker.
 - **Team showcase** (`partials/team-showcase.blade.php`): one card with a
   `role="tablist"` row and three tabpanels. No simulated browser chrome or
   stacked-card props; placeholder portraits render an initials monogram

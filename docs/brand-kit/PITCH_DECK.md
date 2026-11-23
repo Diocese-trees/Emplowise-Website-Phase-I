@@ -251,7 +251,7 @@ Headline: *Shipped platform, not promised platform*
 
 **Speaker Notes.**
 
-- Outputs today: 60 tests and 827 assertions, 22 parity fixtures, and a static
+- Outputs today: 62 tests and 922 assertions, 22 parity fixtures, and a static
   export on every push to `main`.
 - [To Verify: audits completed per month, retainers signed, and any client willing
   to be named with numbers.]

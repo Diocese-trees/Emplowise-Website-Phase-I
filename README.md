@@ -13,7 +13,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 11 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy. Three showcase pages (`/company-profile`, `/portfolio`, `/pitch-deck`) are added in the brand-kit release |
+| Public site | 14 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy, plus Company Profile, Portfolio and an eight-slide Pitch Deck |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
@@ -46,12 +46,12 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 11 pages, chat partial, team showcase
+resources/views          Layout, 14 pages, chat partial, team showcase
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 public/downloads         Editable DOCX/PPTX deliverables (brand-kit release)
 database/migrations      audit_requests, chat_messages
-tests/Feature            60 tests covering pages, APIs, exports and headers
+tests/Feature            62 tests covering pages, APIs, exports and headers
 docs/brand-kit           Brand, commercial and technical Markdown sources
 tools/brand-kit          Isolated Python generators for the Office files
 deploy/                  Dockerfile, nginx, apache, entrypoint
@@ -338,7 +338,7 @@ The Free HR Audit form is the only verified contact channel in this build.
 ```
 app/
   Http/Controllers/
-    SiteController.php          # renders all eleven pages with config data
+    SiteController.php          # renders all fourteen pages with config data
     AuditRequestController.php  # validates + persists audit intake
     Api/ChatController.php      # chat endpoint + transcript logging
     Api/StudentController.php   # interview / ATS / profile endpoints
@@ -401,7 +401,7 @@ Coverage in `tests/Feature/`:
 - interview: deterministic question set and bounded score
 - ATS: score range and structural checks
 - profile: empty payload rejected, rewrites returned
-- static export: eleven pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+- static export: fourteen pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
 
 Browser-engine parity is checked separately, outside PHPUnit:
 
