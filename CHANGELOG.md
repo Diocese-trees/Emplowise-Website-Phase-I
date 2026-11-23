@@ -4,6 +4,28 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
+## Vercel deployment target, static (2026-11-23)
+
+- Added `vercel.json`, which makes the existing static export deployable on
+  Vercel without running Laravel there: trailing slashes for the
+  `/page/index.html` layout, five permanent redirects for the legacy routes,
+  and the response headers a `<meta>` tag cannot send, notably
+  `frame-ancestors 'none'`, `nosniff`, `X-Frame-Options`, HSTS and a referrer
+  and permissions policy matching `SecurityHeaders`. HTML revalidates; assets
+  cache for a day because their names are not content-hashed.
+- Added `.github/workflows/deploy-vercel.yml`. It renders `build/static` with
+  the production base URL, fails on a missing page, a `localhost` leak or an
+  inert audit form, deploys with the Vercel CLI, then checks status codes and
+  headers on the published site. It is dormant until the repository variable
+  `VERCEL_ENABLED` is set, so it cannot publish by itself.
+- Added `VercelConfigTest`, which compares the redirect map and header values
+  with the exporter and `config/security.php` so the second copy of those rules
+  cannot drift silently.
+- Documentation. `docs/STATIC_HOSTING.md` now covers the one-time setup, the
+  safety checks, the preview limitation (the export bakes one absolute base
+  URL) and the rollback. GitHub Pages remains the canonical host until someone
+  decides otherwise, and no domain or DNS record was changed.
+
 ## Internal executive report, documentation only (2026-11-23)
 
 - Added an internal executive report to the Docs repo: business context, dated

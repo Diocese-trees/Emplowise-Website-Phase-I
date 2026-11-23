@@ -1,0 +1,135 @@
+name: Deploy static site to Vercel
+
+# Vercel has no PHP runtime of its own, so this workflow does what the GitHub
+# Pages workflow does: render the Laravel pages to HTML, then publish that
+# folder. Nothing is built on Vercel's side.
+#
+# It stays dormant until the repository variable VERCEL_ENABLED is set to the
+# literal string "true", so adding this file cannot start a deploy by accident.
+# See docs/STATIC_HOSTING.md for the one-time setup.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-vercel
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: vars.VERCEL_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, curl, openssl, tokenizer, xml, ctype, json
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Prepare the environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          mkdir -p storage/framework/cache storage/framework/views bootstrap/cache
+
+      - name: Render the static site
+        env:
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+          STATIC_BASE_URL: ${{ vars.STATIC_BASE_URL }}
+        run: |
+          if [ -z "${STATIC_BASE_URL}" ]; then
+            echo "::error::Set the repository variable STATIC_BASE_URL to the Vercel production URL, for example https://emplowise.com, so asset and canonical links resolve."
+            exit 1
+          fi
+          if [ -z "${WEB3FORMS_ACCESS_KEY}" ]; then
+            echo "::error::Add a WEB3FORMS_ACCESS_KEY repository secret so the free HR audit form can send. Create a free key at https://web3forms.com."
+            exit 1
+          fi
+          php artisan emplowise:export-static build/static \
+            --base="${STATIC_BASE_URL}" \
+            --audit-key="${WEB3FORMS_ACCESS_KEY}"
+
+      - name: Attach the Vercel routing rules
+        run: |
+          cp vercel.json build/static/vercel.json
+
+      - name: Check the export before publishing
+        env:
+          STATIC_BASE_URL: ${{ vars.STATIC_BASE_URL }}
+        run: |
+          set -eu
+          for file in index.html 404.html robots.txt sitemap.xml vercel.json; do
+            if [ ! -s "build/static/${file}" ]; then
+              echo "::error::build/static/${file} is missing or empty."
+              exit 1
+            fi
+          done
+          if [ ! -s "build/static/why-emplowise/index.html" ]; then
+            echo "::error::The export is missing rendered pages."
+            exit 1
+          fi
+          if [ ! -s "build/static/downloads/Emplowise-Brand-Kit-2026.docx" ]; then
+            echo "::error::The downloads folder did not copy."
+            exit 1
+          fi
+          # A local base URL leaking into the published build would break every
+          # link, so fail instead of shipping it.
+          if grep -rIl --exclude-dir=downloads "127.0.0.1\|localhost" build/static >/dev/null 2>&1; then
+            echo "::error::The export contains a localhost URL. Check STATIC_BASE_URL."
+            exit 1
+          fi
+          # The audit form must be live, not inert.
+          if grep -rIl --include='*.html' "data-audit-nokey" build/static >/dev/null 2>&1; then
+            echo "::error::The audit form was exported inert. Check WEB3FORMS_ACCESS_KEY."
+            exit 1
+          fi
+          echo "Export looks consistent for ${STATIC_BASE_URL}."
+          du -sh build/static
+
+      - name: Deploy to Vercel
+        working-directory: build/static
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "${VERCEL_TOKEN}" ] || [ -z "${VERCEL_ORG_ID}" ] || [ -z "${VERCEL_PROJECT_ID}" ]; then
+            echo "::error::Set the VERCEL_TOKEN secret and the VERCEL_ORG_ID and VERCEL_PROJECT_ID variables (Project Settings, General)."
+            exit 1
+          fi
+          npx --yes vercel@latest deploy --prod --yes --token "${VERCEL_TOKEN}"
+
+      - name: Smoke-test the published site
+        env:
+          STATIC_BASE_URL: ${{ vars.STATIC_BASE_URL }}
+        run: |
+          set -eu
+          base="${STATIC_BASE_URL%/}"
+          for path in / /why-emplowise/ /pricing/ /free-hr-audit/ /downloads/Emplowise-Brand-Kit-2026.docx; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "${base}${path}")
+            echo "${path} -> ${code}"
+            case "${path}" in
+              /pricing/) [ "${code}" = "301" ] || [ "${code}" = "308" ] || { echo "::error::/pricing/ should redirect (got ${code})."; exit 1; } ;;
+              *) [ "${code}" = "200" ] || { echo "::error::${path} returned ${code}."; exit 1; } ;;
+            esac
+          done
+          headers=$(curl -sSI --max-time 20 "${base}/")
+          for expected in "content-security-policy: frame-ancestors 'none'" "x-content-type-options: nosniff" "x-frame-options: DENY"; do
+            printf '%s' "${headers}" | tr 'A-Z' 'a-z' | grep -q "${expected}" || {
+              echo "::error::Missing response header: ${expected}"
+              exit 1
+            }
+          done
+          echo "Published headers and status codes verified."

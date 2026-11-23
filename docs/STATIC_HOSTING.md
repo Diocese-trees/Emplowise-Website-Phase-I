@@ -139,3 +139,87 @@ byte-identical on both sides, so a copy edit has to land in both places.
   controls those. The CSP travels as a `<meta>` tag instead of a header.
 - Server behaviours (throttling, 419 CSRF expiry) do not exist; the client
   handles their absence as "use the local engine".
+
+## Vercel (a second static target)
+
+Vercel has no PHP runtime of its own, so Laravel is not deployed there. The
+same export that feeds GitHub Pages is published to Vercel as a static folder,
+which restores the two things Pages cannot give: real HTTP response headers and
+server-side 301s. Nothing is built on Vercel's side.
+
+### One-time setup
+
+1. Create an empty project in the Vercel dashboard, framework preset **Other**,
+   with no build command and no output directory. The CLI uploads a folder that
+   is already built, so any build step would be wrong.
+2. In Vercel, open **Project Settings, General** and copy the project ID and the
+   team ID.
+3. In GitHub, open **Settings, Secrets and variables, Actions**:
+   - Secret `VERCEL_TOKEN`, from Vercel **Account Settings, Tokens**.
+   - Variable `VERCEL_ORG_ID`, the team ID.
+   - Variable `VERCEL_PROJECT_ID`, the project ID.
+   - Variable `STATIC_BASE_URL`, the production origin, for example
+     `https://emplowise.com`. No trailing slash.
+   - Variable `VERCEL_ENABLED`, the literal string `true`.
+4. Point the domain at Vercel and keep GitHub Pages serving, or turn Pages off,
+   once the smoke test passes. Do not run both on the same hostname.
+
+The workflow does nothing until `VERCEL_ENABLED` is `true`, so adding it cannot
+start a deploy by accident. Setting the variable is the decision to publish.
+
+### What the workflow does
+
+`.github/workflows/deploy-vercel.yml` runs on a push to `main` or on demand:
+
+1. Installs PHP 8.3 and Composer dependencies on the runner.
+2. Renders `build/static` with `--base="${STATIC_BASE_URL}"` and the Web3Forms
+   key, exactly as the Pages workflow does.
+3. Copies `vercel.json` into the build root.
+4. Fails before publishing if a page, `404.html`, the sitemap, the downloads
+   folder or `vercel.json` is missing, if a `localhost` URL survived into the
+   build, or if the audit form came out inert.
+5. Runs `vercel deploy --prod` from inside `build/static`.
+6. Curls the published site and fails if `/`, `/why-emplowise/`,
+   `/free-hr-audit/` or a download does not answer 200, if `/pricing/` does not
+   answer 301, or if the security headers are absent.
+
+Step 4 is the safety net: an export pointed at the wrong base URL renders
+perfect-looking pages with dead links, so the check is a content test rather
+than a size test.
+
+### What `vercel.json` adds
+
+| Rule | Why |
+| --- | --- |
+| `trailingSlash: true` | The exporter writes `/page/index.html`, so `/page` must become `/page/` rather than 404 |
+| Five 301s | `/pricing`, `/career-hub`, `/student-hub`, `/ai-automation` and `/team`, matching the Laravel routes and the exporter's redirect pages |
+| `Content-Security-Policy: frame-ancestors 'none'` | The one CSP directive a `<meta>` tag cannot express |
+| `nosniff`, `DENY`, referrer and permissions policy, HSTS | The same values `SecurityHeaders` sends from Laravel |
+| `Cache-Control: max-age=0, must-revalidate` on HTML | Asset names are not content-hashed, so HTML must never be pinned |
+| `max-age=86400` with `stale-while-revalidate` on assets | A day, not a year: `site.css` and `chat.js` keep their names across releases, so `immutable` would serve a stale stylesheet to a fresh page |
+
+The header-level CSP deliberately carries only `frame-ancestors`. The full
+policy travels in the exported `<meta>` tag, and a second full policy in a
+header would have to repeat the theme bootstrap hash and drift from
+`config/security.php` the first time either changes. Both policies apply when
+both are present, and a meta policy cannot be relaxed by a header.
+
+`VercelConfigTest` asserts that the redirect map matches the exporter's, that
+every redirect is a 301, that the header values match, and that no asset rule
+uses `immutable`. Editing one copy without the other fails the suite.
+
+### Limits
+
+- **Previews are not page-accurate.** The exporter bakes one absolute base URL
+  into every asset and canonical link, so a preview deployment inherits the
+  production origin. Use previews for build sanity, not for link testing. Only
+  the production deploy is smoke-tested.
+- **One canonical host.** Serving the same pages from Pages and Vercel splits
+  search signals. Pick one, and add a 301 layer if the other stays reachable.
+- **The `wip` mirror is untouched.** This workflow only reads the repository.
+
+### Rolling back
+
+Delete or set `VERCEL_ENABLED` to `false` to stop publishing, then repoint the
+domain at GitHub Pages. The Vercel project keeps the last deployment, so the
+old origin keeps answering until the domain moves.
