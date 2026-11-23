@@ -107,6 +107,7 @@ guessed. Tier references follow the six-tier hierarchy in
 | 17 | Whether the private mirror repository may be cited publicly | Portfolio section B | 5 | Founder |
 | 18 | Any partner, accelerator or programme relationship that can be named | Portfolio section B, deck slide 06 | 2 Customer statement or 3 dated source | Founder |
 | 19 | Launch date for the AI automation division | Company profile 06, portfolio section D, deck slide 08 | 4 Competitor signal only today | Founder |
+| 20 | Ship dates for Phase II (showcase, Office suite, vector logo) and Phase III | Deck slide 08 speaker notes | 5 | Founder |
 
 Items 1 to 9 mirror `config('emplowise.pending_inputs')`, so the site and the
 documents cannot drift apart. Item 10 is the only market-sizing question; the
