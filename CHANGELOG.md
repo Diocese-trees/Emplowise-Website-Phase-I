@@ -4,6 +4,30 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
+## Internal executive report, documentation only (2026-11-23)
+
+- Added an internal executive report to the Docs repo: business context, dated
+  Pakistan evidence with five `[CANNOT VERIFY]` items and the audit field that
+  would settle each, twelve verbatim copy blocks, one labelled fictional case
+  study, the four dashboard cards with their formulas, the twelve-field employee
+  data format, and a ten-item implementation priority list. It ships as a
+  self-contained interactive HTML file plus an A4 print companion of 23 pages,
+  rebuilt from inside the Docs repo with `make report` and checked with
+  `make report-check`.
+- Cross-referenced it from both repos: `docs/reports/` in the Docs repo holds the
+  Markdown source of truth, Open Evidence Ledger items 21 to 25 name the five
+  missing measurements, and `docs/README.md` plus `docs/REPO_TOPOLOGY.md` here
+  record that the report never crosses the sync boundary. `sync.py` copies only
+  `.docx` and `.pptx` from `exports/`, so an internal report cannot reach
+  `public/downloads/` by accident.
+- No public change. No route, view, config copy, price, stylesheet or asset was
+  touched, and neither proposed page addition is implemented. The two supplied
+  headlines are assigned to the proposed sections in the report only; the frozen
+  homepage `h1` and the site appearance are unchanged.
+- Documentation repair. Added `scripts/check_links.py` and `make links` to the
+  Docs repo, fixed two dead relative links, and extended the theme contract so
+  the same tokens, durations and reduced-motion rules apply outside the site.
+
 ## v2.1 — Brand kit and showcase pages (2026-11-23)
 
 Tag: `v2.1-brand-kit-and-showcase`. The CI repair below shipped earlier in the

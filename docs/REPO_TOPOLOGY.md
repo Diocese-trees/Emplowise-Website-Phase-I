@@ -7,7 +7,7 @@ repo authors, and the product repo ships EmploStart.
 | Repo | Role | Publishes |
 | --- | --- | --- |
 | `Emplowise-Website-Phase-I` (main) | B2B conversion site, the `/emplostart` launcher, the showcase pages and the `/docs` hub | `gh-pages` → GitHub Pages |
-| `Emplowise-Docs` (staged in `_staging/Emplowise-Docs/`) | Single source of truth for `.md`, canonical `brand-tokens/`, DOCX/PPTX generators, built `exports/`, sync scripts | internal |
+| `Emplowise-Docs` (staged in `_staging/Emplowise-Docs/`) | Single source of truth for `.md`, canonical `brand-tokens/`, DOCX/PPTX generators, built `exports/`, internal reports and their builder, sync scripts | internal |
 | `EmploStart` (staged in `_staging/EmploStart/`) | Standalone, permanently free career utility with a deterministic Non-AI default and opt-in AI | its own GitHub Pages site |
 | `Emplowise-repo-qodar-ai-work-in-progress` | Private 1:1 mirror of the main site: every branch, tag and `gh-pages` | nothing (publisher disabled) |
 
@@ -16,6 +16,12 @@ in `public/css/tokens.css`, and `exports/*.docx|*.pptx` land in
 `public/downloads/`. `scripts/sync.py check` fails when the copies drift. The
 rest of this document describes the main site itself; the mirror workflow above
 applies to it.
+
+Internal reports are the exception that never crosses the boundary:
+`Emplowise-Docs/docs/reports/` authors them and `Emplowise-Docs/reports/` holds
+the built HTML and PDF. `sync.py` filters on `.docx` and `.pptx`, so an internal
+report cannot land in `public/downloads/` by accident. See
+[`README.md`](README.md) in this folder.
 
 ## The main site and its private mirror
 
