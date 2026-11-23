@@ -102,6 +102,11 @@ guessed. Tier references follow the six-tier hierarchy in
 | 12 | Official team portraits to replace the placeholder images | Company profile 08, `/what-we-are` | 5 | Founder |
 | 13 | Advegen and Creative Nexus relationship wording for the co-founder bio | Company profile 08 | 2 Customer statement or 5 | Founder |
 | 14 | Whether `/pitch-deck` stays `noindex` after launch | Route metadata | 5 | Founder |
+| 15 | Permission for a named client case study, with numbers and quotes | Portfolio section C, deck slide 07 | 2 Customer statement, none cleared | Founder |
+| 16 | Company-level use of the 2,000+ employee figure in the co-founder bio | Company profile 08, portfolio section A2 | 2, pending permission | Founder |
+| 17 | Whether the private mirror repository may be cited publicly | Portfolio section B | 5 | Founder |
+| 18 | Any partner, accelerator or programme relationship that can be named | Portfolio section B, deck slide 06 | 2 Customer statement or 3 dated source | Founder |
+| 19 | Launch date for the AI automation division | Company profile 06, portfolio section D, deck slide 08 | 4 Competitor signal only today | Founder |
 
 Items 1 to 9 mirror `config('emplowise.pending_inputs')`, so the site and the
 documents cannot drift apart. Item 10 is the only market-sizing question; the
