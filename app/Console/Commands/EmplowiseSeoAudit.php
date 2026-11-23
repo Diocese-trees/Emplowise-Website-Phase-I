@@ -23,6 +23,9 @@ final class EmplowiseSeoAudit extends Command
         'faq',
         'contact',
         'free-hr-audit',
+        'company-profile',
+        'portfolio',
+        'pitch-deck',
     ];
 
     private const BANNED_WORDS = ['leverage', 'ecosystem', 'landscape', 'holistic', 'seamless'];
@@ -156,7 +159,7 @@ final class EmplowiseSeoAudit extends Command
         }
 
         $this->newLine();
-        $this->info('SEO audit passed. All 9 routes have unique, in-range titles and descriptions, and every primary keyword appears in the title, h1, intro, and a section heading.');
+        $this->info('SEO audit passed. All '.count(self::ROUTES).' routes have unique, in-range titles and descriptions, and every primary keyword appears in the title, h1, intro, and a section heading.');
 
         return self::SUCCESS;
     }

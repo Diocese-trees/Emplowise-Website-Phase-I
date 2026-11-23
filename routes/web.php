@@ -21,6 +21,12 @@ Route::get('/free-hr-audit', [SiteController::class, 'audit'])->name('free-hr-au
 Route::get('/terms', [SiteController::class, 'terms'])->name('terms');
 Route::get('/privacy', [SiteController::class, 'privacy'])->name('privacy');
 
+// Showcase pages: HTML editions of the brand-kit documents, each with a
+// downloadable Office file.
+Route::get('/company-profile', [SiteController::class, 'companyProfile'])->name('company-profile');
+Route::get('/portfolio', [SiteController::class, 'portfolio'])->name('portfolio');
+Route::get('/pitch-deck', [SiteController::class, 'pitchDeck'])->name('pitch-deck');
+
 // Legacy URLs stay reachable after the information architecture change.
 Route::redirect('/pricing', '/why-emplowise', 301);
 Route::redirect('/career-hub', '/emplostart', 301);
@@ -29,7 +35,7 @@ Route::redirect('/ai-automation', '/what-we-are-building', 301);
 Route::get('/team', fn () => redirect('/what-we-are#team', 301));
 
 Route::get('/sitemap.xml', function () {
-    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit', 'terms', 'privacy'];
+    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit', 'terms', 'privacy', 'company-profile', 'portfolio'];
     $urls = '';
     foreach ($pages as $name) {
         $priority = $name === 'home' ? '1.0' : '0.8';

@@ -39,7 +39,17 @@ final class ExportStatic extends Command
         '/free-hr-audit' => 'free-hr-audit/index.html',
         '/terms' => 'terms/index.html',
         '/privacy' => 'privacy/index.html',
+        '/company-profile' => 'company-profile/index.html',
+        '/portfolio' => 'portfolio/index.html',
+        '/pitch-deck' => 'pitch-deck/index.html',
     ];
+
+    /**
+     * Pages that ship with a noindex meta and stay out of the sitemap.
+     *
+     * @var array<int, string>
+     */
+    private const NOINDEX = ['/pitch-deck'];
 
     /**
      * Old URLs that remain linked or bookmarked. A static host cannot issue a
@@ -117,7 +127,7 @@ final class ExportStatic extends Command
             );
         }
 
-        foreach (['css', 'js', 'img', 'fonts'] as $directory) {
+        foreach (['css', 'js', 'img', 'fonts', 'downloads'] as $directory) {
             File::copyDirectory(public_path($directory), $target.'/'.$directory);
         }
 
@@ -267,6 +277,9 @@ final class ExportStatic extends Command
     {
         $urls = '';
         foreach ($this->pages as $uri => $file) {
+            if (in_array($uri, self::NOINDEX, true)) {
+                continue;
+            }
             $loc = $uri === '/' ? $base.'/' : $base.$uri.'/';
             $priority = $uri === '/' ? '1.0' : '0.8';
             $urls .= '<url><loc>'.e($loc).'</loc><changefreq>weekly</changefreq><priority>'.$priority.'</priority></url>';

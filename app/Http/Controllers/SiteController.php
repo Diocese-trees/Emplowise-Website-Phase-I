@@ -119,6 +119,41 @@ final class SiteController extends Controller
         ]);
     }
 
+    public function companyProfile(): View
+    {
+        return view('pages.company-profile', [
+            'seo' => config('emplowise.seo.company-profile'),
+            'page' => config('emplowise.showcase_pages.company-profile'),
+            'brand' => config('emplowise.brand'),
+            'packages' => config('emplowise.packages'),
+            'notes' => config('emplowise.pricing_notes'),
+            'services' => config('emplowise.services'),
+            'pillars' => config('emplowise.pillars'),
+            'methodology' => config('emplowise.methodology'),
+            'team' => config('emplowise.copy.team'),
+        ]);
+    }
+
+    public function portfolio(): View
+    {
+        return view('pages.portfolio', [
+            'seo' => config('emplowise.seo.portfolio'),
+            'page' => config('emplowise.showcase_pages.portfolio'),
+            'brand' => config('emplowise.brand'),
+            'pillars' => config('emplowise.pillars'),
+            'methodology' => config('emplowise.methodology'),
+        ]);
+    }
+
+    public function pitchDeck(): View
+    {
+        return view('pages.pitch-deck', [
+            'seo' => config('emplowise.seo.pitch-deck'),
+            'page' => config('emplowise.showcase_pages.pitch-deck'),
+            'brand' => config('emplowise.brand'),
+        ]);
+    }
+
     public function audit(): View
     {
         return view('pages.audit', [

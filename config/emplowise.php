@@ -177,6 +177,42 @@ return [
             'h2' => 'What we collect and why.',
             'intro' => 'This policy explains what Emplowise collects when you use this site, book a free HR audit, or email the team, and the choices you have. It covers cookies and the tools we use to run the site.',
         ],
+
+        // === PAGE: COMPANY PROFILE (showcase) ===
+        'company-profile' => [
+            'primary_keyword' => 'remote HR company profile',
+            'secondary_keywords' => ['Emplowise company document', 'HR service provider profile'],
+            'title' => 'Remote HR Company Profile: 2026 Edition | Emplowise',
+            'description' => 'The Emplowise company profile in one document: who we serve, how we run remote HR, what the retainers cost, and who owns each part of the work.',
+            'h1' => 'A remote HR company profile written for buyers, not archives.',
+            'h1_accent' => 'written for buyers',
+            'h2' => 'What this remote HR company profile includes.',
+            'intro' => 'This is the Emplowise remote HR company profile as a single document. It covers the buying situations we serve, the four-stage method, the published retainers, and the team behind the work.',
+        ],
+
+        // === PAGE: PORTFOLIO (showcase) ===
+        'portfolio' => [
+            'primary_keyword' => 'remote HR portfolio',
+            'secondary_keywords' => ['shipped HR platform work', 'Emplowise work evidence'],
+            'title' => 'Remote HR Portfolio of Shipped Work | Emplowise',
+            'description' => 'A remote HR portfolio that lists only shipped work: the platform, the career toolkit, the audit wizard, and the 2026 brand system, each with repo proof.',
+            'h1' => 'A remote HR portfolio that lists shipped work only.',
+            'h1_accent' => 'shipped work only',
+            'h2' => 'What this remote HR portfolio documents.',
+            'intro' => 'This remote HR portfolio records what Emplowise has actually shipped. Every entry names the repository evidence behind it, and no client study is used until it is cleared in writing.',
+        ],
+
+        // === PAGE: PITCH DECK (showcase) ===
+        'pitch-deck' => [
+            'primary_keyword' => 'Emplowise pitch deck',
+            'secondary_keywords' => ['remote HR slide deck', 'HR service pitch slides'],
+            'title' => 'Emplowise Pitch Deck: Eight Slides for Buyers | Emplowise',
+            'description' => 'The Emplowise pitch deck in eight slides: product, problem, method, pricing, market wedge, go-to-market, shipped proof, and the roadmap.',
+            'h1' => 'The Emplowise pitch deck, eight slides, one question each.',
+            'h1_accent' => 'eight slides',
+            'h2' => 'What the Emplowise pitch deck answers.',
+            'intro' => 'This is the Emplowise pitch deck as a slide-by-slide page. Each slide answers one buyer question, in the order buyers ask it, with unresolved numbers kept in the speaker notes.',
+        ],
     ],
 
     'brand' => [
@@ -1436,6 +1472,42 @@ return [
                 'not_body' => 'The audit is free and diagnostic. It is not legal advice, not a compliance guarantee, and not a commitment to a package. Implementation is quoted separately.',
                 'packages_heading' => 'Package context',
                 'packages_note' => 'Inclusions are confirmed in writing after your Free HR Audit.',
+            ],
+        ],
+    ],
+
+    /*
+     * Showcase pages: public HTML editions of the brand-kit documents. The seo
+     * block above owns the metadata; this block owns the download file and the
+     * indexing decision. The deck stays out of the index until the dates and
+     * open numbers in its notes are confirmed.
+     */
+    'showcase_pages' => [
+        'company-profile' => [
+            'kicker' => 'Company profile',
+            'robots' => 'index,follow',
+            'download' => [
+                'path' => 'downloads/Emplowise-Company-Profile-2026.docx',
+                'label' => 'Download the company profile',
+                'meta' => 'Word document, 57 KB, editable',
+            ],
+        ],
+        'portfolio' => [
+            'kicker' => 'Portfolio',
+            'robots' => 'index,follow',
+            'download' => [
+                'path' => 'downloads/Emplowise-Portfolio-2026.docx',
+                'label' => 'Download the portfolio',
+                'meta' => 'Word document, 56 KB, editable',
+            ],
+        ],
+        'pitch-deck' => [
+            'kicker' => 'Pitch deck',
+            'robots' => 'noindex,follow',
+            'download' => [
+                'path' => 'downloads/Emplowise-Pitch-Deck-2026.pptx',
+                'label' => 'Download the deck',
+                'meta' => 'PowerPoint file, 80 KB, 8 slides',
             ],
         ],
     ],

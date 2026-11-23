@@ -55,11 +55,27 @@
                     ])->values()->all(),
             ];
         }
+        if (request()->routeIs('company-profile', 'portfolio', 'pitch-deck')) {
+            $graph[] = [
+                '@type' => 'WebPage',
+                'name' => $pageTitle,
+                'description' => $pageDescription,
+                'url' => $pageUrl,
+                'inLanguage' => 'en',
+                'isPartOf' => ['@type' => 'WebSite', 'name' => 'Emplowise', 'url' => url('/')],
+                'about' => [
+                    '@type' => 'ProfessionalService',
+                    'name' => config('emplowise.brand.legal_name'),
+                    'url' => url('/'),
+                ],
+            ];
+        }
         $document = ['@context' => 'https://schema.org', '@graph' => $graph];
     @endphp
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
     <link rel="canonical" href="{{ $pageUrl }}">
+    @stack('head')
 
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDescription }}">
@@ -94,6 +110,7 @@
         request()->routeIs('contact') => 'page-contact',
         request()->routeIs('what-we-are') => 'page-team',
         request()->routeIs('what-we-are-building') => 'page-ai',
+        request()->routeIs('company-profile', 'portfolio', 'pitch-deck') => 'page-showcase',
         default => '',
     };
 @endphp
