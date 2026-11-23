@@ -189,7 +189,7 @@
                         <div class="deck-zone">
                             <h3>Shipped</h3>
                             <ul class="deck-blocks deck-blocks--1">
-                                <li class="deck-block"><b>What is shipped</b><span>Fourteen pages, five career tools, an audit wizard, and a grounded assistant.</span></li>
+                                <li class="deck-block"><b>What is shipped</b><span>Fourteen pages, three live career tools in a six-module EmploStart plan, an audit wizard, and a grounded assistant.</span></li>
                                 <li class="deck-block"><b>Who engaged</b><span>No named client study yet; the proof is the shipped repository.</span></li>
                             </ul>
                         </div>

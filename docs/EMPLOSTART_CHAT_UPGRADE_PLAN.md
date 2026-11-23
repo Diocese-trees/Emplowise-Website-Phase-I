@@ -1,4 +1,6 @@
-# Student Hub and Chatbot Upgrade: Plan
+# EmploStart and Chatbot Upgrade: Plan
+
+> Historical record. This plan covered the five-tool upgrade that shipped in 2025. EmploStart is now a six-module, permanently free utility; the pivot is described in `docs/brand-kit/` and `AGENTS.md`. The tool names and counts below are the state at the time of writing.
 
 Status: phase 1 of 5 (plan) — written before research.
 Scope owner: Emplowise website.
@@ -6,7 +8,7 @@ Baseline commit: `4b231ff` on `fix/speed-bugs-scroll-qol`.
 
 ## 1. Why this work exists
 
-The Student Hub is the site's free, no-account acquisition surface: five tools
+EmploStart is the site's free, no-account acquisition surface: five tools
 (mock interview, ATS score, resume builder, profile optimizer, prompt library).
 The chat widget is the site's only always-on answering surface. Both were built
 as deterministic local engines with an optional Alibaba Cloud model behind a
@@ -44,9 +46,9 @@ updated, backup verified, changes delivered as one reviewable commit each.
 
 1. Plan (this document).
 2. Research: external evidence with citations plus the code audit already
-   completed. Output: `docs/STUDENT_HUB_CHAT_RESEARCH.md`.
+   completed. Output: `docs/EMPLOSTART_CHAT_RESEARCH.md`.
 3. Strategy: prioritized, effort-ranked decisions with explicit non-goals.
-   Output: `docs/STUDENT_HUB_CHAT_STRATEGY.md`.
+   Output: `docs/EMPLOSTART_CHAT_STRATEGY.md`.
 4. Backup: git tag plus bundle plus archived frontend, backend, and docs,
    verified by checksum, stored outside the repository.
 5. Implementation: one change per commit, tests first where behaviour changes.
@@ -121,9 +123,9 @@ knowledge base and the server fallbacks, accessibility pass.
 
 ## 8. Deliverables
 
-- `docs/STUDENT_HUB_CHAT_UPGRADE_PLAN.md` (this file)
-- `docs/STUDENT_HUB_CHAT_RESEARCH.md`
-- `docs/STUDENT_HUB_CHAT_STRATEGY.md`
+- `docs/EMPLOSTART_CHAT_UPGRADE_PLAN.md` (this file)
+- `docs/EMPLOSTART_CHAT_RESEARCH.md`
+- `docs/EMPLOSTART_CHAT_STRATEGY.md`
 - Verified backup archive and checksums outside the repo
 - One commit per implemented change on a dedicated branch
 - Updated `CONTENT_EDITING_GUIDE.md` and README section where behaviour changed

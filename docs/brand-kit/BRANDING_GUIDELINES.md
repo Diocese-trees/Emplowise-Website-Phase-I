@@ -17,7 +17,7 @@ Two audiences, ranked:
 | Rank | Audience | What they are buying | Where they enter |
 | --- | --- | --- | --- |
 | 1 | Founders and SME owners, 5 to 100 staff, Pakistan | Structure they do not have to hire for | `/`, `/why-emplowise`, `/free-hr-audit` |
-| 2 | Students and early career candidates | Free, structured practice and feedback | `/emplostart`, `/faq` |
+| 2 | Career pivoters and early career candidates | Free, structured practice and feedback | `/emplostart`, `/faq` |
 
 The second audience never subsidises the first with invented proof. EmploStart is
 free and genuinely useful; it is not a lead magnet that demands an email address.

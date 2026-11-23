@@ -1,6 +1,8 @@
-# Research: Student Hub and Chatbot Upgrade
+# Research: EmploStart and Chatbot Upgrade
 
-Phase 2 of 5. Companion to `STUDENT_HUB_CHAT_UPGRADE_PLAN.md`.
+> Historical record of the five-tool upgrade research. EmploStart now carries six modules; see `AGENTS.md` for the current contract.
+
+Phase 2 of 5. Companion to `EMPLOSTART_CHAT_UPGRADE_PLAN.md`.
 Method: external sources (cited) combined with a line-by-line audit of the
 current implementation at commit `4b231ff`. Where evidence is thin, the note
 says "design judgement" instead of importing a statistic we cannot verify.

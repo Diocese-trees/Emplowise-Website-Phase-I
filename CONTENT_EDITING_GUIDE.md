@@ -80,9 +80,9 @@ counsel rather than inventing a clause.
 
 The theme toggle appears in the header above 1040px (inside the left rail from 1200px) and as a row in the mobile drawer at 1040px and below. The footer no longer carries a toggle, so editing the two keys updates both remaining controls.
 
-## Student Hub and chat controls
+## EmploStart and chat controls
 
-The five Student Hub tools and the chat widget keep their visible labels in `copy.emplostart`:
+The EmploStart tools and the chat widget keep their visible labels in `copy.emplostart`:
 
 - **Interview:** `interview.breakdown_heading` ("Why this score") and `interview.probe_heading` ("Ask yourself next") label the score dimensions and the practice prompt. `interview.score_note` names the four dimensions, so keep it in step with the 35/25/25/15 weights in `app/Services/StudentToolkit.php`.
 - **Resume builder:** `resume.example`, `resume.clear`, and `resume.save_note`. The note must keep saying the draft stays in the browser and is never sent to a server.
@@ -90,7 +90,9 @@ The five Student Hub tools and the chat widget keep their visible labels in `cop
 - **Prompt library:** `prompts.search_placeholder`, `prompts.clear_search`, `prompts.copy`, and `prompts.copy_visible`. The counts on the filter buttons come from the `student.prompts` array, so they update automatically when you add, remove, or recategorise a prompt.
 - **Chat:** `chat.reset` labels the "Start over" button and `chat.quick` holds the opening chips. Follow-up suggestion chips and intent scoring live in `app/Services/EmplowiseAssistant.php`; the browser fallback copy and its internal links live in `public/js/chat.js`. Keep both in step with the confirmed facts.
 
-Interview and ATS scores are calculated by the local engines first. A configured model can refine the wording around a result, but the numbers a student sees always come from the deterministic local calculation, so a model change cannot move a score.
+Interview and ATS scores are calculated by the local engines first. A configured model can refine the wording around a result, but the numbers a candidate sees always come from the deterministic local calculation, so a model change cannot move a score.
+
+The module map above the tools comes from `emplostart_modules` and the Fair Jobs and Fair Wages band from `fair_jobs_pledge`. Edit the status strings there when a planning module ships; the hero count and the "In build" badges follow the array. Keep the pledge disclaimer: voluntary alignment only, never a UN endorsement.
 
 ## Contact Us
 

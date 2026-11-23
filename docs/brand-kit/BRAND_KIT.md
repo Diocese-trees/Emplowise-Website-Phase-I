@@ -23,7 +23,7 @@ number. It never sounds like a consultancy pitching transformation, and it never
 sounds like a job board chasing clicks.
 
 **Two audiences, one system.** B2B buyers (founders and SME owners) are primary.
-Early career candidates using EmploStart are secondary. The visual system is
+Career pivoters and early career candidates using EmploStart are secondary. The visual system is
 identical for both; the density and the call to action are not. A buyer page
 ends in an audit booking. A tool page ends in using a tool.
 

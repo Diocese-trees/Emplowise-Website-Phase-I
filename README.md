@@ -16,7 +16,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | Public site | 14 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy, plus Company Profile, Portfolio and an eight-slide Pitch Deck |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
-| EmploStart | 5 free tools: mock interview, ATS score, resume builder, profile optimiser, 14-prompt library |
+| EmploStart | 6-module free utility: pivot planner, reimagination lab and market assessment in build; ATS score, mock interview, resume builder, profile optimiser and 14-prompt library live |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
 | Brand kit | 7 Markdown sources in `docs/brand-kit/`, 6 editable DOCX and 1 PPTX in `public/downloads/`, see [`docs/brand-kit/README.md`](docs/brand-kit/README.md) |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
@@ -62,7 +62,7 @@ CHANGELOG.md             dated record of behaviour changes, backfilled from the 
 
 ## About the project
 
-Production-ready Laravel 13 application built for Emplowise HR Services. Nine public pages, a Gen Z–voiced HR assistant, five free career tools, and a multi-step Free HR Audit intake that persists to the database.
+Production-ready Laravel 13 application built for Emplowise HR Services. Nine public pages, a Gen Z–voiced HR assistant, a six-module free career utility, and a multi-step Free HR Audit intake that persists to the database.
 
 All business content lives in `config/emplowise.php`. Nothing commercial is hard-coded in Blade or JavaScript, and claims that lack supplied evidence are left out rather than invented.
 
@@ -305,7 +305,7 @@ Chat transcripts are stored in `chat_messages` (one user row, one assistant row 
 | `pillars`, `services`, `method`, `outcomes` | Home, What We Do, Pricing |
 | `packages`, `pricing_notes`, `legacy_tiers` | Home, Pricing, Audit |
 | `faqs` (categories + Q&A) | FAQ page, chat fallback |
-| `student_*` (roles, levels, prompts) | Student hub, interview fallback |
+| `student_*` (roles, levels, prompts) | EmploStart tools, interview fallback |
 | `pending_inputs` | What We Are, Pricing, README |
 
 Rules applied throughout:

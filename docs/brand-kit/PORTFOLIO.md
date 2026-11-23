@@ -42,8 +42,8 @@ sentence in one config file so the two builds cannot drift.
   degrades to Web3Forms or a mailto fallback on the static build.
 - A grounded assistant with 18 intents that answers from the same config facts,
   with an optional hosted model behind it.
-- EmploStart: five free career tools, three of them mirrored in the browser and
-  checked against PHP fixtures.
+- EmploStart: six planned utility modules, with three job-readiness tools live
+  and mirrored in the browser, checked against PHP fixtures.
 - Dark mode, reduced-motion support, and WCAG AA contrast on the documented
   pairings.
 

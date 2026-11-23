@@ -1,7 +1,9 @@
-# Strategy: Student Hub and Chatbot Upgrade
+# Strategy: EmploStart and Chatbot Upgrade
 
-Phase 3 of 5. Inputs: `STUDENT_HUB_CHAT_UPGRADE_PLAN.md` and
-`STUDENT_HUB_CHAT_RESEARCH.md`. Baseline: `4b231ff`.
+> Historical record of the five-tool upgrade strategy. EmploStart now carries six modules; see `AGENTS.md` for the current contract.
+
+Phase 3 of 5. Inputs: `EMPLOSTART_CHAT_UPGRADE_PLAN.md` and
+`EMPLOSTART_CHAT_RESEARCH.md`. Baseline: `4b231ff`.
 
 ## 1. Principles
 
@@ -122,7 +124,7 @@ Keep exactly 14 prompts so the site's published fact stays true.
 Typing indicator marked `aria-hidden` so it is not announced as content.
 Suggestion chips are real buttons with accessible names. Focus returns to the
 input after a reply. Reset announces via the existing polite log. All new
-Student Hub inputs have labels; score bars get `role="img"` with a text label.
+EmploStart inputs have labels; score bars get `role="img"` with a text label.
 
 ## 4. Commit plan
 

@@ -20,7 +20,7 @@ added in this release and are marked **new**. Every route renders through
 | `/what-we-do` | `pages/what-we-do` | `whatWeDo` | Buyer comparing service scope and depth | Service catalogue: HR operations outsourcing | Book audit |
 | `/why-emplowise` | `pages/why-emplowise` | `whyEmplowise` | Buyer comparing price and scope with an agency or a hire | Commercial decision page: why Emplowise, published pricing | Book audit |
 | `/what-we-are-building` | `pages/what-we-are-building` | `whatWeAreBuilding` | Buyer or partner testing whether the AI claims are real | Category page: AI automation for HR, pre-launch | Contact, book audit |
-| `/emplostart` | `pages/emplostart` | `emploStart` | Student or early career candidate, free entry point | Tool page: free ATS resume checker and four more tools | Use a tool |
+| `/emplostart` | `pages/emplostart` | `emploStart` | Career pivoter or early career candidate, free entry point | Tool page: six modules, three live tools, free ATS resume checker | Use a tool |
 | `/faq` | `pages/faq` | `faq` | Buyer with a specific objection before a call | Long-tail question coverage, FAQPage schema | Book audit |
 | `/contact` | `pages/contact` | `contact` | Buyer ready to talk, or a candidate with a question | Contact entity page | Email, free audit |
 | `/free-hr-audit` | `pages/audit` | `audit` | Buyer willing to share headcount and pain points | Conversion page: free HR audit in Pakistan | Submit the wizard |
@@ -103,8 +103,13 @@ the field; the server repeats every rule in `AuditRequestController`.
 
 ### 3.2 EmploStart toolkit (`/emplostart`)
 
-Five tools, one page, one tab rail: mock interview, ATS score, resume builder,
-profile optimiser and the 14-prompt library.
+EmploStart is a six-module utility. Three job-readiness tools run on this page in
+one tab rail (mock interview, ATS score, resume builder) alongside the profile
+optimiser and the 14-prompt library. Three planning modules (career pivot
+planner, career reimagination lab, market assessment) are marked "In build" in
+`emplostart_modules` and ship with the standalone app. The page closes with the
+Fair Jobs and Fair Wages pledge, a voluntary SDG 4, 8 and 10 alignment with no
+UN endorsement claim.
 
 | Tool | Server | Browser | Parity |
 | --- | --- | --- | --- |

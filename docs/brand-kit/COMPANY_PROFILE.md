@@ -18,7 +18,7 @@ site keeps the search-facing copy. Every service, price and name below comes fro
 | Clients | Startups and SMEs, 5 to 100 employees |
 | Free entry point | The Free HR Audit, a four-step intake reviewed by a named lead |
 | Published retainers | PKR 40,000, PKR 75,000, and a custom tier above 50 employees |
-| Second audience | Early career candidates, through EmploStart, free |
+| Second audience | Career pivoters and early career candidates, through EmploStart, free |
 | Contact | hello@emplowise.com |
 
 The one-sentence version: Emplowise installs and then runs the HR structure a
@@ -55,11 +55,17 @@ Emplowise sells to four situations. None of them is a demographic.
 | The founder is the helpdesk | "Every people question ends up with me." | A named HR owner, policies, manager scripts |
 | A document is needed | "I need something credible to show my board or my bank." | Policies, structure and a monthly reporting pack |
 
-**Secondary audience: early career candidates.** EmploStart gives students and
-first-job candidates the same structured thinking for free: interview practice,
-ATS feedback, a resume builder, a profile optimiser and a prompt library. No
-account, no cost. It is a public good and an honest demonstration of how the team
-thinks about people operations.
+**Secondary audience: career pivoters and early career candidates.** EmploStart
+gives them the same structured thinking for free: interview practice, ATS
+feedback, a resume builder, a profile optimiser and a prompt library. The broader
+utility adds three planning modules for a career pivot, career reimagination and
+market assessment. No account, no cost. It is a public good and an honest
+demonstration of how the team thinks about people operations.
+
+EmploStart is free because the paid HR work funds it. The team publishes a
+voluntary alignment with SDG 4, SDG 8 and SDG 10, generational workforce goals,
+and fair jobs and fair wages. It is not a UN endorsement, certification or
+partnership, and no salary or placement figure is invented to support it.
 
 ## 04 Philosophy and scope boundaries
 
