@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\URL;
 
 /**
  * Renders the public pages to plain HTML so they can be served by a static
- * host such as GitHub Pages. The tools keep working because the deterministic
- * engines also ship as browser JavaScript; the audit form can be pointed at
+ * host such as GitHub Pages. The EmploStart tools live in their own standalone
+ * app, so this export only links out to them; the audit form can be pointed at
  * Web3Forms when an access key is configured.
  */
 final class ExportStatic extends Command
@@ -182,16 +182,6 @@ final class ExportStatic extends Command
         $html = preg_replace(
             '/(<meta property="og:url" content=")[^"]*(")/',
             '$1'.$canonical.'$2',
-            $html,
-            1,
-        ) ?? $html;
-
-        // With no server there is no API to call. Drop the endpoint URLs so the
-        // EmploStart goes straight to the bundled browser engines instead of
-        // firing four requests that can only fail.
-        $html = preg_replace(
-            '#<div id="emplostart-config"[^>]*>\s*</div>#i',
-            '<div id="emplostart-config" hidden></div>',
             $html,
             1,
         ) ?? $html;

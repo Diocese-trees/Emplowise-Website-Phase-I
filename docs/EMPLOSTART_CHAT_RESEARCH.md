@@ -1,6 +1,6 @@
 # Research: EmploStart and Chatbot Upgrade
 
-> Historical record of the five-tool upgrade research. EmploStart now carries six modules; see `AGENTS.md` for the current contract.
+> Historical record of the five-tool upgrade research. EmploStart now carries six modules and shipped as a standalone app in v3.0; the engine audit below describes the pre-pivot code, which no longer lives in this repository. See `AGENTS.md` for the current contract.
 
 Phase 2 of 5. Companion to `EMPLOSTART_CHAT_UPGRADE_PLAN.md`.
 Method: external sources (cited) combined with a line-by-line audit of the

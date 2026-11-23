@@ -1,8 +1,8 @@
 # Emplowise brand kit and showcase suite
 
-This folder is the Markdown source of truth for the 2026 Emplowise brand
-system, the commercial profile, the portfolio and the pitch deck. The Office
-files in `public/downloads/` are generated from these files; the hosted pages
+This folder mirrors the canonical 2026 Emplowise brand, commercial, portfolio
+and pitch-deck Markdown authored in the `Emplowise-Docs` repo. The Office files
+in `public/downloads/` are generated there and synced here; the hosted pages
 `/company-profile`, `/portfolio` and `/pitch-deck` render the same copy.
 
 Nothing here invents a client, a metric, a testimonial or a market size. Where a
@@ -29,26 +29,24 @@ release scorecard in `CHANGELOG.md` records the sizes.
 
 ## Rebuilding the Office files
 
-Python 3.11 or newer. The tooling is isolated in `tools/brand-kit/`; it never
-touches the site's PHP, Blade, CSS or JavaScript.
+Python 3.11 or newer. The canonical tooling lives in the `Emplowise-Docs` repo
+(`generators/`); `tools/brand-kit/` in this repository holds the earlier mirror.
+Neither touches the site's PHP, Blade, CSS or JavaScript.
 
 ```bash
-python3 -m venv tools/brand-kit/.venv
-tools/brand-kit/.venv/bin/pip install -r tools/brand-kit/requirements.txt
-
-tools/brand-kit/.venv/bin/python tools/brand-kit/build-docx.py
-tools/brand-kit/.venv/bin/python tools/brand-kit/build-pptx.py
-tools/brand-kit/.venv/bin/python tools/brand-kit/verify-office.py
+cd ../Emplowise-Docs            # or the staged _staging/Emplowise-Docs/
+bash scripts/build.sh           # tokens + 6 DOCX + PPTX + verify
+python3 scripts/sync.py exports # copy the built files into public/downloads/
 ```
 
-`build-docx.py` reads every Markdown file listed above except `PITCH_DECK.md`
-and strips the trailing `## Internal Verification Notes` section before writing,
-so open questions stay in the repository and out of the client-facing file.
-`build-pptx.py` reads `PITCH_DECK.md` and emits eight native slides with speaker
-notes. `verify-office.py` asserts OOXML validity, the 500 KB ceiling, the
-embedded logo, non-empty headings and tables, zero raw Markdown tokens and zero
-`[To Verify]` strings in any body or slide face. It prints a table and exits
-non-zero on the first failure.
+`generators/build_docx.py` reads every Markdown file listed above except
+`PITCH_DECK.md` and strips the trailing `## Internal Verification Notes` section
+before writing, so open questions stay in the repository and out of the
+client-facing file. `generators/build_pptx.py` reads `PITCH_DECK.md` and emits
+eight native slides with speaker notes. `generators/verify_office.py` asserts
+OOXML validity, the 500 KB ceiling, the embedded logo, non-empty headings and
+tables, zero raw Markdown tokens and zero `[To Verify]` strings in any body or
+slide face. It prints a table and exits non-zero on the first failure.
 
 `public/downloads/` is committed because the static export ships `public/` as
 is. Regenerate and commit the Office files in the same change set as the
@@ -115,7 +113,7 @@ deck keeps a qualitative wedge on the slide and the numbers in the notes.
 
 ## Related documentation
 
-- [`../REPO_TOPOLOGY.md`](../REPO_TOPOLOGY.md) explains the two repositories.
+- [`../REPO_TOPOLOGY.md`](../REPO_TOPOLOGY.md) explains the three repositories.
 - [`../STATIC_HOSTING.md`](../STATIC_HOSTING.md) explains the GitHub Pages build.
 - [`../THEME_AND_MOTION.md`](../THEME_AND_MOTION.md) documents the dark mode and
   motion contract behind the live palette.

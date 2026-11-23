@@ -271,8 +271,8 @@ rather than a transform, and never rely on motion alone.
 
 ## 5. Validating a theme change
 
-1. `php artisan test` — 62 tests, including static-export assertions.
-2. `php artisan emplowise:seo-audit` — nine marketing routes.
+1. `php artisan test` — 50 tests, including static-export assertions.
+2. `php artisan emplowise:seo-audit` — thirteen marketing routes.
 3. Capture all eleven routes at 1440px in light and dark, with the consent
    card dismissed. Captures are local review artefacts under the git-ignored
    `docs/screenshots/`; nothing is committed. Check `/terms` and `/privacy`

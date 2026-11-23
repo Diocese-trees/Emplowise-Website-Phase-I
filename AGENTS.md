@@ -14,15 +14,12 @@ export.
 ## Commands
 
 ```bash
-php artisan emplowise:bundle-css                 # regenerate site.css + hub.css
-php artisan emplowise:seo-audit                  # 9 routes: title, description, keyword
+php artisan emplowise:bundle-css                 # regenerate site.css
+php artisan emplowise:seo-audit                  # 13 routes: title, description, keyword
 php artisan emplowise:export-static build/static \
   --base=https://diocese-trees.github.io/Emplowise-Website-Phase-I \
   --audit-key=YOUR_KEY
 php artisan test                                 # Feature suite
-node tools/parity/check-ats.mjs
-node tools/parity/check-interview.mjs
-node tools/parity/check-profile.mjs
 ```
 
 `check-chat-routing.mjs` needs a served export and headless Chromium:
@@ -53,7 +50,7 @@ node tools/parity/check-chat-routing.mjs
 
 Never read these in full: `docs/screenshots/`, `composer.lock`,
 `public/css/site.css` (generated), full `config/emplowise.php` (use targeted
-reads or grep). `public/css/hub.css` is also generated.
+reads or grep).
 
 ## Mandatory loop
 
@@ -61,8 +58,8 @@ reads or grep). `public/css/hub.css` is also generated.
 2. Edit.
 3. Rebuild artifacts: `emplowise:bundle-css` after any CSS edit,
    `emplowise:export-static` after template/route/404 changes.
-4. Run `php artisan test` and `emplowise:seo-audit`; add the parity scripts for
-   toolkit or chat work.
+4. Run `php artisan test` and `emplowise:seo-audit`; add the chat parity harness
+   only when chat routing changes.
 5. Update the mapped docs (`CHANGELOG.md`, `README.md`, `docs/*.md`).
 6. Commit with a `task-N: ...` message.
 7. Check the rendered page at 1440x900 and 375x667 in light and dark mode.
@@ -100,5 +97,5 @@ existing route stay in force.
 
 4. SANDBOX & DENYLIST:
    - NEVER write outside the workspace root (`../`); stage new repos strictly under `_staging/Emplowise-Docs/` and `_staging/EmploStart/` (add `_staging/` to `.gitignore`).
-   - NEVER read in full: `composer.lock`, `docs/screenshots/`, `public/css/site.css`, `tools/parity/fixtures.json`.
+   - NEVER read in full: `composer.lock`, `docs/screenshots/`, `public/css/site.css`.
 ```

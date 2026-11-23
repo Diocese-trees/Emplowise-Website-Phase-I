@@ -87,11 +87,11 @@ return [
             'primary_keyword' => 'free ATS resume checker',
             'secondary_keywords' => ['career pivot planning', 'mock interview practice'],
             'title' => 'Free ATS Resume Checker and 6 Career Tools | Emplowise',
-            'description' => 'EmploStart is a permanently free career utility: a free ATS resume checker, interview prep, a profile builder, and three planning modules. No account.',
+            'description' => 'EmploStart is a free career app: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. No account.',
             'h1' => 'A free ATS resume checker for career pivoters and job seekers.',
             'h1_accent' => 'free ATS resume checker',
-            'h2' => 'Free ATS resume checker and JD analyzer.',
-            'intro' => 'EmploStart is a permanently free career utility for career pivoters and job seekers: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. No account, no cost, no invented feedback.',
+            'h2' => 'Free ATS resume checker and five more free tools.',
+            'intro' => 'EmploStart is a permanently free career app for career pivoters and job seekers: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. It opens in your browser with no account and optional AI.',
         ],
 
         // === PAGE: FAQ ===
@@ -248,6 +248,12 @@ return [
     ],
 
     /*
+    | Public URL of the standalone EmploStart app. The launcher page links out
+    | to it; override with EMPLOSTART_URL once the product repo is deployed.
+    */
+    'emplostart_url' => env('EMPLOSTART_URL', 'https://diocese-trees.github.io/EmploStart/'),
+
+    /*
     | EmploStart is a standalone, permanently free utility. The pledge is
     | voluntary alignment, never a claim of UN endorsement or certification.
     */
@@ -266,13 +272,12 @@ return [
     ],
 
     /*
-    | The six utility modules. Three ship in this build; the planning modules
-    | arrive with the standalone EmploStart app.
+    | The six utility modules, all shipped in the standalone EmploStart app.
     */
     'emplostart_modules' => [
-        ['id' => 'pivot', 'num' => '01', 'title' => 'Career Pivot Planner', 'desc' => 'Transferable skills, priority gaps, bridge roles, and a 30-60-90 day plan.', 'status' => 'In build'],
-        ['id' => 'reimagine', 'num' => '02', 'title' => 'Career Reimagination Lab', 'desc' => 'Three direction archetypes, each with a concrete validation experiment.', 'status' => 'In build'],
-        ['id' => 'market', 'num' => '03', 'title' => 'Market Assessment', 'desc' => 'Role readiness, evidence gaps, and fair-wage negotiation readiness.', 'status' => 'In build'],
+        ['id' => 'pivot', 'num' => '01', 'title' => 'Career Pivot Planner', 'desc' => 'Transferable skills, priority gaps, bridge roles, and a 30-60-90 day plan.', 'status' => 'Live'],
+        ['id' => 'reimagine', 'num' => '02', 'title' => 'Career Reimagination Lab', 'desc' => 'Three direction archetypes, each with a concrete validation experiment.', 'status' => 'Live'],
+        ['id' => 'market', 'num' => '03', 'title' => 'Market Assessment', 'desc' => 'Role readiness, evidence gaps, and fair-wage negotiation readiness.', 'status' => 'Live'],
         ['id' => 'ats', 'num' => '04', 'title' => 'ATS Resume Analyzer', 'desc' => 'Score a resume against a posting, out of 100, with a fix list.', 'status' => 'Live'],
         ['id' => 'interview', 'num' => '05', 'title' => 'Interview Prep', 'desc' => 'Role and level questions with structured feedback and a model answer.', 'status' => 'Live'],
         ['id' => 'profile', 'num' => '06', 'title' => 'Profile Builder', 'desc' => 'Headline, summary, bullets, an ATS resume, and 14 prompts.', 'status' => 'Live'],
@@ -592,19 +597,6 @@ return [
     'faq_note' => 'Answers use only confirmed business data. Anything unresolved is confirmed in writing after your Free HR Audit.',
 
     'student' => [
-        'intro' => 'Six modules, three of them live on this page. No account. No cost. Built on the same structure Emplowise uses for client HR, pointed at your career.',
-        'roles' => [
-            'Software Engineering',
-            'Data and Analytics',
-            'Product and Project',
-            'Marketing',
-            'Sales and Business Development',
-            'Finance and Accounting',
-            'HR and People Operations',
-            'Operations and Supply Chain',
-            'General / Any role',
-        ],
-        'levels' => ['Internship', 'Entry level', '1 to 3 years', 'Career switch'],
         'prompts' => [
             [
                 'category' => 'Job search',
@@ -1280,138 +1272,32 @@ return [
 
         // === PAGE: EMPLOSTART ===
         'emplostart' => [
-            'kicker' => 'Free career utility',
-            'filter_all' => 'All',
-            'stats' => ['Free modules', 'Cost, forever', 'Accounts required', 'Ready prompts'],
+            'kicker' => 'Free career app',
+            'stats' => ['Free modules', 'Cost, forever', 'Accounts required', 'AI by default'],
             'modules_kicker' => 'Six modules',
-            'modules_heading' => 'One free utility, from first question to signed offer.',
-            'modules_lede' => 'Three job-readiness tools run on this page today. The three planning modules arrive with the standalone EmploStart app, still free.',
-            'modules_live' => 'Live here',
+            'modules_heading' => 'One free app, from first question to signed offer.',
+            'modules_lede' => 'Every module now lives in the standalone EmploStart app. This page is the map; the app is where the work happens.',
+            'modules_live' => 'Open in app',
             'modules_next' => 'In build',
-            'tools_heading' => 'Use the live tools',
-            'tabs' => [
-                ['id' => 'interview', 'num' => '01', 'title' => 'Mock interview', 'desc' => 'Three questions, structured feedback'],
-                ['id' => 'ats', 'num' => '02', 'title' => 'ATS score', 'desc' => 'Match a resume to a job description'],
-                ['id' => 'resume', 'num' => '03', 'title' => 'Resume builder', 'desc' => 'Single column, parser safe, printable'],
-                ['id' => 'profile', 'num' => '04', 'title' => 'Profile optimizer', 'desc' => 'Headline, summary, and bullet rewrites'],
-                ['id' => 'prompts', 'num' => '05', 'title' => 'Prompt library', 'desc' => 'Copy, paste, adapt, use'],
+            'launch_cta' => 'Open EmploStart',
+            'launch_secondary' => 'See the six modules',
+            'launch_note' => 'Opens the standalone app in a new tab. Nothing installs, and no account is needed.',
+            'where_kicker' => 'What runs where',
+            'where_heading' => 'Local by default. AI only when you choose it.',
+            'where_lede' => 'The app is built so the useful work happens in your browser. Artificial intelligence is an optional extra, never the default.',
+            'where_local_heading' => 'Runs locally in your browser',
+            'where_local' => [
+                'All six modules work with no network call.',
+                'Nothing you type is uploaded, stored on a server, or sold.',
+                'No account, no payment, and no advertising inside the tools.',
             ],
-            'interview' => [
-                'heading' => 'Mock interview simulator',
-                'body' => 'Pick a role and a level. Answer one question at a time. Get a score, three strengths, three fixes, and a model answer built without invented facts.',
-                'status' => 'Local engine ready',
-                'how_heading' => 'What happens after you press start',
-                'how_steps' => [
-                    'Three questions for your role and level, served one at a time.',
-                    'Each answer is scored out of 100 on structure, evidence, and clarity.',
-                    'You get three strengths, three fixes, and a model answer to adapt.',
-                ],
-                'how_note' => 'Nothing is uploaded to an account. Answers stay in this browser session, and the local scoring engine runs even when no AI key is configured.',
-                'feedback_heading' => 'Structured feedback',
-                'next' => 'Next question',
-                'start' => 'Start set',
-                'role_label' => 'Role',
-                'level_label' => 'Level',
-                'answer_label' => 'Your answer',
-                'answer_meta' => 'Use one concrete example. Numbers help.',
-                'counter_zero' => '0 characters',
-                'submit' => 'Score this answer',
-                'out_of' => 'Out of 100',
-                'score_note' => 'Scored on structure, evidence, clarity, and ownership. Local heuristics run first. AI refines when a key is configured.',
-                'breakdown_heading' => 'Why this score',
-                'probe_heading' => 'Ask yourself next',
-                'worked' => 'What worked',
-                'fix_next' => 'Fix next time',
-                'model_answer' => 'Model answer shape',
+            'where_ai_heading' => 'Optional AI, off until you consent',
+            'where_ai' => [
+                'AI stays off until you turn it on and accept the consent note.',
+                'Only the text you send in that moment leaves your browser.',
+                'Every result has a local fallback, so the tool still works without AI.',
             ],
-            'ats' => [
-                'heading' => 'Free ATS resume checker and JD analyzer',
-                'body' => 'Paste a resume and a job description. Get a 0 to 100 score, the keywords you are missing, and the structure and formatting checks a parser cares about.',
-                'status' => 'Explainable scoring',
-                'submit' => 'Score the match',
-                'report_heading' => 'Match report',
-                'fixes_heading' => 'Fix list',
-                'resume_label' => 'Resume text',
-                'resume_hint' => 'Text is processed for this request and not stored.',
-                'jd_label' => 'Job description',
-                'jd_hint' => 'The keyword list is built from this posting only.',
-                'out_of' => 'Out of 100',
-                'score_note' => 'Weighting: keywords 55, structure 25, formatting 20. The score is deterministic, so re-running it stays honest.',
-                'matched' => 'Matched keywords',
-                'missing' => 'Missing keywords',
-                'structure' => 'Structure checks',
-                'format' => 'Formatting checks',
-                'edits' => 'AI suggested edits',
-            ],
-            'resume' => [
-                'heading' => 'ATS resume builder',
-                'body' => 'One column. Standard headings. Plain text friendly. Fill the form, watch the preview, then print to PDF or copy the text. No account, no watermark.',
-                'status' => 'Print ready',
-                'print' => 'Print or save PDF',
-                'download' => 'Download .txt',
-                'copy' => 'Copy text',
-                'preview_note' => 'Print it, save it as PDF, or copy the plain text into any application form.',
-                'add_role' => 'Add role',
-                'add_education' => 'Add education',
-                'example' => 'Load example',
-                'clear' => 'Clear draft',
-                'save_note' => 'The draft saves in this browser only. Clear it any time, and nothing is sent to a server.',
-                'skills_hint' => 'Comma separated. Use the exact tool names from the job posting.',
-                'form' => [
-                    'name' => 'Full name',
-                    'title' => 'Target title',
-                    'email' => 'Email',
-                    'phone' => 'Phone',
-                    'location' => 'Location',
-                    'linkedin' => 'LinkedIn',
-                    'summary' => 'Summary',
-                    'experience' => 'Experience',
-                    'education' => 'Education',
-                    'skills' => 'Skills',
-                ],
-                'preview' => [
-                    'name' => 'Your Name',
-                    'title' => 'Target title',
-                    'contact' => 'email · phone · location · LinkedIn',
-                    'summary_section' => 'Summary',
-                    'summary_empty' => 'Add a three line summary.',
-                    'experience_section' => 'Experience',
-                    'experience_empty' => 'Add at least one role.',
-                    'education_section' => 'Education',
-                    'education_empty' => 'Add your degree or qualification.',
-                    'skills_section' => 'Skills',
-                    'skills_empty' => 'Add skills.',
-                ],
-            ],
-            'profile' => [
-                'heading' => 'Profile optimizer',
-                'body' => 'Paste your headline, summary, and bullets. Get three headline options, a tighter summary, and bullets rewritten to start with an action verb. Placeholders appear where a number is missing.',
-                'status' => 'No invented metrics',
-                'submit' => 'Rewrite my profile',
-                'headlines_heading' => 'Headline options',
-                'summary_heading' => 'Summary',
-                'bullets_heading' => 'Rewritten bullets',
-                'copy' => 'Copy',
-                'fixes_heading' => 'Fix list',
-                'form' => [
-                    'target' => 'Target role',
-                    'headline' => 'Current headline',
-                    'summary' => 'Current summary',
-                    'bullets' => 'Experience bullets',
-                ],
-            ],
-            'prompts' => [
-                'heading' => 'Prompt library',
-                'body' => ':count copy-paste prompts for job search, resumes, interviews, LinkedIn, and career clarity. Fill the brackets with your details and run them in any assistant.',
-                'status' => 'Yours to adapt',
-                'empty' => 'No prompts match that search. Try a broader word.',
-                'copy' => 'Copy prompt',
-                'expand' => 'Expand',
-                'search_label' => 'Search prompts',
-                'search_placeholder' => 'Search prompts by task or keyword',
-                'clear_search' => 'Clear',
-                'copy_visible' => 'Copy visible prompts',
-            ],
+            'where_note' => 'EmploStart is free because Emplowise remote HR services fund it. The pledge below is voluntary alignment, not an endorsement.',
             'cta_band' => [
                 'heading' => 'Hiring soon? Run the free HR audit before the first start date.',
                 'primary' => 'Book the free HR audit',

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CspReportController;
-use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\AuditRequestController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
@@ -62,20 +61,4 @@ Route::prefix('api')->name('api.')->group(function (): void {
     Route::post('/audit', [AuditRequestController::class, 'store'])
         ->middleware('throttle:15,1')
         ->name('audit.store');
-
-    Route::post('/student/interview/questions', [StudentController::class, 'interviewQuestions'])
-        ->middleware('throttle:20,1')
-        ->name('student.interview.questions');
-
-    Route::post('/student/interview/feedback', [StudentController::class, 'interviewFeedback'])
-        ->middleware('throttle:20,1')
-        ->name('student.interview.feedback');
-
-    Route::post('/student/ats', [StudentController::class, 'ats'])
-        ->middleware('throttle:20,1')
-        ->name('student.ats');
-
-    Route::post('/student/profile', [StudentController::class, 'profile'])
-        ->middleware('throttle:20,1')
-        ->name('student.profile');
 });

@@ -35,11 +35,10 @@ clone works on its own, and nothing about the original depends on it.
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on pushes to `main`, on pull requests and by
-manual dispatch. It fails if the regenerated bundles differ from the committed
-`site.css`/`hub.css`, checks JavaScript syntax, runs `emplowise:seo-audit` and
-the Feature suite, replays the interview/ATS/profile parity fixtures, and
-renders a keyless static export with `index.html`, `404.html`, the audit form
-and the CSP meta asserted. It has read-only permissions; only
+manual dispatch. It fails if the regenerated `site.css` differs from the
+committed bundle, checks JavaScript syntax, runs `emplowise:seo-audit` and the
+Feature suite, and renders a keyless static export with `index.html`, `404.html`,
+the audit form and the CSP meta asserted. It has read-only permissions; only
 `publish-static.yml` writes `gh-pages`.
 
 ## Keeping the copy in sync
@@ -178,18 +177,12 @@ opens without JavaScript on desktop, in the mobile drawer and in the left rail.
   `requestIdleCallback` slot (1200 ms timeout fallback). Reply rendering uses
   `textContent` and `createElement`; the only `innerHTML` writes are empty
   strings that clear a container.
-- **EmploStart module map and tool rail** (`js/student.js`, `css/student.css`):
-  six flat cards from `emplostart_modules` above a five-tab
-  (`role="tab"`) rail with arrow/Home/End navigation. Live cards deep-link to
-  the matching panel; the Fair Jobs and Fair Wages band comes from
-  `fair_jobs_pledge`. Below 1000px the rail is `position: sticky` under the
-  header in a five-column grid; below 760px it
-  becomes one horizontal scroll row (`scroll-snap-type: x proximity`, hidden
-  scrollbar) so the panel stays near the fold. `.hub-panel` scroll margins clear
-  the pinned rail. Resume rows and empty states are built with
-  `createElement`/`textContent` (no interpolated `innerHTML`), and the draft
-  uses guarded `localStorage` get/set/remove so blocked storage still leaves a
-  working builder.
+- **EmploStart launcher** (`pages/emplostart.blade.php`, `css/pages.css`):
+  six flat cards from `emplostart_modules`, a "what runs where" disclosure, and
+  a prominent link to the standalone app at `emplowise.emplostart_url`. The Fair
+  Jobs and Fair Wages band comes from `fair_jobs_pledge`. The page carries no
+  tool panels, no engine scripts, and no `/api/student/*` routes; the app owns
+  all of that runtime in its own repository.
 
 ## Visibility
 

@@ -2,8 +2,7 @@ name: CI
 
 # Every push and pull request must pass the same gate the release loop uses:
 # regenerated CSS bundles match their sources, the test suite and SEO audit
-# pass, the browser engines match their PHP fixtures, and the static export
-# renders without an audit key.
+# pass, and the static export renders without an audit key.
 
 on:
   push:
@@ -43,14 +42,14 @@ jobs:
           mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
           chmod -R ug+rwx storage bootstrap/cache
 
-      - name: Fail if the CSS bundles are stale
+      - name: Fail if the CSS bundle is stale
         run: |
           php artisan emplowise:bundle-css
-          git diff --exit-code -- public/css/site.css public/css/hub.css
+          git diff --exit-code -- public/css/site.css
 
       - name: Check JavaScript syntax
         run: |
-          for file in public/js/*.js public/js/toolkit/*.js; do
+          for file in public/js/*.js; do
             node --check "$file"
           done
 
@@ -59,12 +58,6 @@ jobs:
 
       - name: Run the test suite
         run: php artisan test
-
-      - name: Check browser-engine parity
-        run: |
-          node tools/parity/check-interview.mjs
-          node tools/parity/check-ats.mjs
-          node tools/parity/check-profile.mjs
 
       - name: Smoke-test the static export
         run: |
@@ -76,6 +69,8 @@ jobs:
           test -f build/static/portfolio/index.html
           test -f build/static/pitch-deck/index.html
           test -f build/static/docs/index.html
+          test -f build/static/emplostart/index.html
+          test ! -d build/static/js/toolkit
           test -f build/static/css/showcase.css
           test -f build/static/js/deck.js
           test -f build/static/downloads/Emplowise-Pitch-Deck-2026.pptx

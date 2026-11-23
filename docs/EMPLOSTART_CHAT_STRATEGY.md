@@ -1,6 +1,6 @@
 # Strategy: EmploStart and Chatbot Upgrade
 
-> Historical record of the five-tool upgrade strategy. EmploStart now carries six modules; see `AGENTS.md` for the current contract.
+> Historical record of the five-tool upgrade strategy. EmploStart now carries six modules and shipped as a standalone app in v3.0; the tool runtime described below moved out of this repository. See `AGENTS.md` for the current contract.
 
 Phase 3 of 5. Inputs: `EMPLOSTART_CHAT_UPGRADE_PLAN.md` and
 `EMPLOSTART_CHAT_RESEARCH.md`. Baseline: `4b231ff`.
@@ -152,15 +152,13 @@ The test suite stood at 37 tests / 344 assertions when C7 landed.
 
 The GitHub Pages build no longer depends on a backend:
 
-- `public/js/toolkit/interview.js`, `ats.js`, and `profile.js` are browser ports
-  of `StudentToolkit`, loaded only on the hub. Their output is checked against
-  PHP-generated fixtures with `tools/parity/check-*.mjs`.
+- The browser ports of the interview, ATS, and profile engines live in the
+  standalone EmploStart repo (v3.0), not on this site.
 - `php artisan emplowise:export-static` renders the seven pages with the base
-  path applied, injects a CSP meta policy, strips the `#student-config` endpoint
-  URLs, and points the booking form at Web3Forms.
+  path applied, injects a CSP meta policy, and points the booking form at Web3Forms.
 - `.github/workflows/publish-static.yml` republishes `gh-pages` on every push to
   `main`, so the demo cannot drift from the source again.
-- `student.js` and `chat.js` treat 404/405/5xx as "use the local engine", so an
+- `chat.js` treats 404/405/5xx as "use the local knowledge base", so an
   accidental API call on a static host degrades instead of showing an error.
 
 Suite after the follow-up: 44 tests / 402 assertions.

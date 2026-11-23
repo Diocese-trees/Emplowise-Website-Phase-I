@@ -82,17 +82,30 @@ The theme toggle appears in the header above 1040px (inside the left rail from 1
 
 ## EmploStart and chat controls
 
-The EmploStart tools and the chat widget keep their visible labels in `copy.emplostart`:
+The `/emplostart` page is a launcher, not the app. Its visible labels live in
+`copy.emplostart`, and the app itself is linked from `emplowise.emplostart_url`
+(override with `EMPLOSTART_URL`):
 
-- **Interview:** `interview.breakdown_heading` ("Why this score") and `interview.probe_heading` ("Ask yourself next") label the score dimensions and the practice prompt. `interview.score_note` names the four dimensions, so keep it in step with the 35/25/25/15 weights in `app/Services/StudentToolkit.php`.
-- **Resume builder:** `resume.example`, `resume.clear`, and `resume.save_note`. The note must keep saying the draft stays in the browser and is never sent to a server.
-- **Profile optimizer:** `profile.form.target` labels the optional Target role field. The rewrite uses that role when it is filled in.
-- **Prompt library:** `prompts.search_placeholder`, `prompts.clear_search`, `prompts.copy`, and `prompts.copy_visible`. The counts on the filter buttons come from the `student.prompts` array, so they update automatically when you add, remove, or recategorise a prompt.
-- **Chat:** `chat.reset` labels the "Start over" button and `chat.quick` holds the opening chips. Follow-up suggestion chips and intent scoring live in `app/Services/EmplowiseAssistant.php`; the browser fallback copy and its internal links live in `public/js/chat.js`. Keep both in step with the confirmed facts.
+- **Hero and launch:** `kicker`, `stats`, `launch_cta`, `launch_secondary`, and
+  `launch_note`. The note must keep saying the app opens in a new tab with no
+  install and no account.
+- **Module map:** `modules_kicker`, `modules_heading`, `modules_lede`, and
+  `modules_live`. Module titles, descriptions, and numbers come from
+  `emplostart_modules`, so updating that array updates the grid.
+- **What runs where:** `where_*` keys and their two lists. Keep the privacy
+  promise accurate: all six modules run locally, and AI stays off until the
+  visitor consents.
+- **Pledge:** the Fair Jobs and Fair Wages band comes from `fair_jobs_pledge`.
+  Keep the disclaimer: voluntary alignment only, never a UN endorsement.
+- **Chat:** `chat.reset` labels the "Start over" button and `chat.quick` holds
+  the opening chips. Follow-up suggestion chips and intent scoring live in
+  `app/Services/EmplowiseAssistant.php`; the browser fallback copy and its
+  internal links live in `public/js/chat.js`. Keep both in step with the
+  confirmed facts.
 
-Interview and ATS scores are calculated by the local engines first. A configured model can refine the wording around a result, but the numbers a candidate sees always come from the deterministic local calculation, so a model change cannot move a score.
-
-The module map above the tools comes from `emplostart_modules` and the Fair Jobs and Fair Wages band from `fair_jobs_pledge`. Edit the status strings there when a planning module ships; the hero count and the "In build" badges follow the array. Keep the pledge disclaimer: voluntary alignment only, never a UN endorsement.
+The main site carries no EmploStart engine code, no tool panels, and no
+`/api/student/*` routes. Change the product in its own repo (`_staging/EmploStart/`),
+then update this launcher copy only.
 
 ## Contact Us
 
@@ -129,7 +142,7 @@ php artisan emplowise:seo-audit
 php artisan config:clear && php artisan config:cache
 ```
 
-`emplowise:seo-audit` checks the nine marketing routes for missing keys, title and description length, duplicate titles, duplicate keywords, keyword placement in the title, h1, intro, and section heading, banned filler words, em dashes, and the confirmed business facts. Terms and privacy carry their own meta titles and descriptions and are covered by the route-render tests. It prints a table and exits non-zero when something needs fixing. The second command clears the old cached config and rebuilds it so the live site uses your new text.
+`emplowise:seo-audit` checks the thirteen marketing routes for missing keys, title and description length, duplicate titles, duplicate keywords, keyword placement in the title, h1, intro, and section heading, banned filler words, em dashes, and the confirmed business facts. Terms and privacy carry their own meta titles and descriptions and are covered by the route-render tests. It prints a table and exits non-zero when something needs fixing. The second command clears the old cached config and rebuilds it so the live site uses your new text.
 
 To preview locally without caching, run `php artisan config:clear` and open the site with `php artisan serve`.
 
@@ -137,7 +150,7 @@ To preview locally without caching, run `php artisan config:clear` and open the 
 
 Text edits never need a rebuild. If you change a stylesheet in `public/css`, run
 `php artisan emplowise:bundle-css` afterwards and commit the regenerated
-`site.css`/`hub.css` in the same change set, or the site keeps serving the old
+`site.css` in the same change set, or the site keeps serving the old
 bundle. See "Styles and assets" in the README, and
 [`docs/THEME_AND_MOTION.md`](docs/THEME_AND_MOTION.md) before touching colours or
 adding a component that must work in dark mode.

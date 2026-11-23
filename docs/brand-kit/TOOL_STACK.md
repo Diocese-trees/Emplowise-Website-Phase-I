@@ -21,11 +21,11 @@ Application layers:
 - `app/Http/Controllers/SiteController.php` renders every page with config data.
 - `app/Http/Controllers/AuditRequestController.php` validates and persists the
   audit intake.
-- `app/Http/Controllers/Api/{ChatController,StudentController,CspReportController}.php`
-  serve the assistant, the three server-backed tools and CSP reports.
-- `app/Services/{EmplowiseAssistant,StudentToolkit,AlibabaCloudClient}.php` hold
-  the business rules: intent scoring and grounded replies, the interview/ATS/
-  profile algorithms, and the OpenAI-compatible Model Studio client.
+- `app/Http/Controllers/Api/{ChatController,CspReportController}.php` serve the
+  assistant and CSP reports.
+- `app/Services/{EmplowiseAssistant,AlibabaCloudClient}.php` hold the business
+  rules: intent scoring and grounded replies, plus the OpenAI-compatible Model
+  Studio client. The EmploStart engines live in the standalone product repo.
 - `app/Support/{CssBundles,ThemeBootstrap,helpers}.php` own the CSS bundles, the
   hashed inline theme script and `asset_v()`.
 - `app/Http/Middleware/{SecurityHeaders,ForcePublicUrl}.php` emit the security
@@ -58,9 +58,7 @@ Client scripts, all loaded with `defer`:
 | `faq.js` | `/faq` | accordion |
 | `team.js` | `/what-we-are` | team tabs |
 | `audit.js` | `/free-hr-audit` | four-step wizard, drafts, inline validation |
-| `student.js` | `/emplostart` | tabs, resume builder, prompt library |
-| `js/toolkit/{interview,ats,profile}.js` | `/emplostart` | browser ports of the PHP engines |
-| `deck.js` | `/pitch-deck` only (new) | slide navigation and counter |
+| `deck.js` | `/pitch-deck` only | slide navigation and counter |
 
 ## 3. AI, forms and parity
 
@@ -69,10 +67,9 @@ Client scripts, all loaded with `defer`:
 | Model provider | Alibaba Cloud Model Studio, OpenAI-compatible `/chat/completions` |
 | Primary and fallback models | `qwen-max`, then `kimi` (both configurable) |
 | Client | `App\Services\AlibabaCloudClient`, timeout 45 s, connect timeout 10 s |
-| No-key behaviour | deterministic local engines, `model: local-rules`, `source: fallback` |
+| No-key behaviour | deterministic local replies in `EmplowiseAssistant`, `source: fallback` |
 | Booking form, Laravel | `POST /api/audit`, throttled 15/min, SQLite `audit_requests` |
 | Booking form, static | Web3Forms with a repository secret; keyless builds are inert |
-| Parity fixtures | `tools/parity/generate.php` writes `fixtures.json`; three Node harnesses compare browser output with PHP |
 | Chat routing harness | `tools/parity/check-chat-routing.mjs`, needs a served export and headless Chromium |
 
 ## 4. Delivery
@@ -94,14 +91,14 @@ travels with the page. The limitation is documented in `README.md` and in
 
 | Gate | Command | Count |
 | --- | --- | --- |
-| Feature suite | `php artisan test` | 62 tests, 922 assertions, including showcase routes, export assets and Office download checks |
+| Feature suite | `php artisan test` | 50 tests, 821 assertions, including showcase routes, export assets and Office download checks |
 | SEO copy audit | `php artisan emplowise:seo-audit` | every public route: title 45 to 60 characters, description 135 to 155, unique keywords, primary keyword present in title, h1, intro and h2 |
 | Security headers | `php artisan test --filter=SecurityHeadersTest` | CSP mode, HSTS over HTTPS, nosniff, frame denial, permissions policy |
 | Static export | `php artisan test --filter=ExportStaticTest` | 15 pages plus redirects, subpath assets, CSP meta, no inline script or style |
-| Browser parity | `node tools/parity/check-{interview,ats,profile}.mjs` | 11 + 6 + 5 fixtures |
+| Chat routing | `node tools/parity/check-chat-routing.mjs` | served export plus headless Chromium |
 | JS syntax | `node --check` on every script | all files in `public/js` |
-| Bundle freshness | `emplowise:bundle-css` then `git diff --exit-code` | `site.css`, `hub.css` |
-| Office files | `python tools/brand-kit/verify-office.py` | 6 DOCX + 1 PPTX, size, OOXML, logo, no raw Markdown or verification notes |
+| Bundle freshness | `emplowise:bundle-css` then `git diff --exit-code` | `site.css` |
+| Office files | `python Emplowise-Docs/generators/verify_office.py` | 6 DOCX + 1 PPTX, size, OOXML, logo, no raw Markdown or verification notes |
 
 `composer.json` also ships `laravel/pint` for style, `phpunit/phpunit` 12.5,
 `mockery/mockery`, `nunomaduro/collision` and `fakerphp/faker` as dev
@@ -111,11 +108,11 @@ dependencies. None of them run at request time.
 
 | Piece | Detail |
 | --- | --- |
-| Runtime | Python 3.11 or newer, isolated in `tools/brand-kit/.venv` |
-| Libraries | `python-docx`, `python-pptx`, `Pillow` (pinned in `tools/brand-kit/requirements.txt`) |
-| Builders | `build-docx.py`, `build-pptx.py` |
-| Verifier | `verify-office.py` |
-| Output | `public/downloads/*.docx`, `public/downloads/*.pptx` |
+| Runtime | Python 3.11 or newer, isolated in `Emplowise-Docs/generators/.venv` |
+| Libraries | `python-docx`, `python-pptx`, `Pillow` (pinned in `Emplowise-Docs/generators/requirements.txt`) |
+| Builders | `Emplowise-Docs/generators/build_docx.py`, `build_pptx.py` |
+| Verifier | `Emplowise-Docs/generators/verify_office.py` |
+| Output | Built in `Emplowise-Docs/exports/`, then synced to `public/downloads/*.docx` and `*.pptx` |
 | Why Python | the site has no Node build step; keeping the generator in Python prevents a second JavaScript toolchain and keeps `package.json` out of the repository root |
 
 ## 7. Upgrade ledger for Phase II
@@ -133,7 +130,6 @@ justify the work.
 | Assistant evaluation | Fixture parity and routing tests only | A model upgrade that changes tone or intent boundaries |
 | Market sizing | Qualitative wedge only | A fundraising process that requires a sourced TAM/SAM/SOM |
 | Office branding | Paragraph and table styling in generated DOCX/PPTX, no `.dotx`/`.potx` template files | Brand team wants locked templates with protected styles |
-| Print | Browser print via `print.css` | A designed PDF that must match the DOCX exactly |
 
 ## 8. Deliberately absent
 

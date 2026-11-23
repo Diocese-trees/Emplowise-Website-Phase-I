@@ -42,40 +42,37 @@ sentence in one config file so the two builds cannot drift.
   degrades to Web3Forms or a mailto fallback on the static build.
 - A grounded assistant with 18 intents that answers from the same config facts,
   with an optional hosted model behind it.
-- EmploStart: six planned utility modules, with three job-readiness tools live
-  and mirrored in the browser, checked against PHP fixtures.
+- EmploStart: six-module standalone app, linked from a launcher, with local
+  engines and consent-gated AI.
 - Dark mode, reduced-motion support, and WCAG AA contrast on the documented
   pairings.
 
 **Repo proof.** `routes/web.php`, `resources/views/`, `public/css/`,
-`public/js/`, `tests/Feature/` (62 tests, 922 assertions),
+`public/js/`, `tests/Feature/` (50 tests, 821 assertions),
 `.github/workflows/publish-static.yml`, `docs/STATIC_HOSTING.md`.
 
-### A2. EmploStart toolkit and parity engine
+### A2. EmploStart: standalone, local-first career app
 
-**Problem.** Career tools that only work with a live API are useless on a static
-host, and a browser port that drifts from the server engine is worse than no
-port at all.
+**Problem.** Career tools that need a live API fail on a static host, and
+embedding heavy tool UI in a marketing site slows both products down.
 
-**Strategy.** Implement the algorithms once in PHP (`StudentToolkit`), port them
-to vanilla JavaScript, generate fixtures from PHP, and fail CI when the two
-disagree.
+**Strategy.** Split EmploStart into its own static app repo with six local engine
+modules, a Non-AI default, and consent-gated AI, then link to it from a fast
+launcher page on the main site.
 
 **Capabilities.**
 
-- Interview practice: question bank by role family and seniority, STAR scoring,
-  per-dimension breakdown, next-practice probe, model answer.
-- ATS score: keyword extraction with synonyms and stems, weighted score,
-  target-title check, structure and formatting checks.
-- Profile optimiser: headline variants, summary rewrite, bullet rewrites, quick
-  fixes.
-- Resume builder and prompt library, entirely client-side with `localStorage`
-  drafts.
-- 22 parity fixtures: 11 interview, 6 ATS, 5 profile.
+- Six modules: career pivot planning, career reimagination, market assessment,
+  ATS resume analysis, interview prep, and profile building.
+- Deterministic local engines that make no network call, plus optional AI only
+  after explicit consent.
+- Engine tests in the product repo, a static Pages workflow, and a launcher that
+  discloses what runs where.
+- No account, no payment, and no advertising inside the tools.
 
-**Repo proof.** `app/Services/StudentToolkit.php`, `public/js/toolkit/`,
-`tools/parity/generate.php`, `tools/parity/check-{interview,ats,profile}.mjs`,
-`tools/parity/fixtures.json`.
+**Repo proof.** `EmploStart/js/engines/`, `EmploStart/tests/engines.test.mjs`,
+`EmploStart/.github/workflows/pages.yml`,
+`resources/views/pages/emplostart.blade.php`, `config/emplowise.php`.
 
 ### A3. Free HR Audit diagnostic
 
@@ -130,13 +127,13 @@ are real, inspectable and relevant to how the platform is maintained.
 | System | What it does | Proof |
 | --- | --- | --- |
 | Static export pipeline | Renders 15 pages, five redirect documents, a 404, sitemap, robots and a CSP meta; rewrites every asset, canonical and download URL for a project subpath | `app/Console/Commands/ExportStatic.php`, `tests/Feature/ExportStaticTest.php` |
-| CSS bundle pipeline | Concatenates and minifies two bundles from 12 sources, checked in because the static host ships `public/` as is | `app/Support/CssBundles.php`, `php artisan emplowise:bundle-css` |
+| CSS bundle pipeline | Concatenates and minifies one bundle from 11 sources, checked in because the static host ships `public/` as is | `app/Support/CssBundles.php`, `php artisan emplowise:bundle-css` |
 | SEO copy audit | Enforces title and description length, unique keywords, keyword placement, banned words, em dashes and the confirmed pricing facts | `app/Console/Commands/EmplowiseSeoAudit.php` |
-| CI gate | Bundle freshness, JS syntax, SEO audit, 62 tests, three parity harnesses (chat routing runs locally against Chromium), keyless export smoke test | `.github/workflows/ci.yml` |
+| CI gate | Bundle freshness, JS syntax, SEO audit, 50 tests, chat routing parity (local, against Chromium), keyless export smoke test | `.github/workflows/ci.yml` |
 | Dual deployment | A public original and a private mirror with a documented one-way sync and backup tags | `docs/REPO_TOPOLOGY.md` |
 | Security headers | CSP with a hashed inline bootstrap, HSTS on HTTPS only, COOP/CORP, nosniff, frame denial, CSP reporting | `app/Http/Middleware/SecurityHeaders.php`, `tests/Feature/SecurityHeadersTest.php` |
 | Theme bootstrap | One inline script, hashed into the CSP, so dark mode paints before first paint without `unsafe-inline` | `app/Support/ThemeBootstrap.php` |
-| Office generator | Python builders and a verifier that asserts OOXML validity, size ceiling, embedded logo and no raw markers | `tools/brand-kit/` |
+| Office generator | Python builders in the Emplowise-Docs repo and a verifier that asserts OOXML validity, size ceiling, embedded logo and no raw markers | `Emplowise-Docs/generators/` |
 
 ## Section C: Client case study proof standard
 

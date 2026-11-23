@@ -61,31 +61,41 @@ final class SiteAndApiTest extends TestCase
             ->assertDontSee('most popular', false);
     }
 
-    public function test_career_assets_load_only_on_the_hub(): void
+    public function test_emplostart_is_a_launcher_that_opens_the_standalone_app(): void
     {
-        $hub = $this->get('/emplostart')->assertOk();
-        $hub->assertSee('css/site.css', false);
-        $hub->assertSee('css/hub.css', false);
-        $hub->assertSee('js/student.js', false);
+        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
 
-        $home = $this->get('/')->assertOk();
-        $home->assertDontSee('css/hub.css', false);
-        $home->assertDontSee('js/student.js', false);
+        $url = (string) config('emplowise.emplostart_url');
+        $this->assertStringContainsString('href="'.e($url).'"', $html);
+        $this->assertStringContainsString('target="_blank"', $html);
+        $this->assertStringContainsString('rel="noopener"', $html);
+        $this->assertStringContainsString('Open EmploStart', $html);
+
+        // The launcher embeds no tool UI and no engine scripts.
+        $this->assertStringNotContainsString('emplostart-config', $html);
+        $this->assertStringNotContainsString('data-hub-panel', $html);
+        $this->assertStringNotContainsString('js/student.js', $html);
+        $this->assertStringNotContainsString('js/toolkit/', $html);
+        $this->assertStringNotContainsString('css/hub.css', $html);
+
+        foreach (config('emplowise.emplostart_modules') as $module) {
+            $this->assertStringContainsString(e($module['title']), $html);
+            $this->assertStringContainsString(e($module['desc']), $html);
+        }
     }
 
-    public function test_stylesheets_ship_as_two_bundles(): void
+    public function test_stylesheets_ship_as_one_bundle(): void
     {
         $hub = (string) $this->get('/emplostart')->assertOk()->getContent();
         $home = (string) $this->get('/')->assertOk()->getContent();
 
-        $this->assertSame(2, preg_match_all('/<link rel="stylesheet"/', $hub), 'The hub should load two bundles');
+        $this->assertSame(1, preg_match_all('/<link rel="stylesheet"/', $hub), 'The launcher should load one bundle');
         $this->assertSame(1, preg_match_all('/<link rel="stylesheet"/', $home), 'Other pages should load one bundle');
 
         foreach ([$hub, $home] as $html) {
-            $this->assertStringNotContainsString('css/tokens.css', $html);
-            $this->assertStringNotContainsString('css/components.css', $html);
-            $this->assertStringNotContainsString('css/print.css', $html);
-            $this->assertStringNotContainsString('css/student.css', $html);
+            foreach (['hub', 'tokens', 'components', 'print', 'student'] as $source) {
+                $this->assertStringNotContainsString('css/'.$source.'.css', $html);
+            }
         }
     }
 
@@ -100,89 +110,6 @@ final class SiteAndApiTest extends TestCase
                 (string) file_get_contents($path),
                 $name.' is stale; run php artisan emplowise:bundle-css'
             );
-        }
-    }
-
-    public function test_primary_nav_stays_compact_and_secondary_pages_move_to_the_footer(): void
-    {
-        $html = (string) $this->get('/')->assertOk()->getContent();
-
-        $this->assertSame(1, preg_match('/<nav class="main-nav".*?<\/nav>/s', $html, $nav));
-        $topLevel = (string) preg_replace('/<details class="nav-group".*?<\/details>/s', '', $nav[0]);
-        $this->assertLessThanOrEqual(5, substr_count($topLevel, '<a '), 'Header nav keeps at most five top-level links');
-        $this->assertStringNotContainsString('FAQ', $nav[0]);
-        $this->assertStringContainsString('Company', $nav[0]);
-        $this->assertStringContainsString('Meet Emplowise', $nav[0]);
-        $this->assertStringContainsString('Our Story', $nav[0]);
-        $this->assertStringContainsString('What We Do', $nav[0]);
-        $this->assertStringContainsString('Meet The Team', $nav[0]);
-        $this->assertStringContainsString("Where&#039;s AI", $nav[0]);
-        $this->assertStringContainsString('EmploStart', $nav[0]);
-        $this->assertStringContainsString('what-we-are#team', $nav[0]);
-
-        $this->assertSame(1, preg_match('/<footer class="site-footer">.*?<\/footer>/s', $html, $footer));
-        $this->assertStringContainsString('FAQ', $footer[0]);
-        $this->assertStringContainsString('EmploStart', $footer[0]);
-        $this->assertStringContainsString('Free HR Audit', $footer[0]);
-    }
-
-    public function test_resume_builder_offers_draft_recovery_controls(): void
-    {
-        $this->get('/emplostart')
-            ->assertOk()
-            ->assertSee('Load example')
-            ->assertSee('Clear draft')
-            ->assertSee('The draft saves in this browser only.');
-    }
-
-    public function test_prompt_library_shows_counts_and_bulk_actions(): void
-    {
-        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
-
-        $this->assertStringContainsString('id="prompt-copy-visible"', $html);
-        $this->assertStringContainsString('Copy visible prompts', $html);
-        $this->assertStringContainsString('id="prompt-clear"', $html);
-        $this->assertStringContainsString('class="search-clear"', $html);
-        $this->assertMatchesRegularExpression('/data-prompt-filter="all">All <span class="filter-count">14<\/span>/', $html);
-        $this->assertMatchesRegularExpression('/data-prompt-filter="Job search">Job search <span class="filter-count">3<\/span>/', $html);
-    }
-
-    public function test_print_rules_stay_scoped_and_scripts_defer(): void
-    {
-        $bundle = (string) file_get_contents(public_path('css/hub.css'));
-
-        $this->assertStringContainsString('@media print', $bundle);
-        $this->assertStringContainsString('.resume-paper', $bundle);
-
-        // The tool rail becomes a sticky segmented bar below 1000px and a
-        // single scrollable row below 760px, with panel scroll margins that
-        // clear it.
-        $this->assertStringContainsString(
-            '.hub-rail{position: sticky;top: calc(var(--header-h) + 0.4rem);z-index: var(--z-sticky)',
-            $bundle
-        );
-        $this->assertStringContainsString('scroll-snap-type: x proximity', $bundle);
-        $this->assertStringContainsString('.hub-panel{scroll-margin-top: calc(var(--header-h) + 4.1rem)}', $bundle);
-
-        $hub = (string) $this->get('/emplostart')->assertOk()->getContent();
-        $this->assertMatchesRegularExpression('/<script src="\/js\/student\.js\?v=\d+" defer><\/script>/', $hub);
-
-        $home = (string) $this->get('/')->assertOk()->getContent();
-        $this->assertMatchesRegularExpression('/<script src="\/js\/app\.js\?v=\d+" defer><\/script>/', $home);
-        $this->assertMatchesRegularExpression('/<script src="\/js\/chat\.js\?v=\d+" defer><\/script>/', $home);
-    }
-
-    public function test_the_hub_loads_every_browser_engine_before_student_js(): void
-    {
-        $html = (string) $this->get('/emplostart')->assertOk()->getContent();
-
-        $student = strpos($html, '/js/student.js');
-        $this->assertNotFalse($student);
-
-        foreach (['interview', 'ats', 'profile'] as $engine) {
-            $position = strpos($html, '/js/toolkit/'.$engine.'.js');
-            $this->assertNotFalse($position, 'Missing toolkit script for '.$engine);
-            $this->assertLessThan($student, $position, $engine.'.js must load before student.js');
         }
     }
 
@@ -602,182 +529,5 @@ final class SiteAndApiTest extends TestCase
 
             $this->assertStringContainsString($literal, $js, 'Browser KB drifted from the server copy: '.$intent);
         }
-    }
-
-    public function test_interview_questions_come_from_the_local_bank_without_an_api_key(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $this->postJson('/api/student/interview/questions', [
-            'role' => 'Data and Analytics',
-            'level' => 'Entry level',
-        ])->assertOk()
-            ->assertJsonCount(3, 'questions')
-            ->assertJsonPath('source', 'local');
-    }
-
-    public function test_interview_feedback_is_deterministic_and_bounded(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $payload = [
-            'role' => 'Data and Analytics',
-            'level' => 'Entry level',
-            'question' => 'Describe a dataset you cleaned. What was messy?',
-            'answer' => 'At my university lab we had a survey dataset with duplicate rows and missing income values. I removed duplicates, standardised city names, and filled missing values with the median. As a result the analysis error dropped and the team could trust the report.',
-        ];
-
-        $first = $this->postJson('/api/student/interview/feedback', $payload)->assertOk();
-        $second = $this->postJson('/api/student/interview/feedback', $payload)->assertOk();
-
-        $this->assertSame($first->json('score'), $second->json('score'));
-        $this->assertGreaterThanOrEqual(0, $first->json('score'));
-        $this->assertLessThanOrEqual(100, $first->json('score'));
-        $first->assertJsonStructure(['score', 'verdict', 'strengths', 'fixes', 'model_answer', 'source']);
-    }
-
-    public function test_interview_feedback_explains_its_score_and_offers_a_probe(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $response = $this->postJson('/api/student/interview/feedback', [
-            'role' => 'Data and Analytics',
-            'level' => 'Entry level',
-            'question' => 'Describe a dataset you cleaned. What was messy?',
-            'answer' => 'At my university lab we had a survey dataset with duplicate rows and missing income values. I removed duplicates, standardised city names, and filled missing values with the median. As a result the analysis error dropped and the team could trust the report.',
-        ])->assertOk();
-
-        $breakdown = $response->json('breakdown');
-        $this->assertCount(4, $breakdown);
-        $this->assertSame([35, 25, 25, 15], array_column($breakdown, 'max'));
-        $this->assertSame($response->json('score'), array_sum(array_column($breakdown, 'score')));
-        $this->assertNotEmpty($response->json('next_probe'));
-
-        $this->postJson('/api/student/interview/feedback', [
-            'role' => 'Data and Analytics',
-            'level' => 'Entry level',
-            'question' => 'Describe a dataset you cleaned. What was messy?',
-            'answer' => 'I cleaned data.',
-        ])->assertOk()
-            ->assertJsonCount(4, 'breakdown')
-            ->assertJsonPath('score', 18)
-            ->assertJsonStructure(['next_probe']);
-    }
-
-    public function test_ats_score_is_explainable_and_bounded(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $resume = <<<'RESUME'
-Ayesha Khan
-Karachi, Pakistan | ayesha@example.com | +92 300 1234567 | linkedin.com/in/ayesha
-
-Summary
-Data analyst with experience in SQL, Excel, and Python dashboards.
-
-Experience
-Data Analyst Intern — Northline
-- Built SQL reports for 3 teams and reduced manual reporting time by 6 hours a week.
-- Cleaned a 40,000 row dataset and documented the data dictionary.
-- Presented weekly findings to two product managers.
-
-Education
-BS Computer Science — IBA Karachi, 2022 to 2026
-
-Skills
-SQL, Python, Excel, Power BI, stakeholder communication, data cleaning
-RESUME;
-
-        $jd = 'We are hiring a data analyst. Requirements include strong SQL, Python, Excel, Power BI, dashboarding, data cleaning, stakeholder communication, and reporting. You will build dashboards, analyse product metrics, and present insights to business teams.';
-
-        $response = $this->postJson('/api/student/ats', [
-            'resume' => $resume,
-            'job_description' => $jd,
-        ])->assertOk();
-
-        $response->assertJsonStructure([
-            'score', 'verdict', 'breakdown', 'matched', 'missing', 'structure', 'format', 'fixes', 'source',
-        ]);
-
-        $score = $response->json('score');
-        $this->assertGreaterThanOrEqual(3, $score);
-        $this->assertLessThanOrEqual(98, $score);
-        $this->assertCount(3, $response->json('breakdown'));
-        $this->assertSame(55 + 25 + 20, collect($response->json('breakdown'))->sum('max'));
-        $this->assertSame('local', $response->json('source'));
-    }
-
-    public function test_ats_matches_synonyms_and_checks_the_target_title(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $resume = "Senior Data Analyst\nKarachi | analyst@example.com | +92 300 1234567\n\nSummary\nAnalyst who communicates clearly and builds dashboards with JS.\n\nExperience\nSenior Data Analyst — Northline\n- Built dashboards in JS for three teams.\n- Communicated findings to two managers every week.\n\nEducation\nBS Computer Science\n\nSkills\nJS, SQL, communication";
-
-        $jd = "Senior Data Analyst\nWe need strong communication and JavaScript skills for reporting work.";
-
-        $response = $this->postJson('/api/student/ats', [
-            'resume' => $resume,
-            'job_description' => $jd,
-        ])->assertOk();
-
-        $this->assertSame('Senior Data Analyst', $response->json('title'));
-        $this->assertTrue($response->json('title_match'));
-        $this->assertContains('communication', $response->json('matched'));
-        $this->assertContains('javascript', $response->json('matched'));
-
-        $titleCheck = collect($response->json('structure'))->firstWhere('label', 'Target title present');
-        $this->assertTrue($titleCheck['ok']);
-        $this->assertSame(0, $titleCheck['weight']);
-    }
-
-    public function test_student_tools_accept_arabic_text_without_corrupting_it(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        // U+0645 (م) contains the byte 0x85. A byte-mode /\R/ split used to cut
-        // the character in half, which left the JSON response unencodable and
-        // turned the whole endpoint into a 500.
-        $resume = "محللة بيانات\nكراتشي | ayesha@example.com\n\nالملخص\nمحللة بيانات بخبرة ثلاث سنوات في SQL و Excel.\n\nالخبرة\nمحللة بيانات - نورثلاين\n- بنت لوحات معلومات لثلاثة فرق.\n\nالمهارات\nSQL, Excel, Power BI";
-        $jobDescription = 'نبحث عن محللة بيانات. المتطلبات تشمل SQL و Excel و Power BI وتنظيف البيانات وإعداد التقارير.';
-
-        $this->postJson('/api/student/ats', [
-            'resume' => $resume,
-            'job_description' => $jobDescription,
-        ])->assertOk()->assertJsonStructure(['score', 'verdict', 'title', 'source']);
-
-        $profile = $this->postJson('/api/student/profile', [
-            'headline' => 'محلل بيانات بخبرة ثلاث سنوات',
-            'summary' => 'أعمل على تنظيف البيانات وبناء لوحات المعلومات لفريق من خمسة أشخاص.',
-            'bullets' => "• حللت ١٢ تقريراً شهرياً\n- حسّنت المبيعات ٢٥٪",
-        ])->assertOk();
-
-        // The bullet must survive whole; the old byte split dropped "حسّنت المبيعات ".
-        $this->assertStringContainsString('حسّنت المبيعات ٢٥٪', implode(' ', $profile->json('bullets')));
-    }
-
-    public function test_profile_optimizer_rejects_empty_input_and_rewrites_weak_copy(): void
-    {
-        config(['ai.alibaba.api_key' => null]);
-
-        $this->postJson('/api/student/profile', [])->assertStatus(422);
-
-        $response = $this->postJson('/api/student/profile', [
-            'headline' => 'Final year CS student passionate about data',
-            'summary' => 'I am a hardworking student looking for internship opportunities in data analytics.',
-            'bullets' => 'Worked on a dashboard project'."\n".'Responsible for cleaning survey data',
-        ])->assertOk();
-
-        $response->assertJsonCount(3, 'headlines');
-        $this->assertStringNotContainsString('passionate', strtolower((string) $response->json('headlines.0')));
-        $this->assertStringContainsString('[add one number]', implode(' ', $response->json('bullets')));
-        $response->assertJsonPath('source', 'local');
-
-        $aimed = $this->postJson('/api/student/profile', [
-            'target_role' => 'Cybersecurity Analyst',
-            'headline' => 'Final year CS student passionate about data',
-            'summary' => 'I am a hardworking student looking for internship opportunities.',
-        ])->assertOk();
-
-        $this->assertStringStartsWith('Cybersecurity Analyst |', (string) $aimed->json('headlines.0'));
     }
 }

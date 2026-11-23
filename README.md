@@ -1,9 +1,9 @@
 # Emplowise - Live demo - abdul hadi - kodar - cega buildathon
 
-**Remote HR services website, grounded AI assistant and EmploStart, a free career toolkit for early career candidates.**
+**Remote HR services website, grounded AI assistant and a launcher for EmploStart, a free career app for early career candidates.**
 Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-end dependencies.
 
-**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. The EmploStart scoring runs in the browser from the same engines as the PHP service, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
+**Demo:** https://diocese-trees.github.io/Emplowise-Website-Phase-I/ — every page is static HTML on GitHub Pages. EmploStart lives in its own static app repo, linked from `/emplostart`, and the booking form posts to Web3Forms. `main` is published by `.github/workflows/publish-static.yml`; see [`docs/STATIC_HOSTING.md`](docs/STATIC_HOSTING.md). The work-in-progress copy and its two-way relationship with this repo are described in [`docs/REPO_TOPOLOGY.md`](docs/REPO_TOPOLOGY.md).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-open-0d9488?style=flat-square)](https://diocese-trees.github.io/Emplowise-Website-Phase-I/)
 [![CI](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml/badge.svg)](https://github.com/Diocese-trees/Emplowise-Website-Phase-I/actions/workflows/ci.yml)
@@ -16,7 +16,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | Public site | 15 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy, plus Company Profile, Portfolio, an eight-slide Pitch Deck and a Documentation hub |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
-| EmploStart | 6-module free utility: pivot planner, reimagination lab and market assessment in build; ATS score, mock interview, resume builder, profile optimiser and 14-prompt library live |
+| EmploStart | 6-module standalone app, linked from `/emplostart`: pivot planner, reimagination lab, market assessment, ATS score, interview prep, profile builder, plus 14 prompts. Local by default, AI opt-in |
 | Free HR Audit | 4-step validated wizard, honeypot, reference numbers, SQLite persistence |
 | Brand kit | Canonical sources and generators live in `Emplowise-Docs`; this repo ships the synced 6 DOCX and 1 PPTX in `public/downloads/` and a mirror of `docs/brand-kit/`, see [`docs/README.md`](docs/README.md) |
 | Security | Enforced CSP, HSTS with preload on HTTPS, COOP/CORP, nosniff, frame denial, violation reporting |
@@ -45,18 +45,18 @@ The public site serves a live [`/docs`](https://diocese-trees.github.io/Emplowis
 ## Repository layout
 
 ```
-app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
-app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
+app/Http/Controllers     SiteController + API (chat, audit, csp report)
+app/Services             EmplowiseAssistant, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
 resources/views          Layout, 15 pages, chat partial, team showcase
-public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
-public/js                10 progressive-enhancement scripts (no build step)
+public/css               11 source stylesheets + 1 generated bundle (site.css)
+public/js                9 progressive-enhancement scripts (no build step)
 public/downloads         Editable DOCX/PPTX deliverables (brand-kit release)
 database/migrations      audit_requests, chat_messages
-tests/Feature            62 tests covering pages, APIs, exports and headers
+tests/Feature            Tests covering pages, APIs, exports and headers
 docs/brand-kit           Brand, commercial and technical Markdown sources
-tools/brand-kit          Isolated Python generators for the Office files
+tools/parity             Chat routing parity harness
 deploy/                  Dockerfile, nginx, apache, entrypoint
 CHANGELOG.md             dated record of behaviour changes, backfilled from the history
 ```
@@ -211,8 +211,8 @@ The Netlify bundle ships a `_headers` file with the same CSP and HSTS values, be
 
 ## Styles and assets
 
-There is no Node build step. The layout loads exactly two stylesheets, both
-generated by concatenating and minifying the sources in `public/css`:
+There is no Node build step. The layout loads one stylesheet, generated by
+concatenating and minifying the sources in `public/css`:
 
 ```bash
 php artisan emplowise:bundle-css
@@ -221,12 +221,11 @@ php artisan emplowise:bundle-css
 | Bundle | Loaded by | Sources, in cascade order |
 | --- | --- | --- |
 | `public/css/site.css` | every page | fonts, tokens, base, layout, components, pages, consent, theme, chat, inline |
-| `public/css/hub.css` | `/emplostart` only | student, print |
 
 The manifest is `App\Support\CssBundles::MANIFESTS`. Rules that matter:
 
-- **Edit the sources, never the bundles.** The bundles are checked in because
-  the static export ships `public/` as-is; each one starts with a banner naming
+- **Edit the sources, never the bundle.** The bundle is checked in because
+  the static export ships `public/` as-is; it starts with a banner naming
   its sources.
 - **Regenerate before committing.** Editing `pages.css` alone changes nothing:
   the request still loads the old `site.css`. Run the command and commit both
@@ -267,15 +266,24 @@ the project base path.
 | `/contact` | `contact` | `pages/contact.blade.php` |
 | `/free-hr-audit` | `free-hr-audit` | `pages/audit.blade.php` |
 
-### EmploStart modules
+### EmploStart launcher
 
-1. **Mock interview simulator** — role and level selection, one question at a time, structured STAR feedback, per-dimension score breakdown, next-practice probe, score ring, model answer.
-2. **ATS resume/JD analyzer** — 0–100 score, keyword match with synonyms and stems, target-title check, structure checklist, formatting checks, prioritised fixes.
-3. **ATS resume builder** — single-column form with live preview, repeatable experience/education blocks, browser-only draft autosave and clear, print, `.txt` download, copy as plain text.
-4. **Profile optimizer** — optional target role, headline options, summary rewrite, bullet rewrites, quick fixes.
-5. **Prompt library** — searchable, category-filtered prompt cards with counts, clear search, copy one, and copy all visible.
+`/emplostart` is a launcher, not the app. It renders a hero, a six-module map,
+a "what runs where" disclosure, and a prominent link to the standalone
+EmploStart app configured by `emplowise.emplostart_url` (override with
+`EMPLOSTART_URL`). The six modules are:
 
-The resume builder and prompt library are entirely client-side. Resume drafts autosave to `localStorage` only, with a visible save state and a one-click clear; no draft text is sent to the server. Interview, ATS, and profile call the API when it exists and otherwise run the bundled browser engines in `public/js/toolkit/`, which are ported from `StudentToolkit` and checked against committed PHP fixtures. Answers are not stored in the database, and on the static GitHub Pages build no answer ever leaves the browser.
+1. **Career Pivot Planner** — transferable skills, gap priorities, bridge roles, and a 30-60-90 day plan.
+2. **Career Reimagination Lab** — three direction archetypes, each with a validation experiment.
+3. **Market Assessment** — role readiness, evidence gaps, and fair-wage negotiation readiness.
+4. **ATS Resume Analyzer** — deterministic resume-to-posting score with a fix list.
+5. **Interview Prep** — role and level questions with structured feedback.
+6. **Profile Builder** — headline, summary, bullets, ATS resume, and 14 prompts.
+
+All six engines run locally in the browser by default. AI is opt-in and only
+activates after explicit consent, and every result has a local fallback. The
+main site carries no tool runtime, no `/api/student/*` routes, and no engine
+scripts; the launcher only links out.
 
 ---
 
@@ -287,10 +295,6 @@ All endpoints sit under the `web` middleware group, so they require the CSRF tok
 | --- | --- | --- | --- |
 | POST | `/api/chat` | 30/min | HR assistant reply |
 | POST | `/api/audit` | 15/min | Store a Free HR Audit request |
-| POST | `/api/student/interview/questions` | 20/min | Generate/normalise interview questions |
-| POST | `/api/student/interview/feedback` | 20/min | Score one interview answer |
-| POST | `/api/student/ats` | 20/min | Score a resume against a job description |
-| POST | `/api/student/profile` | 20/min | Optimise headline, summary, bullets |
 
 `POST /api/audit` returns `201` with `message`, `reference` (format `EMP-YYMMDD-XXXX`), `preferred_date`, `preferred_slot`, and `next_step`. Validation failures return `422` with field-level messages the wizard maps back to the offending step. Submissions go to `audit_requests`; a hidden `website` honeypot silently accepts and discards bots with `202`.
 
@@ -308,7 +312,7 @@ Chat transcripts are stored in `chat_messages` (one user row, one assistant row 
 | `pillars`, `services`, `method`, `outcomes` | Home, What We Do, Pricing |
 | `packages`, `pricing_notes`, `legacy_tiers` | Home, Pricing, Audit |
 | `faqs` (categories + Q&A) | FAQ page, chat fallback |
-| `student_*` (roles, levels, prompts) | EmploStart tools, interview fallback |
+| `student.prompts` | EmploStart prompt count and the chat fact check |
 | `pending_inputs` | What We Are, Pricing, README |
 
 Rules applied throughout:
@@ -341,41 +345,38 @@ The Free HR Audit form is the only verified contact channel in this build.
 ```
 app/
   Http/Controllers/
-    SiteController.php          # renders all fourteen pages with config data
+    SiteController.php          # renders all fifteen pages with config data
     AuditRequestController.php  # validates + persists audit intake
     Api/ChatController.php      # chat endpoint + transcript logging
-    Api/StudentController.php   # interview / ATS / profile endpoints
   Models/
     AuditRequest.php
     ChatMessage.php
   Services/
     AlibabaCloudClient.php      # primary → fallback → error
     EmplowiseAssistant.php      # system prompt, intent, local replies
-    StudentToolkit.php          # local interview, ATS, profile algorithms
   Console/Commands/
     ExportStatic.php            # renders the public pages to static HTML
+    EmplowiseSeoAudit.php       # checks titles, descriptions, keywords, facts
+    BundleCss.php               # rebuilds public/css/site.css
 config/
   ai.php                        # Alibaba Cloud connection settings
   emplowise.php                 # all business content
   static.php                    # static base URL + Web3Forms key
 public/
-  css/  12 sources: tokens, base, layout, components, pages, theme,
-        consent, chat, student, print, fonts, inline
-        plus the generated bundles site.css (loaded by every page) and
-        hub.css (loaded only by /emplostart)
-  js/   app.js (site + audit wizard), chat.js, student.js, theme.js,
-        consent.js, faq.js, home.js, team.js, audit.js
-  js/toolkit/  interview.js, ats.js, profile.js (browser ports of StudentToolkit)
+  css/  11 sources: tokens, base, layout, components, pages, theme,
+        consent, chat, fonts, inline, showcase
+        plus the generated site.css loaded by every page
+  js/   app.js (site + audit wizard), chat.js, theme.js, consent.js,
+        faq.js, home.js, team.js, audit.js, deck.js
 resources/views/
   layouts/app.blade.php
   partials/header.blade.php     # site shell: brand, Company dropdown, audit CTA
   partials/footer.blade.php     # site footer, cut verbatim from the layout
   partials/chat.blade.php
-  partials/emplostart/          # ats, interview, profile tool panels
   pages/*.blade.php
   errors/404.blade.php          # dynamic 404; the static build mirrors it as 404.html
 routes/web.php
-tools/parity/                   # PHP-generated fixtures + Node parity harnesses
+tools/parity/                   # chat routing parity harness
 tests/Feature/                  # page, API, header and static-export tests
 .github/workflows/              # ci.yml (tests + export), publish-static.yml (gh-pages)
 ```
@@ -401,26 +402,26 @@ Coverage in `tests/Feature/`:
 - chat: local fallback reply plus two `chat_messages` rows; the widget binds
   lazily on first interaction or idle, while `window.EmplowiseChat` stays
   available immediately for the routing parity harness
-- interview: deterministic question set and bounded score
-- ATS: score range and structural checks
-- profile: empty payload rejected, rewrites returned
-- static export: fourteen pages plus legacy redirects, sub-path assets and canonicals, stripped API config, Web3Forms form swap, no inline styles/scripts
+- EmploStart launcher: external app link, one stylesheet, no embedded tool
+  runtime, no `/api/student/*` routes
+- static export: fifteen pages plus legacy redirects, sub-path assets and canonicals, no API config, Web3Forms form swap, no inline styles/scripts
 
-Browser-engine parity is checked separately, outside PHPUnit:
+Chat routing parity is checked separately, outside PHPUnit, against a served
+static export:
 
 ```bash
-php tools/parity/generate.php          # regenerate fixtures from the PHP engines
-node tools/parity/check-interview.mjs
-node tools/parity/check-ats.mjs
-node tools/parity/check-profile.mjs
+php tools/parity/generate-chat.php
+php artisan emplowise:export-static /tmp/chat-parity --base=http://127.0.0.1:8116
+php -S 127.0.0.1:8116 -t /tmp/chat-parity &
+node tools/parity/check-chat-routing.mjs
 ```
 
 `.github/workflows/ci.yml` runs the same gate on every push and pull request:
-it rebuilds the CSS bundles and fails on a diff, checks JS syntax, runs the SEO
-audit and the test suite, replays the three browser-engine parity fixtures, and
-smoke-tests a keyless static export (`index.html`, `404.html`, the audit form
-and the CSP meta). Screenshots are local captures for review: `docs/screenshots/`
-is git-ignored, so the repository carries no image binaries.
+it rebuilds the CSS bundle and fails on a diff, checks JS syntax, runs the SEO
+audit and the test suite, and smoke-tests a keyless static export (`index.html`,
+`404.html`, the audit form and the CSP meta). Screenshots are local captures for
+review: `docs/screenshots/` is git-ignored, so the repository carries no image
+binaries.
 
 ---
 

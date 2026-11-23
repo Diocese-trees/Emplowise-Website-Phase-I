@@ -16,7 +16,7 @@ final class BundleCss extends Command
 {
     protected $signature = 'emplowise:bundle-css';
 
-    protected $description = 'Rebuild public/css/site.css and public/css/hub.css from their sources';
+    protected $description = 'Rebuild public/css/site.css from its sources';
 
     public function handle(): int
     {

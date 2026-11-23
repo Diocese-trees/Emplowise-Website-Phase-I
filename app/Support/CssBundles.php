@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Support;
 
 /**
- * Concatenates the source stylesheets into the two bundles the layout loads.
+ * Concatenates the source stylesheets into the bundle the layout loads.
  *
- * Source files stay in public/css so they remain editable; the bundles are
+ * Source files stay in public/css so they remain editable; the bundle is
  * generated with `php artisan emplowise:bundle-css` and checked in, because the
  * static export ships public/ as-is and the app has no Node build step.
  */
@@ -26,10 +26,6 @@ final class CssBundles
             'theme.css',
             'chat.css',
             'inline.css',
-        ],
-        'hub.css' => [
-            'student.css',
-            'print.css',
         ],
     ];
 

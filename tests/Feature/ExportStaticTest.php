@@ -66,9 +66,7 @@ final class ExportStaticTest extends TestCase
             $this->assertStringContainsString('name="robots" content="noindex, follow"', $redirect);
         }
 
-        $this->assertFileExists($this->target.'/js/toolkit/interview.js');
-        $this->assertFileExists($this->target.'/js/toolkit/ats.js');
-        $this->assertFileExists($this->target.'/js/toolkit/profile.js');
+        $this->assertFalse(is_dir($this->target.'/js/toolkit'), 'The toolkit runtime no longer ships with the site');
     }
 
     public function test_assets_and_canonicals_use_the_base_path(): void
@@ -108,7 +106,8 @@ final class ExportStaticTest extends TestCase
         $this->assertStringNotContainsString('url(/fonts/', $site);
 
         $hub = (string) File::get($this->target.'/emplostart/index.html');
-        $this->assertStringContainsString('href="https://example.github.io/demo/css/hub.css', $hub);
+        $this->assertStringContainsString('href="https://example.github.io/demo/css/site.css', $hub);
+        $this->assertStringContainsString('href="'.e((string) config('emplowise.emplostart_url')).'"', $hub);
     }
 
     public function test_it_exports_the_showcase_pages_assets_and_downloads(): void
@@ -172,7 +171,7 @@ final class ExportStaticTest extends TestCase
         $this->assertStringNotContainsString('/pitch-deck/', $sitemap);
     }
 
-    public function test_static_pages_drop_the_api_and_use_local_engines(): void
+    public function test_static_launcher_links_out_without_api_calls(): void
     {
         $this->artisan('emplowise:export-static', [
             'path' => $this->target,
@@ -182,11 +181,11 @@ final class ExportStaticTest extends TestCase
 
         $hub = (string) File::get($this->target.'/emplostart/index.html');
 
-        $this->assertStringContainsString('<div id="emplostart-config" hidden></div>', $hub);
-        $this->assertStringNotContainsString('data-interview-questions', $hub);
-        $this->assertStringContainsString('js/toolkit/interview.js', $hub);
-        $this->assertStringContainsString('js/toolkit/ats.js', $hub);
-        $this->assertStringContainsString('js/toolkit/profile.js', $hub);
+        $this->assertStringContainsString('href="'.e((string) config('emplowise.emplostart_url')).'"', $hub);
+        $this->assertStringContainsString('target="_blank"', $hub);
+        $this->assertStringNotContainsString('emplostart-config', $hub);
+        $this->assertStringNotContainsString('js/toolkit/', $hub);
+        $this->assertStringNotContainsString('js/student.js', $hub);
         $this->assertStringNotContainsString('csrf-token', $hub);
     }
 
@@ -212,7 +211,7 @@ final class ExportStaticTest extends TestCase
             '--audit-key' => 'test-key',
         ])->assertSuccessful();
 
-        $routes = ['/api/chat', '/api/audit', '/api/student/', '/api/csp-report'];
+        $routes = ['/api/chat', '/api/audit', '/api/csp-report'];
         $files = File::allFiles($this->target);
 
         foreach ($files as $file) {

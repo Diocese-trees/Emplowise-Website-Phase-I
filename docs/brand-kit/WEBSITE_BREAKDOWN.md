@@ -98,34 +98,31 @@ the field; the server repeats every rule in `AuditRequestController`.
 - Progress is announced through `#wizard-label` (`aria-live="polite"`,
   `aria-atomic="true"`); the form carries `aria-busy` while submitting.
 - Drafts: `sessionStorage` key `emplowise_audit_draft` for the in-progress
-  wizard, `localStorage` key `emplowise_resume_draft_v1` for the resume builder.
+  wizard.
 - Static build: the exporter rewrites the endpoint to Web3Forms and injects the
   hidden `access_key` when one is configured. With no key the form is marked
   `data-audit-nokey="1"`, never posts, and offers a `mailto:` fallback.
 
-### 3.2 EmploStart toolkit (`/emplostart`)
+### 3.2 EmploStart launcher (`/emplostart`)
 
-EmploStart is a six-module utility. Three job-readiness tools run on this page in
-one tab rail (mock interview, ATS score, resume builder) alongside the profile
-optimiser and the 14-prompt library. Three planning modules (career pivot
-planner, career reimagination lab, market assessment) are marked "In build" in
-`emplostart_modules` and ship with the standalone app. The page closes with the
-Fair Jobs and Fair Wages pledge, a voluntary SDG 4, 8 and 10 alignment with no
-UN endorsement claim.
+EmploStart is a standalone, permanently free career app with six modules:
+career pivot planner, career reimagination lab, market assessment, ATS resume
+analyser, interview prep, and profile builder. `/emplostart` is a launcher: a
+hero, a six-module map, a "what runs where" disclosure, the Fair Jobs and Fair
+Wages pledge, and a prominent link to the app at `emplowise.emplostart_url`
+(override with `EMPLOSTART_URL`).
 
-| Tool | Server | Browser | Parity |
-| --- | --- | --- | --- |
-| Interview questions and feedback | `POST /api/student/interview/questions`, `/feedback` | `public/js/toolkit/interview.js` | `tools/parity/check-interview.mjs`, 11 fixtures |
-| ATS resume and JD score | `POST /api/student/ats` | `public/js/toolkit/ats.js` | `tools/parity/check-ats.mjs`, 6 fixtures |
-| Profile optimiser | `POST /api/student/profile` | `public/js/toolkit/profile.js` | `tools/parity/check-profile.mjs`, 5 fixtures |
-| Resume builder | none | `public/js/student.js` | client only, `localStorage` drafts |
-| Prompt library | none | `public/js/student.js` | client only |
+| Layer | Detail |
+| --- | --- |
+| Launcher copy | `config/emplowise.php` → `copy.emplostart`, `emplostart_modules`, `fair_jobs_pledge` |
+| App URL | `config/emplowise.php` → `emplostart_url` |
+| Runtime on this site | none: no tool panels, no engine scripts, no `/api/student/*` routes |
+| Privacy | the app runs locally by default; AI is opt-in and consent-gated |
+| Pledge | voluntary SDG 4, 8 and 10 alignment with no UN endorsement claim |
 
-Fixtures are generated from the PHP engines with `php tools/parity/generate.php`
-and committed. The browser ports must match them exactly; the three Node
-harnesses run in CI. On the static build the exporter hides
-`#emplostart-config`, so the browser engines answer immediately instead of
-calling endpoints that cannot exist.
+The product repo (`EmploStart`) owns the six engines, its engine tests, and its
+static Pages workflow. The main site only links out, so the marketing build stays
+small and both products can ship independently.
 
 ### 3.3 Assistant (`public/js/chat.js`)
 
@@ -142,11 +139,11 @@ keeps the widget off the critical path without changing its behaviour.
 
 ## 4. Assets, bundles and subpath hosting
 
-- `App\Support\CssBundles` concatenates and minifies `public/css/*.css` into two
-  checked-in bundles: `site.css` (loaded everywhere) and `hub.css` (loaded only
-  on `/emplostart`). Edit sources, then run `php artisan emplowise:bundle-css`.
+- `App\Support\CssBundles` concatenates and minifies `public/css/*.css` into one
+  checked-in `site.css` bundle loaded everywhere. Edit sources, then run
+  `php artisan emplowise:bundle-css`.
 - The showcase pages add `public/css/showcase.css` through `@push('styles')`,
-  so `/`, `/audit` and the other Phase I pages load zero bytes of it. The deck
+  so `/`, the launcher and the other Phase I pages load zero bytes of it. The deck
   adds `public/js/deck.js` through `@push('scripts')`.
 - `asset_v()` appends `?v=<filemtime>` to CSS, JS and image URLs. Because the
   value is the file's own mtime, a regenerated bundle busts the cache without a

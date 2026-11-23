@@ -8,8 +8,7 @@ browser or talks to a form service.
 | --- | --- |
 | Fifteen public pages | Pre-rendered HTML committed to `gh-pages`; `/pitch-deck` ships `noindex` and stays out of the sitemap |
 | Chat assistant | Local 18-intent knowledge base in `public/js/chat.js` |
-| Interview, ATS, profile tools | Browser ports in `public/js/toolkit/`, no network calls |
-| Resume builder, prompt library | Client-side only, drafts in `localStorage` |
+| EmploStart | Linked from `/emplostart`; the app is a separate static repo |
 | Free HR Audit form | Posts to Web3Forms (free tier: 250 submissions/month) |
 | Security policy | CSP `<meta>` injected into every page by the exporter |
 
@@ -79,8 +78,8 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
   `https://api.web3forms.com` for `connect-src` and `form-action`, and
   whitelists the pre-paint theme bootstrap by SHA-256 hash
   (`script-src 'self' 'sha256-…'`) instead of `'unsafe-inline'`.
-- Replaces the EmploStart endpoint attributes, so the page never fires calls
-  to `/api/...` that can only fail.
+- Leaves the `/emplostart` launcher's external app link untouched, so the page
+  never fires calls to `/api/...` that can only fail.
 - Rewrites the booking form to `https://api.web3forms.com/submit`, adds the
   `access_key`, `subject`, `from_name` and honeypot fields, and switches the
   client to `credentials: 'omit'` with no CSRF header.
@@ -92,7 +91,7 @@ root-relative asset URLs and CSS `url(/...)` references to the base path, adds
 
 ## API boundary on a static host
 
-`routes/web.php` keeps seven `POST /api/*` routes for the Laravel deployment.
+`routes/web.php` keeps three `POST /api/*` routes for the Laravel deployment.
 None of them may appear in a static build, so each client script has a fallback
 that runs before any request is attempted:
 
@@ -100,43 +99,23 @@ that runs before any request is attempted:
 | --- | --- |
 | `POST /api/chat` | `data-endpoint` is removed; `chat.js` answers from its bundled knowledge base |
 | `POST /api/audit` | Form is rewritten to Web3Forms; without a key it stops and shows the email fallback |
-| `POST /api/student/interview/questions` | `#emplostart-config` loses its endpoints; `student.js` uses `js/toolkit/interview.js` |
-| `POST /api/student/interview/feedback` | Same — local engine |
-| `POST /api/student/ats` | Same — local engine |
-| `POST /api/student/profile` | Same — local engine |
 | `POST /api/csp-report` | The exported CSP has no `report-uri`, so nothing is sent |
 
 Gating lives in the clients rather than one global flag: `chat.js` checks the
-endpoint attribute, `student.js` checks each endpoint before calling
-`postJson()`, and `audit.js` checks `data-audit-mode="web3forms"`. That keeps
-each page independent. `ExportStaticTest` enforces the result by scanning every
-exported `.html` file for `/api/chat`, `/api/audit`, `/api/student/`, and
+endpoint attribute and `audit.js` checks `data-audit-mode="web3forms"`. That
+keeps each page independent. `ExportStaticTest` enforces the result by scanning
+every exported `.html` file for `/api/chat`, `/api/audit`, and
 `/api/csp-report`, so a new endpoint cannot leak into the static site silently.
 
 Verified with headless Chromium against a local export: loading
-`/free-hr-audit/`, sending a chat message, and running the ATS tool produced
+`/free-hr-audit/`, sending a chat message, and opening `/emplostart/` produced
 zero `fetch()` calls, zero `/api/` requests, and zero console errors.
 
-## Browser-engine parity
-
-The toolkit ports must return exactly what the PHP service returns. The fixtures
-are generated from the PHP code with no API key:
-
-```bash
-php tools/parity/generate.php
-node tools/parity/check-interview.mjs
-node tools/parity/check-ats.mjs
-node tools/parity/check-profile.mjs
-```
-
-Each harness loads the shipped browser file in `node:vm` with a fake `window`,
-runs the fixture inputs, deep-compares the JSON, and exits non-zero on the first
-difference. Regenerate the fixtures after any change to `StudentToolkit`, and
-fix the JavaScript until all three harnesses pass.
+## Chat routing parity
 
 The chat widget's intent routing is a port of `EmplowiseAssistant::detectIntent`,
-so it is checked the same way — the corpus comes from PHP and the browser is
-driven over CDP:
+so it is checked against a served export with a corpus generated from PHP and
+a browser driven over CDP:
 
 ```bash
 php tools/parity/generate-chat.php

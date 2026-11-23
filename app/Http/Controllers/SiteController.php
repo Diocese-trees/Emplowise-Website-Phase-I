@@ -67,8 +67,7 @@ final class SiteController extends Controller
         return view('pages.emplostart', [
             'seo' => config('emplowise.seo.emplostart'),
             'copy' => config('emplowise.copy.emplostart'),
-            'student' => config('emplowise.student'),
-            'brand' => config('emplowise.brand'),
+            'emplostartUrl' => config('emplowise.emplostart_url'),
             'modules' => config('emplowise.emplostart_modules'),
             'pledge' => config('emplowise.fair_jobs_pledge'),
         ]);

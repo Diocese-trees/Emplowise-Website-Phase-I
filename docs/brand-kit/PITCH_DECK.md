@@ -251,8 +251,8 @@ Headline: *Shipped platform, not promised platform*
 
 **Speaker Notes.**
 
-- Outputs today: 62 tests and 922 assertions, 22 parity fixtures, and a static
-  export on every push to `main`.
+- Outputs today: 50 tests and 821 assertions, a six-module standalone product
+  repo, and a static export on every push to `main`.
 - [To Verify: audits completed per month, retainers signed, and any client willing
   to be named with numbers.]
 - Do not present the 2,000+ employee figure in a co-founder bio as company

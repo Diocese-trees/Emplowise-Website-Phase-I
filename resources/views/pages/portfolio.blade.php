@@ -127,31 +127,30 @@
 
             <article class="show-entry">
                 <div class="show-entry-head">
-                    <h3>A2. EmploStart toolkit and parity engine</h3>
+                    <h3>A2. EmploStart: standalone, local-first career app</h3>
                     <span class="show-entry-tag">Shipped</span>
                 </div>
                 <dl class="show-fields">
                     <dt>Problem</dt>
-                    <dd>Career tools that only work with a live API are useless on a static host, and a browser port that drifts from the server engine is worse than no port at all.</dd>
+                    <dd>Career tools that need a live API fail on a static host, and embedding heavy tool UI in a marketing site slows both products down.</dd>
                     <dt>Strategy</dt>
-                    <dd>Implement the algorithms once in PHP, port them to vanilla JavaScript, generate fixtures from PHP, and fail continuous integration when the two disagree.</dd>
+                    <dd>Split EmploStart into its own static app repo with six local engine modules, a Non-AI default, and consent-gated AI, then link to it from a fast launcher page on the main site.</dd>
                     <dt>Capabilities</dt>
                     <dd>
                         <ul>
-                            <li>Interview practice: question bank by role family and seniority, STAR scoring, per-dimension breakdown, next-practice probe, and a model answer.</li>
-                            <li>ATS score: keyword extraction with synonyms and stems, weighted score, target-title check, and structure and formatting checks.</li>
-                            <li>Profile optimiser: headline variants, summary rewrite, bullet rewrites, and quick fixes.</li>
-                            <li>Resume builder and prompt library, entirely client-side with local drafts.</li>
-                            <li>22 parity fixtures: 11 interview, 6 ATS, and 5 profile.</li>
+                            <li>Six modules: career pivot planning, career reimagination, market assessment, ATS resume analysis, interview prep, and profile building.</li>
+                            <li>Deterministic local engines that make no network call, plus optional AI only after explicit consent.</li>
+                            <li>Engine tests in the product repo, a static Pages workflow, and a launcher that discloses what runs where.</li>
+                            <li>No account, no payment, and no advertising inside the tools.</li>
                         </ul>
                     </dd>
                     <dt>Repo proof</dt>
                     <dd class="show-proof">
-                        <code>app/Services/StudentToolkit.php</code>
-                        <code>public/js/toolkit/</code>
-                        <code>tools/parity/generate.php</code>
-                        <code>tools/parity/check-{interview,ats,profile}.mjs</code>
-                        <code>tools/parity/fixtures.json</code>
+                        <code>EmploStart/js/engines/</code>
+                        <code>EmploStart/tests/engines.test.mjs</code>
+                        <code>EmploStart/.github/workflows/pages.yml</code>
+                        <code>resources/views/pages/emplostart.blade.php</code>
+                        <code>config/emplowise.php</code>
                     </dd>
                 </dl>
             </article>
