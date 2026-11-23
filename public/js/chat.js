@@ -26,7 +26,7 @@
     const KB = {
         pricing: 'Starter is PKR 40,000 a month for up to 20 employees.\nBusiness is PKR 75,000 a month for up to 50.\nEnterprise is custom above 50.\nExact inclusions are confirmed in writing after the free HR audit, so the audit scopes them.',
         audit: 'The Free HR Audit is the front door.\nFill the form at /free-hr-audit and pick a morning, afternoon, or evening slot.\nWe map payroll, performance, and policy gaps before quoting anything.\nNo cost, no obligation.',
-        student: 'EmploStart is free and no account is needed.\nInside: mock interviews, an ATS score out of 100, resume builder, profile optimiser, and 14 prompts.\nOpen /emplostart and pick a tool.',
+        emplostart: 'EmploStart is a permanently free career utility, no account needed.\nSix modules: a career pivot planner, a career reimagination lab, a market assessment, an ATS resume checker, interview prep, and a profile builder.\nThree tools run here today; the planning modules ship with the standalone app at /emplostart.',
         tools: 'The ATS tool scores your resume against a job description out of 100.\nThe resume builder and profile optimiser rewrite weak bullets.\nThe prompt library holds 14 ready prompts.\nAll free at /emplostart, and nothing you paste leaves your browser.',
         payroll: 'Payroll, leave and attendance, onboarding, and employee records are confirmed services.\nTax, statutory contributions, and disbursement scope are confirmed in writing after the free HR audit.\nSo we confirm those before work starts.',
         performance: 'Performance support, conflict guidance, organisational assessments, and monthly HR reporting are confirmed.\nAssessment cadence is confirmed in writing after the free HR audit.\nThe review cycle stays yours, we run the structure.',
@@ -39,9 +39,9 @@
         who: 'Emplowise HR Services does remote HR outsourcing for startups and SMEs in Pakistan.\nConsultants backed by specialist support, plus a dedicated HR representative.\nDirect access to your CEO or founder is part of the model.',
         where: 'We are based in Pakistan and deliver fully remote.\nThere is no walk-in office in this build.\nInternational expansion is planned long term, not live yet.',
         when: 'The method runs Assess, Identify, Improve, Review.\nReview means monthly reporting with a quarterly assessment.\nStart dates and contract length are confirmed in writing after the free HR audit.',
-        greeting: 'hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or the EmploStart.\nI keep it short and never invent numbers.',
+        greeting: 'hey. I am the Emplowise assistant.\nAsk about packages, confirmed services, the free audit, or EmploStart.\nI keep it short and never invent numbers.',
         thanks: 'Anytime.\nIf you want a real scope, the audit at /free-hr-audit is the next step.',
-        general: 'Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or the EmploStart.\nIf it is not in our verified data, I point you to the free audit.'
+        general: 'Emplowise runs remote HR for growing teams in Pakistan.\nAsk about pricing, services, the free audit, or EmploStart.\nIf it is not in our verified data, I point you to the free audit.'
     };
 
     // Scoring mirrors EmplowiseAssistant::detectIntent: all rules are scored,
@@ -53,7 +53,7 @@
         pricing: ['price', 'pricing', 'cost', 'pkr', 'package', 'packages', 'starter', 'business', 'enterprise', 'how much', 'budget', 'charge', 'quote', 'fee', 'per month'],
         pending: ['pending', 'tbd', 'not disclosed', 'not published', 'unclear', 'not confirmed'],
         audit: ['audit', 'free hr', 'free audit', 'book', 'meeting', 'talk to', 'sign up', 'onboard me', 'consultation', 'get started'],
-        student: ['student', 'student hub', 'career hub', 'emplostart', 'emplo start', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
+        emplostart: ['emplostart', 'emplo start', 'career pivot', 'career change', 'career reimagination', 'market assessment', 'ats resume checker', 'student', 'internship', 'graduate', 'fresh grad', 'prompt library', 'linkedin'],
         tools: ['resume', 'cv', 'ats', 'interview', 'cover letter'],
         payroll: ['payroll', 'salary', 'tax', 'attendance', 'leave', 'onboarding', 'records', 'document'],
         performance: ['performance', 'review', 'appraisal', 'conflict', 'manager', 'kpi', 'okr'],
@@ -143,10 +143,10 @@
             ['Free audit', 'How does the free HR audit work?'],
             ['Services', 'Which HR services do you run?']
         ],
-        student: [
+        emplostart: [
+            ['Six modules', 'What is in the EmploStart?'],
             ['ATS score', 'How does the ATS score work?'],
-            ['Mock interview', 'How does the mock interview tool work?'],
-            ['Resume builder', 'Is the resume builder free?']
+            ['Mock interview', 'How does the mock interview tool work?']
         ],
         tools: [
             ['EmploStart', 'What is in the EmploStart?'],

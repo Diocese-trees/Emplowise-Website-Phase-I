@@ -99,7 +99,7 @@
                 <div class="hero-stats">
                     <div class="hero-stat"><span>{{ $copy['panel']['stats']['services'] }}</span><b data-count="{{ $serviceCount }}">{{ $serviceCount }}</b></div>
                     <div class="hero-stat"><span>{{ $copy['panel']['stats']['stages'] }}</span><b data-count="{{ count($methodology) }}">{{ count($methodology) }}</b></div>
-                    <div class="hero-stat"><span>{{ $copy['panel']['stats']['tools'] }}</span><b data-count="5">5</b></div>
+                    <div class="hero-stat"><span>{{ $copy['panel']['stats']['tools'] }}</span><b data-count="6">6</b></div>
                 </div>
             </aside>
         </div>

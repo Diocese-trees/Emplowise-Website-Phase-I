@@ -85,13 +85,13 @@ return [
         // === PAGE: EMPLOSTART ===
         'emplostart' => [
             'primary_keyword' => 'free ATS resume checker',
-            'secondary_keywords' => ['mock interview practice', 'free resume builder'],
-            'title' => 'Free ATS Resume Checker and 5 Career Tools | Emplowise',
-            'description' => 'Five free career tools from EmploStart: an ATS resume checker, mock interview practice, resume builder, profile optimizer, and 14 prompts. No account.',
-            'h1' => 'A free ATS resume checker built for early career candidates.',
+            'secondary_keywords' => ['career pivot planning', 'mock interview practice'],
+            'title' => 'Free ATS Resume Checker and 6 Career Tools | Emplowise',
+            'description' => 'EmploStart is a permanently free career utility: a free ATS resume checker, interview prep, a profile builder, and three planning modules. No account.',
+            'h1' => 'A free ATS resume checker for career pivoters and job seekers.',
             'h1_accent' => 'free ATS resume checker',
             'h2' => 'Free ATS resume checker and JD analyzer.',
-            'intro' => 'EmploStart gives early career candidates five free tools: a free ATS resume checker, mock interviews, a resume builder, a profile optimizer, and 14 prompts. No account, no cost, no invented feedback.',
+            'intro' => 'EmploStart is a permanently free career utility for career pivoters and job seekers: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. No account, no cost, no invented feedback.',
         ],
 
         // === PAGE: FAQ ===
@@ -235,6 +235,37 @@ return [
         'contact_note' => 'The Free HR Audit form is the only verified contact channel in this build. Direct phone and inbox details are confirmed in writing after your Free HR Audit.',
     ],
 
+    /*
+    | EmploStart is a standalone, permanently free utility. The pledge is
+    | voluntary alignment, never a claim of UN endorsement or certification.
+    */
+    'fair_jobs_pledge' => [
+        'kicker' => 'Fair jobs, fair wages',
+        'heading' => 'Free because the HR work funds it.',
+        'body' => 'EmploStart is a permanently free public utility. Emplowise remote HR services fund it, so there is no account, payment, or advertising inside the tools.',
+        'points' => [
+            ['label' => 'SDG 4', 'text' => 'Quality education: free career learning for anyone with a browser.'],
+            ['label' => 'SDG 8', 'text' => 'Decent work and economic growth: better-prepared candidates and clearer hiring.'],
+            ['label' => 'SDG 10', 'text' => 'Reduced inequalities: the same tools whether or not you can pay for coaching.'],
+            ['label' => 'Generations', 'text' => 'Built for career pivoters, returners, and first-job candidates of every age.'],
+            ['label' => 'Fair wages', 'text' => 'A voluntary pledge: no fabricated salary data, no pay-to-rank, and transparent benchmarking guidance.'],
+        ],
+        'disclaimer' => 'Voluntary alignment only. This is not a UN endorsement, certification, or partnership.',
+    ],
+
+    /*
+    | The six utility modules. Three ship in this build; the planning modules
+    | arrive with the standalone EmploStart app.
+    */
+    'emplostart_modules' => [
+        ['id' => 'pivot', 'num' => '01', 'title' => 'Career Pivot Planner', 'desc' => 'Transferable skills, priority gaps, bridge roles, and a 30-60-90 day plan.', 'status' => 'In build'],
+        ['id' => 'reimagine', 'num' => '02', 'title' => 'Career Reimagination Lab', 'desc' => 'Three direction archetypes, each with a concrete validation experiment.', 'status' => 'In build'],
+        ['id' => 'market', 'num' => '03', 'title' => 'Market Assessment', 'desc' => 'Role readiness, evidence gaps, and fair-wage negotiation readiness.', 'status' => 'In build'],
+        ['id' => 'ats', 'num' => '04', 'title' => 'ATS Resume Analyzer', 'desc' => 'Score a resume against a posting, out of 100, with a fix list.', 'status' => 'Live'],
+        ['id' => 'interview', 'num' => '05', 'title' => 'Interview Prep', 'desc' => 'Role and level questions with structured feedback and a model answer.', 'status' => 'Live'],
+        ['id' => 'profile', 'num' => '06', 'title' => 'Profile Builder', 'desc' => 'Headline, summary, bullets, an ATS resume, and 14 prompts.', 'status' => 'Live'],
+    ],
+
     'mission' => [
         'statement' => 'Everyone knows who owns what.',
         'body' => 'Emplowise exists so growing teams stop treating HR as paperwork that happens after the real work. We run the structure behind people operations, remote, so founders keep momentum and employees get clarity. It starts with your yearly goals: the HR is built to deliver them before the next quarter.',
@@ -270,8 +301,8 @@ return [
             'text' => 'You have people operations that grew by accident. Emplowise audits the gaps, then runs attendance, payroll inputs, performance cycles, and reporting on a fixed monthly retainer.',
         ],
         'talent' => [
-            'title' => 'For emerging talent',
-            'text' => 'Students and early career candidates get the same structured thinking, free. Interview practice, ATS feedback, resume building, profile rewrites, and a prompt library.',
+            'title' => 'For career pivoters',
+            'text' => 'Career pivoters and early career candidates get the same structured thinking, free. Six modules cover pivot planning, career reimagining, market assessment, ATS feedback, interview practice, and a profile builder.',
         ],
     ],
 
@@ -540,7 +571,7 @@ return [
                 ],
                 [
                     'q' => 'Can I use the prompt library for work?',
-                    'a' => 'Yes. Copy any prompt and adapt it. It is written for job seekers, students, and early career candidates.',
+                    'a' => 'Yes. Copy any prompt and adapt it. It is written for career pivoters, job seekers, and early career candidates.',
                 ],
             ],
         ],
@@ -549,7 +580,7 @@ return [
     'faq_note' => 'Answers use only confirmed business data. Anything unresolved is confirmed in writing after your Free HR Audit.',
 
     'student' => [
-        'intro' => 'Five working tools. No account. No cost. Built on the same structure Emplowise uses for client HR, pointed at your career.',
+        'intro' => 'Six modules, three of them live on this page. No account. No cost. Built on the same structure Emplowise uses for client HR, pointed at your career.',
         'roles' => [
             'Software Engineering',
             'Data and Analytics',
@@ -567,7 +598,7 @@ return [
                 'category' => 'Job search',
                 'title' => 'Target role shortlist',
                 'use' => 'Turn a vague job hunt into a ranked list.',
-                'text' => 'Act as a career strategist. I am a final year student in [degree] looking for roles in [city or remote]. My strengths are [strengths]. List 8 realistic role titles, rank them by fit, and for each one name the single strongest proof point I should build in the next 30 days.',
+                'text' => 'Act as a career strategist. I work in [current field] and want to move into [target field] in [city or remote]. My strengths are [strengths]. List 8 realistic bridge roles, rank them by fit, and for each one name the single strongest proof point I should build in the next 30 days.',
             ],
             [
                 'category' => 'Job search',
@@ -1059,7 +1090,7 @@ return [
                 'stats' => [
                     'services' => 'Confirmed services in scope',
                     'stages' => 'Method stages per engagement',
-                    'tools' => 'Free tools in the EmploStart',
+                    'tools' => 'Free modules in EmploStart',
                 ],
             ],
             'strip_label' => 'Confirmed services',
@@ -1070,7 +1101,7 @@ return [
                 'items' => [
                     ['label' => 'What we do', 'desc' => 'The three pillars and every confirmed service.', 'route' => 'what-we-do', 'icon' => 'chart-bars'],
                     ['label' => 'Pricing', 'desc' => 'Monthly retainers by headcount, from PKR 40,000.', 'route' => 'why-emplowise', 'icon' => 'card'],
-                    ['label' => 'EmploStart', 'desc' => 'Five free career tools. No account needed.', 'route' => 'emplostart', 'hash' => 'prompts', 'icon' => 'chip'],
+                    ['label' => 'EmploStart', 'desc' => 'Six free career modules. No account needed.', 'route' => 'emplostart', 'hash' => 'modules', 'icon' => 'chip'],
                     ['label' => 'Contact', 'desc' => 'Talk to the team and book the free audit.', 'route' => 'contact', 'icon' => 'mail'],
                 ],
             ],
@@ -1094,9 +1125,9 @@ return [
                 'note' => 'Prices are monthly retainers in PKR. Recruitment fees, payroll tax scope, and legal advice qualifications are confirmed in writing after your Free HR Audit.',
             ],
             'student' => [
-                'kicker' => 'Free career tools',
-                'heading' => 'Five free career tools. No account. No cost.',
-                'lede' => 'EmploStart gives early career candidates ATS scoring, mock interviews, a resume builder, profile rewrites, and 14 prompts. The local engine runs even without an AI key.',
+                'kicker' => 'Free career modules',
+                'heading' => 'Six free career modules. No account. No cost.',
+                'lede' => 'EmploStart gives career pivoters ATS scoring, mock interviews, a resume builder, profile rewrites, and 14 prompts today, with three planning modules in the standalone app. The local engine runs even without an AI key.',
                 'cta_prompts' => 'Explore the :count prompts',
                 'cta_ats' => 'Score your resume',
             ],
@@ -1237,9 +1268,15 @@ return [
 
         // === PAGE: EMPLOSTART ===
         'emplostart' => [
-            'kicker' => 'Free career tools',
+            'kicker' => 'Free career utility',
             'filter_all' => 'All',
-            'stats' => ['Working tools', 'Cost, forever', 'Accounts required', 'Ready prompts'],
+            'stats' => ['Free modules', 'Cost, forever', 'Accounts required', 'Ready prompts'],
+            'modules_kicker' => 'Six modules',
+            'modules_heading' => 'One free utility, from first question to signed offer.',
+            'modules_lede' => 'Three job-readiness tools run on this page today. The three planning modules arrive with the standalone EmploStart app, still free.',
+            'modules_live' => 'Live here',
+            'modules_next' => 'In build',
+            'tools_heading' => 'Use the live tools',
             'tabs' => [
                 ['id' => 'interview', 'num' => '01', 'title' => 'Mock interview', 'desc' => 'Three questions, structured feedback'],
                 ['id' => 'ats', 'num' => '02', 'title' => 'ATS score', 'desc' => 'Match a resume to a job description'],

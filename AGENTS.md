@@ -69,3 +69,36 @@ reads or grep). `public/css/hub.css` is also generated.
 
 Rollback: `git checkout -- . && git clean -fd`, then `git reset --hard HEAD~1`,
 or reset to the `pre-redesign-backup` tag for a full reset.
+
+## Three-repository contract
+
+This block is the strategic contract for the 3-repo pivot. It supersedes the
+EmploStart parts of the locked contract above; the B2B SEO freeze and every
+existing route stay in force.
+
+```text
+3-REPO ECOSYSTEM & STRATEGIC CONTRACT:
+
+1. REPO ROLES:
+   - Main Repo (`Emplowise-Website-Phase-I`): Pure B2B CEO conversion site (Remote HR, Free HR Audit, Company pages) + fast `/emplostart` product launcher + static hosted showcase/docs (`/company-profile`, `/portfolio`, `/pitch-deck`, `/docs`) + synced `public/downloads/*.docx|*.pptx`.
+   - Docs Repo (`Emplowise-Docs`, staged in `_staging/Emplowise-Docs/`): Single source of truth for all `.md` docs, canonical `brand-tokens/`, `.docx`/`.pptx` generators, built `exports/`, and cross-repo sync scripts.
+   - Product Repo (`EmploStart`, staged in `_staging/EmploStart/`): Standalone free career utility housing BOTH Non-AI Mode (default, `$0` static/offline deterministic engine on GitHub Pages) and AI Mode (opt-in, rate-limited, zero-dependency API adapter with automatic fallback to Non-AI Mode).
+
+2. EMPLOSTART PIVOT & LEGAL/ETHICAL BOUNDARIES:
+   - Positioning: Standalone, permanently FREE utility product, one of Emplowise's streamlined workforce solutions (never "Student Hub" or student-only).
+   - Target Users: Career pivoters, professionals reimagining careers, market-assessment seekers, and job-readiness candidates.
+   - 6 Core Utility Modules: (1) Career Pivot Planner, (2) Career Reimagination Lab, (3) Market Assessment & Fair-Wage Readiness, (4) ATS Resume Analyzer, (5) Interview Prep, (6) Profile Builder.
+   - Mission Alignment: Voluntary operational pledge aligned with UN SDG 4 (Quality Education), SDG 8 (Decent Work & Economic Growth), SDG 10 (Reduced Inequalities), Generational Workforce Goals, and Emplowise's Pledge to Fair Jobs & Fair Wages.
+   - STRICT LEGAL/HONESTY RULES: NEVER claim official UN endorsement/certification. NEVER fabricate salaries, user counts, client logos, placement rates, or TAM/SAM/SOM. B2B pages stay relentlessly ROI-driven; EmploStart carries the public-good halo + a subtle B2B HR Audit bridge on tool outputs.
+   - PRIVACY BOUNDARY: Non-AI Mode runs 100% locally in-browser (zero network transmission). AI Mode requires explicit opt-in consent notice before sending resume/career PII to any external LLM API.
+
+3. BRAND KIT 2026 & SEO LOCK:
+   - Tagline: "Clarity Built on Structure" | Philosophy: "Empower people. Simplify work. Build momentum."
+   - Palette: Navy #081B3E, Teal #0D9488, Deep Teal #0F766E, Aqua #5EEAD4, Ice Teal Mist #F0F9F9, Off-White #F7F7F7, Slate Charcoal #1E293B, White #FFFFFF.
+   - Fonts: Montserrat (700/800) + Plus Jakarta Sans (400/500/600). Zero neon glows, gradients, fake browser chrome, or raw `[To Verify]` tags in public HTML or `.docx`/`.pptx` bodies.
+   - SEO Freeze: Keep existing B2B SEO copy & routes untouched; update ONLY EmploStart descriptions/metadata. Keep `/student-hub` -> `/emplostart` redirect live.
+
+4. SANDBOX & DENYLIST:
+   - NEVER write outside the workspace root (`../`); stage new repos strictly under `_staging/Emplowise-Docs/` and `_staging/EmploStart/` (add `_staging/` to `.gitignore`).
+   - NEVER read in full: `composer.lock`, `docs/screenshots/`, `public/css/site.css`, `tools/parity/fixtures.json`.
+```

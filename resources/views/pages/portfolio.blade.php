@@ -108,7 +108,7 @@
                             <li>A strict content security policy with a single hashed inline script, self-hosted fonts, and no third-party origins.</li>
                             <li>A four-step Free HR Audit wizard that validates inline, persists to SQLite, and degrades to Web3Forms or an email fallback on the static build.</li>
                             <li>A grounded assistant with 18 intents that answers from the same config facts, with an optional hosted model behind it.</li>
-                            <li>EmploStart: five free career tools, three of them mirrored in the browser and checked against PHP fixtures.</li>
+                            <li>EmploStart: six planned utility modules, with three job-readiness tools live here, mirrored in the browser and checked against PHP fixtures.</li>
                             <li>Dark mode, reduced-motion support, and WCAG AA contrast on the documented pairings.</li>
                         </ul>
                     </dd>

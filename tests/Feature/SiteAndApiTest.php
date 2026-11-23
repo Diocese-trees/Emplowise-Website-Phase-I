@@ -581,7 +581,7 @@ final class SiteAndApiTest extends TestCase
     {
         $js = (string) file_get_contents(public_path('js/chat.js'));
 
-        foreach (['PKR 40,000', 'PKR 75,000', '14 prompts', '/free-hr-audit', '/emplostart'] as $fact) {
+        foreach (['PKR 40,000', 'PKR 75,000', '14 ready prompts', '/free-hr-audit', '/emplostart'] as $fact) {
             $this->assertStringContainsString($fact, $js, 'Browser KB missing: '.$fact);
         }
 
@@ -592,7 +592,7 @@ final class SiteAndApiTest extends TestCase
         $assistant = app(EmplowiseAssistant::class);
 
         foreach ([
-            'pricing', 'audit', 'student', 'tools', 'payroll', 'performance', 'policy',
+            'pricing', 'audit', 'emplostart', 'tools', 'payroll', 'performance', 'policy',
             'services', 'pending', 'contact', 'careers', 'why', 'who', 'where', 'when',
             'greeting', 'thanks', 'general',
         ] as $intent) {

@@ -858,6 +858,144 @@
 .prompt-empty.is-visible { display: block; }
 
 /* ------------------------------------------------------------------
+   Module map (six-module roadmap, Brand Kit 2026 flat)
+------------------------------------------------------------------- */
+
+.module-map-lede { max-width: 64ch; margin-bottom: var(--s-5); }
+
+.module-map {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.module-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: clamp(1.1rem, 2vw, 1.5rem);
+    background: var(--surface-card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+}
+
+.module-card.is-live { border-color: rgba(13, 148, 136, 0.5); }
+
+.module-num {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--teal-deep);
+}
+
+.module-card h3 { font-size: 1.02rem; margin: 0; line-height: 1.3; }
+
+.module-card p { margin: 0; font-size: 0.85rem; line-height: 1.55; color: var(--slate-500); }
+
+.module-status {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid rgba(13, 148, 136, 0.35);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--teal-deep);
+    background: transparent;
+}
+
+a.module-status:hover { background: var(--teal); border-color: var(--teal); color: var(--white); }
+
+.module-status--build { color: var(--slate-500); border-color: var(--line-strong); }
+
+.hub-intro { padding-top: clamp(2.5rem, 5vw, 4rem); padding-bottom: 0; }
+.hub-intro h2 { margin-bottom: 0; }
+.hub-intro + .hub-shell { padding-top: var(--s-5); }
+
+/* ------------------------------------------------------------------
+   Fair jobs and fair wages pledge (deep teal ground, white text)
+------------------------------------------------------------------- */
+
+.pledge-band {
+    background: #0f766e;
+    color: #f0f9f9;
+    padding: clamp(2.6rem, 5vw, 4rem) 0;
+    border-block: 1px solid rgba(8, 27, 62, 0.2);
+}
+
+.pledge-band .kicker {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.38);
+}
+
+.pledge-band h2 {
+    color: var(--white);
+    font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+    max-width: 30ch;
+    margin-bottom: var(--s-3);
+}
+
+.pledge-body { color: #f0f9f9; max-width: 70ch; margin-bottom: var(--s-5); }
+
+.pledge-points {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--s-3);
+    list-style: none;
+    margin: 0 0 var(--s-4);
+    padding: 0;
+}
+
+.pledge-points li {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    background: rgba(8, 27, 62, 0.16);
+}
+
+.pledge-points b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+}
+
+.pledge-points span { color: #f0f9f9; font-size: 0.82rem; line-height: 1.5; }
+
+.pledge-note {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #e6f4f3;
+}
+
+@media (max-width: 1100px) {
+    .pledge-points { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1000px) {
+    .module-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    .module-map { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    .pledge-points { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------------------------------
    Responsive
 ------------------------------------------------------------------- */
 

@@ -15,7 +15,7 @@
                         </div>
                         <div class="field">
                             <label for="profile-headline">{{ $copy['profile']['form']['headline'] }}</label>
-                            <input id="profile-headline" type="text" autocomplete="off" enterkeyhint="next" maxlength="200" placeholder="Final year CS student looking for internships">
+                            <input id="profile-headline" type="text" autocomplete="off" enterkeyhint="next" maxlength="200" placeholder="Operations lead moving into product management">
                         </div>
                         <div class="field">
                             <label for="profile-summary">{{ $copy['profile']['form']['summary'] }}</label>

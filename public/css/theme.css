@@ -595,6 +595,14 @@ html[data-theme="dark"] .repeat-item .remove-btn {
 
 html[data-theme="dark"] .prompt-card { background: var(--d-surface); border-color: var(--d-line); }
 
+/* EmploStart module map and pledge band. The pledge keeps its deep teal
+   ground in both themes, so only the light cards need a dark surface. */
+html[data-theme="dark"] .module-card { background: var(--d-surface); border-color: var(--d-line); }
+html[data-theme="dark"] .module-card.is-live { border-color: rgba(94, 234, 212, 0.35); }
+html[data-theme="dark"] .module-num,
+html[data-theme="dark"] .module-status { color: var(--d-accent); border-color: rgba(94, 234, 212, 0.3); }
+html[data-theme="dark"] .module-status--build { color: var(--d-ink-dim); border-color: var(--d-line-strong); }
+
 html[data-theme="dark"] .result-text {
     background: var(--d-surface-2);
     border-color: var(--d-line-strong);

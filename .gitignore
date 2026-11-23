@@ -41,3 +41,6 @@ Thumbs.db
 /tools/brand-kit/.venv/
 /tools/brand-kit/node_modules/
 /tools/brand-kit/__pycache__/
+
+# Staged repos for the 3-repo split (never committed to the main site)
+/_staging/

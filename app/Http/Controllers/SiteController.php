@@ -69,6 +69,8 @@ final class SiteController extends Controller
             'copy' => config('emplowise.copy.emplostart'),
             'student' => config('emplowise.student'),
             'brand' => config('emplowise.brand'),
+            'modules' => config('emplowise.emplostart_modules'),
+            'pledge' => config('emplowise.fair_jobs_pledge'),
         ]);
     }
 

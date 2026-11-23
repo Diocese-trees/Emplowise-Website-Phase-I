@@ -166,7 +166,7 @@
             </div>
             <h3>A second audience: early career candidates.</h3>
             <p class="show-lede">
-                <a href="{{ route('emplostart') }}">EmploStart</a> gives students and first-job candidates the same structured thinking for free: interview practice, ATS feedback, a resume builder, a profile optimiser, and a prompt library. No account, no cost. It is a public good and an honest demonstration of how the team thinks about people operations.
+                <a href="{{ route('emplostart') }}">EmploStart</a> gives career pivoters and first-job candidates the same structured thinking for free: interview practice, ATS feedback, a resume builder, a profile optimiser, and a prompt library. The broader utility adds planning modules for pivots, reimagining a career, and market assessment. No account, no cost. It is a public good and an honest demonstration of how the team thinks about people operations.
             </p>
         </div>
     </section>

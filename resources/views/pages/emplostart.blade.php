@@ -23,13 +23,40 @@
             <h1>@if ($h1Accent && str_contains($h1Text, $h1Accent)){!! str_replace(e($h1Accent), '<em>'.e($h1Accent).'</em>', e($h1Text)) !!}@else{{ $h1Text }}@endif</h1>
             <p class="lede">{{ $seo['intro'] }}</p>
             <div class="hub-stats">
-                <div class="hub-stat"><b>5</b><span>{{ $copy['stats'][0] }}</span></div>
+                <div class="hub-stat"><b>{{ count($modules) }}</b><span>{{ $copy['stats'][0] }}</span></div>
                 <div class="hub-stat"><b>0</b><span>{{ $copy['stats'][1] }}</span></div>
                 <div class="hub-stat"><b>0</b><span>{{ $copy['stats'][2] }}</span></div>
                 <div class="hub-stat"><b>{{ count($student['prompts']) }}</b><span>{{ $copy['stats'][3] }}</span></div>
             </div>
         </div>
     </section>
+
+    <section class="section section--tight module-map-section" id="modules">
+        <div class="shell">
+            <p class="kicker">{{ $copy['modules_kicker'] }}</p>
+            <h2>{{ $copy['modules_heading'] }}</h2>
+            <p class="lede module-map-lede">{{ $copy['modules_lede'] }}</p>
+            <ol class="module-map">
+                @foreach ($modules as $module)
+                    <li class="module-card {{ $module['status'] === 'Live' ? 'is-live' : '' }}">
+                        <span class="module-num">{{ $module['num'] }}</span>
+                        <h3>{{ $module['title'] }}</h3>
+                        <p>{{ $module['desc'] }}</p>
+                        @if ($module['status'] === 'Live')
+                            <a class="module-status" href="#{{ $module['id'] }}">{{ $copy['modules_live'] }}</a>
+                        @else
+                            <span class="module-status module-status--build">{{ $copy['modules_next'] }}</span>
+                        @endif
+                    </li>
+                @endforeach
+            </ol>
+        </div>
+    </section>
+
+    <div class="shell hub-intro">
+        <p class="kicker">{{ $copy['modules_live'] }}</p>
+        <h2>{{ $copy['tools_heading'] }}</h2>
+    </div>
 
     <div class="shell hub-shell">
         <div class="hub-rail" role="tablist" aria-label="EmploStart tools">
@@ -217,6 +244,20 @@
             </section>
         </div>
     </div>
+
+    <section class="pledge-band" id="pledge" aria-labelledby="pledge-heading">
+        <div class="shell">
+            <p class="kicker">{{ $pledge['kicker'] }}</p>
+            <h2 id="pledge-heading">{{ $pledge['heading'] }}</h2>
+            <p class="pledge-body">{{ $pledge['body'] }}</p>
+            <ul class="pledge-points">
+                @foreach ($pledge['points'] as $point)
+                    <li><b>{{ $point['label'] }}</b><span>{{ $point['text'] }}</span></li>
+                @endforeach
+            </ul>
+            <p class="pledge-note">{{ $pledge['disclaimer'] }}</p>
+        </div>
+    </section>
 
     <section class="cta-band">
         <div class="shell cta-inner">

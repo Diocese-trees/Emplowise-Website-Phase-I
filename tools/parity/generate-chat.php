@@ -28,7 +28,7 @@ $cases = [
     ['How much is the free audit?', ''],
     ['How does the free HR audit work?', ''],
     ['Can I book a meeting this week?', ''],
-    ['What is in the Student Hub?', ''],
+    ['What is in the EmploStart?', ''],
     ['How does the ATS score work?', ''],
     ['Is the resume builder free?', ''],
     ['Do you store my resume or interview answers in your database?', ''],

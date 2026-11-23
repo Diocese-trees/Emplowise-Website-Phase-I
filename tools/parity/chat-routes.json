@@ -65,9 +65,9 @@
         "intent": "audit"
     },
     {
-        "message": "What is in the Student Hub?",
+        "message": "What is in the EmploStart?",
         "previous": "",
-        "intent": "student"
+        "intent": "emplostart"
     },
     {
         "message": "How does the ATS score work?",
