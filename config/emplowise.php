@@ -1565,12 +1565,12 @@ return [
         ['label' => 'Meet The Team', 'route' => 'what-we-are', 'hash' => 'team'],
         ['label' => 'Why Us', 'route' => 'why-emplowise'],
         ['label' => 'Company Profile', 'route' => 'company-profile'],
+        ['label' => 'Portfolio', 'route' => 'portfolio'],
         ['label' => 'Where\'s AI', 'route' => 'what-we-are-building'],
     ],
 
     'footer_resources' => [
         ['label' => 'EmploStart', 'route' => 'emplostart'],
-        ['label' => 'Portfolio', 'route' => 'portfolio'],
         ['label' => 'Pitch Deck', 'route' => 'pitch-deck'],
         ['label' => 'Documentation', 'route' => 'docs'],
         ['label' => 'FAQ', 'route' => 'faq'],
