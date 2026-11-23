@@ -8,7 +8,7 @@ describes the mechanism, not new marketing text.
 
 ## 1. Sitemap and SEO route matrix
 
-Fourteen public routes. Eleven shipped in Phase I; the three showcase routes are
+Fifteen public routes. Eleven shipped in Phase I; the four showcase routes are
 added in this release and are marked **new**. Every route renders through
 `App\Http\Controllers\SiteController` and is pre-rendered by
 `emplowise:export-static`.
@@ -29,10 +29,12 @@ added in this release and are marked **new**. Every route renders through
 | `/company-profile` | `pages/company-profile` | `companyProfile` | Buyer who needs a document to circulate internally | **new** Editorial entity page, DOCX download | Download profile, book audit |
 | `/portfolio` | `pages/portfolio` | `portfolio` | Buyer who wants evidence of shipped work | **new** Proof page, repo-evidenced artifacts | Download portfolio, book audit |
 | `/pitch-deck` | `pages/pitch-deck` | `pitchDeck` | Partner or investor reviewing the business model | **new** Presentation surface, `noindex, follow` by default | Play the deck, download PPTX |
+| `/docs` | `pages/docs` | `docs` | Buyer or partner gathering brand and company documents | **new** Documentation hub: one index, live editions, editable downloads | Download a document, book audit |
 
-The three showcase routes are deliberately non-cannibalising: their primary
-keywords are `Emplowise company profile`, `Emplowise portfolio` and
-`Emplowise pitch deck`, none of which overlap the nine Phase I targets above.
+The four showcase routes are deliberately non-cannibalising: their primary
+keywords are `Emplowise company profile`, `Emplowise portfolio`,
+`Emplowise pitch deck` and `Emplowise documentation`, none of which overlap the
+nine Phase I targets above.
 The SEO audit asserts uniqueness across titles, descriptions, primary and
 secondary keywords.
 

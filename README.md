@@ -13,7 +13,7 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 
 | Area | What ships |
 | --- | --- |
-| Public site | 14 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy, plus Company Profile, Portfolio and an eight-slide Pitch Deck |
+| Public site | 15 pages: Meet Emplowise (home), Our Story, What We Do, Where's AI, Why Us, EmploStart, FAQ, Contact Us, Free HR Audit, Terms, Privacy, plus Company Profile, Portfolio, an eight-slide Pitch Deck and a Documentation hub |
 | Content model | 14 services, 3 pillars, 4 method stages, 3 packages, 22 FAQs, all copy driven from `config/emplowise.php` |
 | AI assistant | 18-intent grounded reply engine, 4–5 line hard cap, optional Qwen model, browser-side knowledge base so it works with no backend |
 | EmploStart | 6-module free utility: pivot planner, reimagination lab and market assessment in build; ATS score, mock interview, resume builder, profile optimiser and 14-prompt library live |
@@ -23,6 +23,8 @@ Laravel 13 · PHP 8.3 · Blade · vanilla JS · SQLite · zero external front-en
 | Delivery | static export command, GitHub Pages publish workflow, Docker + Nginx + Apache configs, single-file offline demo |
 
 ## Documentation index
+
+The public site serves a live [`/docs`](https://diocese-trees.github.io/Emplowise-Website-Phase-I/docs/) hub that indexes every document with live editions and editable downloads; the table below points at the Markdown sources.
 
 | Document | Answers |
 | --- | --- |
@@ -46,7 +48,7 @@ app/Http/Controllers     SiteController + API (chat, audit, student, csp report)
 app/Services             EmplowiseAssistant, StudentToolkit, AlibabaCloudClient
 app/Http/Middleware      SecurityHeaders, ForcePublicUrl
 config/emplowise.php     The single source of truth for every public word
-resources/views          Layout, 14 pages, chat partial, team showcase
+resources/views          Layout, 15 pages, chat partial, team showcase
 public/css               13 source stylesheets + 2 generated bundles (site.css, hub.css)
 public/js                10 progressive-enhancement scripts (no build step)
 public/downloads         Editable DOCX/PPTX deliverables (brand-kit release)

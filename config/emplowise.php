@@ -202,6 +202,18 @@ return [
             'intro' => 'This remote HR portfolio records what Emplowise has actually shipped. Every entry names the repository evidence behind it, and no client study is used until it is cleared in writing.',
         ],
 
+        // === PAGE: DOCS HUB ===
+        'docs' => [
+            'primary_keyword' => 'Emplowise documentation',
+            'secondary_keywords' => ['brand kit downloads', 'company profile document'],
+            'title' => 'Emplowise Documentation and Downloads | Emplowise',
+            'description' => 'Every Emplowise document in one place: brand kit, company profile, portfolio, pitch deck, and engineering notes, with live editions and editable downloads.',
+            'h1' => 'Emplowise documentation, with live editions and editable downloads.',
+            'h1_accent' => 'Emplowise documentation',
+            'h2' => 'Emplowise documentation index',
+            'intro' => 'Emplowise documentation covers the brand system, the commercial profile, shipped work, the pitch deck, and the engineering notes behind the site. Read the live edition or download the editable file.',
+        ],
+
         // === PAGE: PITCH DECK (showcase) ===
         'pitch-deck' => [
             'primary_keyword' => 'Emplowise pitch deck',
@@ -1549,6 +1561,106 @@ return [
         ],
     ],
 
+    /*
+     * The /docs hub indexes every public document. Downloads are the built
+     * Office files; routes point at the HTML editions where one exists.
+     */
+    'docs_index' => [
+        'intro' => 'Seven downloadable documents and three live editions, grouped by the question they answer. Every file is editable and every figure is traceable to the site configuration.',
+        'groups' => [
+            [
+                'id' => 'brand',
+                'kicker' => 'Brand and voice',
+                'heading' => 'Brand system and writing rules.',
+                'intro' => 'The 2026 identity, plus the voice, evidence tiers, and naming rules every other document follows.',
+                'items' => [
+                    [
+                        'title' => 'Brand Kit 2026',
+                        'desc' => 'Logo, colour, typography, and surface rules for every public asset.',
+                        'path' => 'downloads/Emplowise-Brand-Kit-2026.docx',
+                        'download_label' => 'Download the brand kit',
+                    ],
+                    [
+                        'title' => 'Branding Guidelines 2026',
+                        'desc' => 'Voice, evidence tiers, interface rules, and the naming lock.',
+                        'path' => 'downloads/Emplowise-Branding-Guidelines-2026.docx',
+                        'download_label' => 'Download the guidelines',
+                    ],
+                ],
+            ],
+            [
+                'id' => 'commercial',
+                'kicker' => 'Commercial',
+                'heading' => 'What Emplowise sells, and the proof behind it.',
+                'intro' => 'The company profile, the shipped-work portfolio, and the eight-slide pitch deck. Each one has a live HTML edition and an editable Office file.',
+                'items' => [
+                    [
+                        'title' => 'Company Profile 2026',
+                        'desc' => 'Category, market, services, pricing, and scope in one profile.',
+                        'path' => 'downloads/Emplowise-Company-Profile-2026.docx',
+                        'download_label' => 'Download the profile',
+                        'route' => 'company-profile',
+                        'route_label' => 'Read the profile',
+                    ],
+                    [
+                        'title' => 'Portfolio 2026',
+                        'desc' => 'Repo-evidenced shipped work, with no invented clients.',
+                        'path' => 'downloads/Emplowise-Portfolio-2026.docx',
+                        'download_label' => 'Download the portfolio',
+                        'route' => 'portfolio',
+                        'route_label' => 'Read the portfolio',
+                    ],
+                    [
+                        'title' => 'Pitch Deck 2026',
+                        'desc' => 'Eight slides, one buyer question each, with speaker notes.',
+                        'path' => 'downloads/Emplowise-Pitch-Deck-2026.pptx',
+                        'download_label' => 'Download the deck',
+                        'route' => 'pitch-deck',
+                        'route_label' => 'Read the deck',
+                    ],
+                ],
+            ],
+            [
+                'id' => 'engineering',
+                'kicker' => 'Engineering',
+                'heading' => 'How the site is built and shipped.',
+                'intro' => 'The route inventory, the module specs, the static export pipeline, and the verified toolchain.',
+                'items' => [
+                    [
+                        'title' => 'Website Breakdown 2026',
+                        'desc' => 'Routes, partials, engines, and the static export pipeline.',
+                        'path' => 'downloads/Emplowise-Website-Breakdown-2026.docx',
+                        'download_label' => 'Download the breakdown',
+                    ],
+                    [
+                        'title' => 'Tool Stack 2026',
+                        'desc' => 'Verified versions, commands, and the upgrade ledger.',
+                        'path' => 'downloads/Emplowise-Tool-Stack-2026.docx',
+                        'download_label' => 'Download the tool stack',
+                    ],
+                ],
+            ],
+        ],
+        'notes' => [
+            'kicker' => 'Operational notes',
+            'heading' => 'Notes that live with the code.',
+            'body' => 'Four Markdown notes stay in the repository beside the code they describe. They are versioned with the implementation, not downloaded as Office files.',
+            'items' => [
+                ['file' => 'STATIC_HOSTING.md', 'desc' => 'GitHub Pages build, Web3Forms key, and the keyless fallback.'],
+                ['file' => 'REPO_TOPOLOGY.md', 'desc' => 'The original repository, the private mirror, and the export path.'],
+                ['file' => 'THEME_AND_MOTION.md', 'desc' => 'Tokens, dark mode, motion timings, and reduced motion.'],
+                ['file' => 'CONTENT_EDITING_GUIDE.md', 'desc' => 'Editing config copy without breaking SEO.'],
+            ],
+        ],
+        'gate' => 'Every download is generated from one Markdown source and checked for OOXML validity, raw Markdown tokens, and internal verification tags before it ships.',
+        'cta' => [
+            'heading' => 'Need a document this hub does not carry?',
+            'body' => 'Ask the team. Anything not published here is confirmed in writing rather than drafted from memory.',
+            'primary' => 'Talk to the team',
+            'secondary' => 'Read the FAQ',
+        ],
+    ],
+
     'nav' => [
         ['label' => 'Meet Emplowise', 'route' => 'home'],
         ['label' => 'Our Story', 'route' => 'what-we-are'],
@@ -1574,6 +1686,7 @@ return [
         ['label' => 'EmploStart', 'route' => 'emplostart'],
         ['label' => 'Portfolio', 'route' => 'portfolio'],
         ['label' => 'Pitch Deck', 'route' => 'pitch-deck'],
+        ['label' => 'Documentation', 'route' => 'docs'],
         ['label' => 'FAQ', 'route' => 'faq'],
         ['label' => 'Contact Us', 'route' => 'contact'],
         ['label' => 'Free HR Audit', 'route' => 'free-hr-audit'],

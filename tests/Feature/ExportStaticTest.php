@@ -48,6 +48,7 @@ final class ExportStaticTest extends TestCase
             'company-profile/index.html',
             'portfolio/index.html',
             'pitch-deck/index.html',
+            'docs/index.html',
         ];
 
         foreach ($pages as $page) {

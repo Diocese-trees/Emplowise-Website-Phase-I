@@ -34,7 +34,7 @@ sentence in one config file so the two builds cannot drift.
 
 **Capabilities.**
 
-- 14 public routes rendered by `SiteController`, all data from
+- 15 public routes rendered by `SiteController`, all data from
   `config/emplowise.php`.
 - A strict CSP with a single hashed inline script, self-hosted fonts, and no
   third-party origins.
@@ -129,7 +129,7 @@ are real, inspectable and relevant to how the platform is maintained.
 
 | System | What it does | Proof |
 | --- | --- | --- |
-| Static export pipeline | Renders 14 pages, five redirect documents, a 404, sitemap, robots and a CSP meta; rewrites every asset, canonical and download URL for a project subpath | `app/Console/Commands/ExportStatic.php`, `tests/Feature/ExportStaticTest.php` |
+| Static export pipeline | Renders 15 pages, five redirect documents, a 404, sitemap, robots and a CSP meta; rewrites every asset, canonical and download URL for a project subpath | `app/Console/Commands/ExportStatic.php`, `tests/Feature/ExportStaticTest.php` |
 | CSS bundle pipeline | Concatenates and minifies two bundles from 12 sources, checked in because the static host ships `public/` as is | `app/Support/CssBundles.php`, `php artisan emplowise:bundle-css` |
 | SEO copy audit | Enforces title and description length, unique keywords, keyword placement, banned words, em dashes and the confirmed pricing facts | `app/Console/Commands/EmplowiseSeoAudit.php` |
 | CI gate | Bundle freshness, JS syntax, SEO audit, 62 tests, three parity harnesses (chat routing runs locally against Chromium), keyless export smoke test | `.github/workflows/ci.yml` |

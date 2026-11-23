@@ -97,7 +97,7 @@ travels with the page. The limitation is documented in `README.md` and in
 | Feature suite | `php artisan test` | 62 tests, 922 assertions, including showcase routes, export assets and Office download checks |
 | SEO copy audit | `php artisan emplowise:seo-audit` | every public route: title 45 to 60 characters, description 135 to 155, unique keywords, primary keyword present in title, h1, intro and h2 |
 | Security headers | `php artisan test --filter=SecurityHeadersTest` | CSP mode, HSTS over HTTPS, nosniff, frame denial, permissions policy |
-| Static export | `php artisan test --filter=ExportStaticTest` | 14 pages plus redirects, subpath assets, CSP meta, no inline script or style |
+| Static export | `php artisan test --filter=ExportStaticTest` | 15 pages plus redirects, subpath assets, CSP meta, no inline script or style |
 | Browser parity | `node tools/parity/check-{interview,ats,profile}.mjs` | 11 + 6 + 5 fixtures |
 | JS syntax | `node --check` on every script | all files in `public/js` |
 | Bundle freshness | `emplowise:bundle-css` then `git diff --exit-code` | `site.css`, `hub.css` |

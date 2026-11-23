@@ -42,6 +42,7 @@ final class ExportStatic extends Command
         '/company-profile' => 'company-profile/index.html',
         '/portfolio' => 'portfolio/index.html',
         '/pitch-deck' => 'pitch-deck/index.html',
+        '/docs' => 'docs/index.html',
     ];
 
     /**

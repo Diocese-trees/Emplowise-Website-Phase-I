@@ -158,6 +158,14 @@ final class SiteController extends Controller
         ]);
     }
 
+    public function docs(): View
+    {
+        return view('pages.docs', [
+            'seo' => config('emplowise.seo.docs'),
+            'index' => config('emplowise.docs_index'),
+        ]);
+    }
+
     public function audit(): View
     {
         return view('pages.audit', [

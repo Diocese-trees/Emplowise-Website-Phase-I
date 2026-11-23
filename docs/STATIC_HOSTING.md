@@ -6,7 +6,7 @@ browser or talks to a form service.
 
 | Piece | How it works on the live site |
 | --- | --- |
-| Fourteen public pages | Pre-rendered HTML committed to `gh-pages`; `/pitch-deck` ships `noindex` and stays out of the sitemap |
+| Fifteen public pages | Pre-rendered HTML committed to `gh-pages`; `/pitch-deck` ships `noindex` and stays out of the sitemap |
 | Chat assistant | Local 18-intent knowledge base in `public/js/chat.js` |
 | Interview, ATS, profile tools | Browser ports in `public/js/toolkit/`, no network calls |
 | Resume builder, prompt library | Client-side only, drafts in `localStorage` |

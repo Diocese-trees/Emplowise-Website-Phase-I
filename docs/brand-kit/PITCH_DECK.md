@@ -242,7 +242,7 @@ left.
 
 Headline: *Shipped platform, not promised platform*
 
-- **What is shipped.** Fourteen pages, three live career tools inside a
+- **What is shipped.** Fifteen pages, three live career tools inside a
   six-module EmploStart plan, an audit wizard and a grounded assistant.
 - **Who engaged.** No named client study yet; the proof is the shipped
   repository.

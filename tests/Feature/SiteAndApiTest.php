@@ -235,6 +235,7 @@ final class SiteAndApiTest extends TestCase
             '/free-hr-audit' => 'free-hr-audit',
             '/terms' => 'terms',
             '/privacy' => 'privacy',
+            '/docs' => 'docs',
         ];
 
         $titles = [];
@@ -332,12 +333,12 @@ final class SiteAndApiTest extends TestCase
         $this->assertNotFalse($xml);
 
         $locations = array_map(fn ($url): string => (string) $url->loc, iterator_to_array($xml->url, false));
-        $this->assertCount(13, $locations);
+        $this->assertCount(14, $locations);
 
         foreach ([
             '/', '/what-we-are', '/what-we-do', '/why-emplowise', '/emplostart', '/faq',
             '/contact', '/what-we-are-building', '/free-hr-audit', '/terms', '/privacy',
-            '/company-profile', '/portfolio',
+            '/company-profile', '/portfolio', '/docs',
         ] as $path) {
             $this->assertTrue(
                 collect($locations)->contains(fn (string $url): bool => (parse_url($url, PHP_URL_PATH) ?: '/') === $path),

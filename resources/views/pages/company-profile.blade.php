@@ -86,7 +86,7 @@
                 </div>
                 <div class="show-fact">
                     <dt>Second audience</dt>
-                    <dd>Early career candidates, through EmploStart, free</dd>
+                    <dd>Career pivoters and early career candidates, through EmploStart, free</dd>
                 </div>
                 <div class="show-fact">
                     <dt>Contact</dt>

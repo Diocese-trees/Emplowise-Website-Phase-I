@@ -27,6 +27,9 @@ Route::get('/company-profile', [SiteController::class, 'companyProfile'])->name(
 Route::get('/portfolio', [SiteController::class, 'portfolio'])->name('portfolio');
 Route::get('/pitch-deck', [SiteController::class, 'pitchDeck'])->name('pitch-deck');
 
+// The documentation hub indexes every public document and its Office download.
+Route::get('/docs', [SiteController::class, 'docs'])->name('docs');
+
 // Legacy URLs stay reachable after the information architecture change.
 Route::redirect('/pricing', '/why-emplowise', 301);
 Route::redirect('/career-hub', '/emplostart', 301);
@@ -35,7 +38,7 @@ Route::redirect('/ai-automation', '/what-we-are-building', 301);
 Route::get('/team', fn () => redirect('/what-we-are#team', 301));
 
 Route::get('/sitemap.xml', function () {
-    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit', 'terms', 'privacy', 'company-profile', 'portfolio'];
+    $pages = ['home', 'what-we-are', 'what-we-do', 'why-emplowise', 'emplostart', 'faq', 'contact', 'what-we-are-building', 'free-hr-audit', 'terms', 'privacy', 'company-profile', 'portfolio', 'docs'];
     $urls = '';
     foreach ($pages as $name) {
         $priority = $name === 'home' ? '1.0' : '0.8';

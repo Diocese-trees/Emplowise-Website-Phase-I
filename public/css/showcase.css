@@ -128,6 +128,47 @@ html[data-theme="dark"] .page-showcase {
 
 .show-note p:last-child { margin-bottom: 0; }
 
+/* ------------------------------------------------- documentation hub */
+
+.docs-index-head { padding-bottom: 0; }
+
+.docs-card { display: flex; flex-direction: column; }
+
+.docs-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: auto;
+    padding-top: var(--s-4);
+}
+
+.docs-notes {
+    display: grid;
+    gap: var(--s-2);
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.docs-notes li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--surface-card);
+}
+
+.docs-notes code {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--show-accent);
+}
+
+.docs-notes span { font-size: 0.86rem; color: var(--ink-muted); }
+
 .show-disclaimer {
     margin-top: var(--s-3);
     font-size: 0.82rem;
