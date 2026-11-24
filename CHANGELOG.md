@@ -1,3 +1,18 @@
+## Vercel Git integration, branch publisher (2026-11-24)
+
+- Added `.github/workflows/publish-vercel-branch.yml`, which renders the site and
+  force-pushes it to a single-commit `vercel-static` branch, so Vercel's own Git
+  integration can serve it without running PHP. Dormant until the repository
+  variable `VERCEL_BRANCH_ENABLED` is `true`, and independent of the CLI
+  workflow: run one or the other.
+- `docs/VERCEL.md` now opens with the choice between the two routes, gives the
+  seven setup steps for the Git integration (variables, render, project
+  settings, first-deploy checks, domain, retiring the old host, day to day),
+  and keeps the CLI path as the alternative. The ignored-build-step command that
+  stops Vercel compiling PHP on every push is documented with its exit codes.
+- Verified locally: the publish step produces an 82-file branch, one commit, and
+  the rendered base URL intact.
+
 # Changelog
 
 Notable changes, newest first. Short hashes refer to commits in
