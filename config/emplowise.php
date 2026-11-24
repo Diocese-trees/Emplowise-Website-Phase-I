@@ -1573,9 +1573,10 @@ return [
         'notes' => [
             'kicker' => 'Operational notes',
             'heading' => 'Notes that live with the code.',
-            'body' => 'Four Markdown notes stay in the repository beside the code they describe. They are versioned with the implementation, not downloaded as Office files.',
+            'body' => 'Five Markdown notes stay in the repository beside the code they describe. They are versioned with the implementation, not downloaded as Office files.',
             'items' => [
                 ['file' => 'STATIC_HOSTING.md', 'desc' => 'GitHub Pages build, Web3Forms key, and the keyless fallback.'],
+                ['file' => 'VERCEL.md', 'desc' => 'Vercel static deployment, headers, redirects, and rollback.'],
                 ['file' => 'REPO_TOPOLOGY.md', 'desc' => 'The original repository, the private mirror, and the export path.'],
                 ['file' => 'THEME_AND_MOTION.md', 'desc' => 'Tokens, dark mode, motion timings, and reduced motion.'],
                 ['file' => 'CONTENT_EDITING_GUIDE.md', 'desc' => 'Editing config copy without breaking SEO.'],

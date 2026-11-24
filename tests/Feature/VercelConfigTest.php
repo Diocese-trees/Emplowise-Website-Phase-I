@@ -57,10 +57,15 @@ final class VercelConfigTest extends TestCase
         $this->assertCount(count($map), $configured, 'vercel.json has redirects the exporter does not.');
     }
 
-    public function test_every_redirect_is_permanent(): void
+    public function test_every_redirect_is_permanent_and_uses_the_public_property(): void
     {
         foreach ($this->config['redirects'] as $redirect) {
-            $this->assertSame(301, $redirect['statusCode'] ?? null, 'Legacy routes must answer 301.');
+            // permanent: true is the documented switch and answers 308. The
+            // statusCode override is marked private in Vercel's own schema, so
+            // it is not relied on here.
+            $this->assertTrue($redirect['permanent'] ?? false, 'Legacy routes must be permanent redirects.');
+            $this->assertArrayNotHasKey('statusCode', $redirect);
+            $this->assertStringEndsWith('/', $redirect['source'], 'trailingSlash: true means sources must carry the slash.');
         }
     }
 
@@ -76,15 +81,23 @@ final class VercelConfigTest extends TestCase
         $this->assertStringContainsString('max-age=63072000', $headers['strict-transport-security']);
     }
 
-    public function test_html_is_revalidated_and_static_assets_get_a_short_ttl(): void
+    public function test_html_cache_control_is_left_to_the_platform(): void
     {
-        // Asset names are not content-hashed, so a long immutable cache would
-        // pin an old stylesheet to a new page.
-        $this->assertSame('public, max-age=0, must-revalidate', $this->headersFor('/(.*)')['cache-control']);
+        // An earlier version set Cache-Control on the catch-all rule as well.
+        // Two rules then matched every asset, and the merge order decided the
+        // result. Vercel already answers HTML with max-age=0, must-revalidate,
+        // so the catch-all stays out of it and only assets opt in.
+        $this->assertArrayNotHasKey('cache-control', $this->headersFor('/(.*)'));
+    }
 
+    public function test_static_assets_get_a_short_ttl_never_immutable(): void
+    {
+        // Asset names are not content-hashed, so an immutable cache would pin
+        // an old stylesheet to a new page.
         foreach (['/css/(.*)', '/js/(.*)', '/fonts/(.*)', '/img/(.*)', '/downloads/(.*)'] as $source) {
             $cache = $this->headersFor($source)['cache-control'] ?? '';
             $this->assertStringContainsString('max-age=86400', $cache, "{$source} should cache for a day.");
+            $this->assertStringContainsString('stale-while-revalidate', $cache);
             $this->assertStringNotContainsString('immutable', $cache);
         }
     }

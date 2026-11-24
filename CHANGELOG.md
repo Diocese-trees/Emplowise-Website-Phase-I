@@ -4,6 +4,32 @@ Notable changes, newest first. Short hashes refer to commits in
 [the original repository](https://github.com/Diocese-trees/Emplowise-Website-Phase-I);
 each commit body carries the detail. Dates are the commit dates.
 
+## Vercel fixes and documentation (2026-11-24)
+
+- Correction: redirects now use `permanent: true` instead of the `statusCode`
+  override. `statusCode` is marked private in Vercel's published JSON schema;
+  `permanent` is the documented switch and answers 308. The smoke test already
+  accepted either code.
+- Correction: the catch-all header rule no longer sets `Cache-Control`. Two
+  rules matched every asset, which left the merge order to decide whether the
+  one-day asset cache applied at all. Vercel answers static HTML with
+  `max-age=0, must-revalidate` already, so only the asset rules opt in.
+- Deploy step links the folder to the project through a written
+  `.vercel/project.json` instead of relying on environment variables alone, so
+  a non-interactive run cannot create a second project or prompt for a scope.
+  The deployment URL is written to the job summary.
+- Smoke test extended: an unknown path must answer 404 with the custom page,
+  following `/pricing` must land on 200, and `/css/site.css` must carry the
+  asset cache header, which proves the rule reached the CDN rather than only
+  the repository.
+- Added `docs/VERCEL.md`: setup, the configuration table with the reasoning
+  behind each choice, off-platform checks, a troubleshooting table, limits and
+  rollback. `docs/STATIC_HOSTING.md` now links to it instead of carrying a
+  second copy, and the `/docs` hub lists it as the fifth operational note.
+- Verified: `vercel.json` validates against the published schema with zero
+  errors, 57 tests pass, the SEO audit passes all 13 routes, and a local export
+  serves the expected folder layout.
+
 ## Vercel deployment target, static (2026-11-23)
 
 - Added `vercel.json`, which makes the existing static export deployable on

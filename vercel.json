@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": true,
   "redirects": [
-    { "source": "/pricing/", "destination": "/why-emplowise/", "statusCode": 301 },
-    { "source": "/career-hub/", "destination": "/emplostart/", "statusCode": 301 },
-    { "source": "/student-hub/", "destination": "/emplostart/", "statusCode": 301 },
-    { "source": "/ai-automation/", "destination": "/what-we-are-building/", "statusCode": 301 },
-    { "source": "/team/", "destination": "/what-we-are/#team", "statusCode": 301 }
+    { "source": "/pricing/", "destination": "/why-emplowise/", "permanent": true },
+    { "source": "/career-hub/", "destination": "/emplostart/", "permanent": true },
+    { "source": "/student-hub/", "destination": "/emplostart/", "permanent": true },
+    { "source": "/ai-automation/", "destination": "/what-we-are-building/", "permanent": true },
+    { "source": "/team/", "destination": "/what-we-are/#team", "permanent": true }
   ],
   "headers": [
     {
@@ -26,10 +26,6 @@
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=63072000; includeSubDomains; preload"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },

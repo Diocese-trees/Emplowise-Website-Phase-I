@@ -105,11 +105,22 @@ jobs:
           VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
         run: |
+          set -eu
           if [ -z "${VERCEL_TOKEN}" ] || [ -z "${VERCEL_ORG_ID}" ] || [ -z "${VERCEL_PROJECT_ID}" ]; then
             echo "::error::Set the VERCEL_TOKEN secret and the VERCEL_ORG_ID and VERCEL_PROJECT_ID variables (Project Settings, General)."
             exit 1
           fi
-          npx --yes vercel@latest deploy --prod --yes --token "${VERCEL_TOKEN}"
+          # Link the folder to the existing project explicitly. The CLI reads this
+          # file, so a non-interactive run cannot create a second project by
+          # accident or prompt for a scope.
+          mkdir -p .vercel
+          printf '{"projectId":"%s","orgId":"%s"}\n' "${VERCEL_PROJECT_ID}" "${VERCEL_ORG_ID}" > .vercel/project.json
+          # The folder is already rendered. The project must have no build
+          # command, or Vercel would try to compile PHP it does not have.
+          url=$(npx --yes vercel@latest deploy --prod --yes --token "${VERCEL_TOKEN}" | tail -n 1)
+          echo "Deployed ${url}"
+          echo "### Vercel production" >> "${GITHUB_STEP_SUMMARY}"
+          echo "${url}" >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Smoke-test the published site
         env:
@@ -117,14 +128,20 @@ jobs:
         run: |
           set -eu
           base="${STATIC_BASE_URL%/}"
-          for path in / /why-emplowise/ /pricing/ /free-hr-audit/ /downloads/Emplowise-Brand-Kit-2026.docx; do
+          for path in / /why-emplowise/ /pricing/ /free-hr-audit/ /downloads/Emplowise-Brand-Kit-2026.docx /this-page-does-not-exist-emplowise/; do
             code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "${base}${path}")
             echo "${path} -> ${code}"
             case "${path}" in
               /pricing/) [ "${code}" = "301" ] || [ "${code}" = "308" ] || { echo "::error::/pricing/ should redirect (got ${code})."; exit 1; } ;;
+              /this-page-does-not-exist-emplowise/) [ "${code}" = "404" ] || { echo "::error::An unknown path should answer 404 with the custom page (got ${code})."; exit 1; } ;;
               *) [ "${code}" = "200" ] || { echo "::error::${path} returned ${code}."; exit 1; } ;;
             esac
           done
+          # The folder layout depends on trailingSlash plus 301s. A redirect that
+          # lands on a 404 is invisible to a simple status check, so follow one.
+          final=$(curl -sS -L -o /dev/null -w '%{http_code}' --max-time 20 "${base}/pricing")
+          echo "/pricing (followed) -> ${final}"
+          [ "${final}" = "200" ] || { echo "::error::/pricing did not land on a page (got ${final})."; exit 1; }
           headers=$(curl -sSI --max-time 20 "${base}/")
           for expected in "content-security-policy: frame-ancestors 'none'" "x-content-type-options: nosniff" "x-frame-options: DENY"; do
             printf '%s' "${headers}" | tr 'A-Z' 'a-z' | grep -q "${expected}" || {
@@ -132,4 +149,10 @@ jobs:
               exit 1
             }
           done
-          echo "Published headers and status codes verified."
+          # Asset caching is a rule in vercel.json, so prove it reached the CDN.
+          asset_headers=$(curl -sSI --max-time 20 "${base}/css/site.css")
+          printf '%s' "${asset_headers}" | tr 'A-Z' 'a-z' | grep -q "cache-control:.*max-age=86400" || {
+            echo "::error::/css/site.css is not carrying the asset cache header."
+            exit 1
+          }
+          echo "Published headers, redirects and status codes verified."
