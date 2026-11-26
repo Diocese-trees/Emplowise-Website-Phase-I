@@ -95,7 +95,6 @@
                 <section class="contact-card" aria-labelledby="contact-social-title">
                     <h2 id="contact-social-title">{{ $copy['social_heading'] }}</h2>
                     <p>{{ $copy['social_body'] }}</p>
-                    @include('partials.social-links')
                     <p class="contact-card-foot">{{ $copy['social_note'] }}</p>
                 </section>
 

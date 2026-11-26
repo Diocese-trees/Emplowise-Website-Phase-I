@@ -38,48 +38,48 @@ return [
         'home' => [
             'primary_keyword' => 'remote HR services in Pakistan',
             'secondary_keywords' => ['HR outsourcing in Pakistan', 'managed HR services'],
-            'title' => 'Remote HR Services in Pakistan for Growing Teams | Emplowise',
-            'description' => 'Emplowise runs remote HR for startups and SMEs in Pakistan. Payroll, performance, and policy from PKR 40,000 a month. Book a free audit.',
+            'title' => 'Remote HR Services in Pakistan, One Team | Emplowise',
+            'description' => 'Remote HR services in Pakistan for startups and SMEs. Payroll, performance and policy on one monthly retainer from PKR 40,000. Book a free audit.',
             'h1' => 'Remote HR services in Pakistan, run by one accountable team.',
             'h1_accent' => 'one accountable team',
             'h2' => 'What our remote HR services in Pakistan cover.',
-            'intro' => 'Emplowise runs remote HR services in Pakistan for startups and SMEs. We run payroll inputs, performance cycles, and policy for growing teams, with retainers from PKR 40,000 a month.',
+            'intro' => 'Emplowise provides remote HR services in Pakistan for startups and SMEs. It runs payroll inputs, performance cycles and policy on one monthly retainer priced by headcount, from PKR 40,000 for up to 20 staff. Every engagement starts with a free HR audit and a written gap list, delivered remotely by one accountable team.',
         ],
 
         // === PAGE: WHAT WE ARE ===
         'what-we-are' => [
             'primary_keyword' => 'HR outsourcing company in Pakistan',
             'secondary_keywords' => ['outsourced HR support', 'dedicated HR representative'],
-            'title' => 'HR Outsourcing Company in Pakistan, Remote Team | Emplowise',
-            'description' => 'Emplowise is an HR outsourcing company in Pakistan. A remote HR team installs payroll, performance, and policy structure for startups and SMEs.',
+            'title' => 'HR Outsourcing Company in Pakistan, Named Team | Emplowise',
+            'description' => 'Emplowise is an HR outsourcing company in Pakistan. Three named people install payroll, performance and policy structure, then run it remotely.',
             'h1' => 'An HR outsourcing company in Pakistan that answers directly.',
             'h1_accent' => 'that answers directly',
             'h2' => 'How an HR outsourcing company in Pakistan delivers.',
-            'intro' => 'Emplowise is an HR outsourcing company in Pakistan and the remote HR team for startups and SMEs. We install the payroll, performance, and policy structure behind your people operations, then run it, so founders stop acting as the HR helpdesk.',
+            'intro' => 'Emplowise is an HR outsourcing company in Pakistan delivering remote HR to startups and SMEs. A named team installs payroll, performance and policy structure, then runs it, so founders stop acting as the HR helpdesk. Delivery is remote, and a dedicated HR representative gives your founder or CEO direct access.',
         ],
 
         // === PAGE: WHAT WE DO ===
         'what-we-do' => [
             'primary_keyword' => 'HR operations outsourcing',
             'secondary_keywords' => ['payroll and compliance services', 'HR process management'],
-            'title' => 'HR Operations Outsourcing for Pakistani SMEs | Emplowise',
-            'description' => 'HR operations outsourcing across payroll, performance, and policy. Fourteen confirmed services, remote delivery in Pakistan, one four-stage method.',
+            'title' => 'HR Operations Outsourcing for Teams in Pakistan | Emplowise',
+            'description' => 'HR operations outsourcing in Pakistan across payroll, performance and policy. Fourteen confirmed services, one four-stage method, remote delivery.',
             'h1' => 'HR operations outsourcing across three confirmed pillars.',
             'h1_accent' => 'three confirmed pillars',
             'h2' => 'Fourteen services inside HR operations outsourcing.',
-            'intro' => 'Emplowise runs HR operations outsourcing for startups and SMEs in Pakistan, fully remote. Fourteen confirmed services sit across three pillars, and every engagement follows the same four-stage method. Retainers start at PKR 40,000 a month.',
+            'intro' => 'Emplowise provides HR operations outsourcing across three pillars: payroll, performance management and policy making. Fourteen confirmed services sit inside them, each engagement follows a four-stage method (assess, identify, improve, review), and retainers start at PKR 40,000 a month, delivered remotely in Pakistan.',
         ],
 
         // === PAGE: WHY EMPLOWISE ===
         'why-emplowise' => [
             'primary_keyword' => 'why Emplowise',
             'secondary_keywords' => ['remote HR partner in Pakistan', 'HR outsourcing pricing in Pakistan'],
-            'title' => 'Why Emplowise for Remote HR in Pakistan | Emplowise',
-            'description' => 'See why Emplowise is the remote HR partner for growing teams in Pakistan, with published pricing from PKR 40,000, clear scope, and a free HR audit.',
+            'title' => 'Why Emplowise Publishes HR Pricing in Pakistan | Emplowise',
+            'description' => 'Why Emplowise: remote HR for growing teams in Pakistan with pricing on the page. Starter PKR 40,000, Business PKR 75,000, Enterprise custom, audit first.',
             'h1' => 'Why Emplowise is the remote HR partner for growing teams.',
             'h1_accent' => 'the remote HR partner',
             'h2' => 'Why Emplowise publishes HR pricing by headcount.',
-            'intro' => 'Why Emplowise? Because remote HR should come with published pricing, a named team, and a scope you can read before you commit. Starter is PKR 40,000 for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is quoted above 50.',
+            'intro' => 'Why Emplowise publishes HR outsourcing pricing in Pakistan by headcount: Starter is PKR 40,000 a month for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is custom quoted above 50. Each is a monthly retainer, and which services are included is confirmed in writing after your free HR audit.',
         ],
 
         // === PAGE: EMPLOSTART ===
@@ -87,47 +87,47 @@ return [
             'primary_keyword' => 'free ATS resume checker',
             'secondary_keywords' => ['career pivot planning', 'mock interview practice'],
             'title' => 'Free ATS Resume Checker and 6 Career Tools | Emplowise',
-            'description' => 'EmploStart is a free career app: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. No account.',
+            'description' => 'EmploStart is a permanently free career app: a free ATS resume checker, interview prep, profile builder and three planning modules. Runs in your browser.',
             'h1' => 'A free ATS resume checker for career pivoters and job seekers.',
             'h1_accent' => 'free ATS resume checker',
             'h2' => 'Free ATS resume checker and five more free tools.',
-            'intro' => 'EmploStart is a permanently free career app for career pivoters and job seekers: a free ATS resume checker, mock interview practice, a profile builder, and three planning modules. It opens in your browser with no account and optional AI.',
+            'intro' => 'EmploStart is a permanently free career app from Emplowise. It includes a free ATS resume checker, mock interview practice, a profile builder and three planning modules, six tools that run in your browser with no account and optional AI, funded by Emplowise remote HR services.',
         ],
 
         // === PAGE: FAQ ===
         'faq' => [
             'primary_keyword' => 'HR outsourcing questions',
             'secondary_keywords' => ['Emplowise pricing answers', 'HR scope questions'],
-            'title' => 'HR Outsourcing Questions Answered Clearly | Emplowise',
-            'description' => 'Answers to HR outsourcing questions about Emplowise services, pricing from PKR 40,000, the free HR audit, and EmploStart. Confirmed facts only.',
+            'title' => 'HR Outsourcing Questions, Answered With Facts | Emplowise',
+            'description' => 'Twenty-one answers to HR outsourcing questions in Pakistan: pricing from PKR 40,000, what a retainer includes, the free audit and the EmploStart tools.',
             'h1' => 'HR outsourcing questions answered with confirmed facts.',
             'h1_accent' => 'with confirmed facts',
             'h2' => 'HR outsourcing questions',
-            'intro' => 'Emplowise answers HR outsourcing questions for startups and SMEs in Pakistan. EmploStart answers career questions with the same rule: confirmed facts only.',
+            'intro' => 'These HR outsourcing questions are answered with confirmed facts only: prices published in PKR, scope confirmed in writing after your free HR audit, and no claims about results the team has not yet verified. Where something is unconfirmed, the answer says so plainly.',
         ],
 
         // === PAGE: FREE HR AUDIT ===
         'free-hr-audit' => [
             'primary_keyword' => 'free HR audit in Pakistan',
             'secondary_keywords' => ['HR gap assessment', 'HR diagnostic review'],
-            'title' => 'Free HR Audit in Pakistan, Booked in 4 Minutes | Emplowise',
-            'description' => 'Book a free HR audit in Pakistan. Share headcount, payroll, performance, and policy pain points in about four minutes and get a prioritised gap list.',
+            'title' => 'Free HR Audit in Pakistan, Written Gap List | Emplowise',
+            'description' => 'Book a free HR audit in Pakistan. Four minutes to share headcount, payroll, performance and policy pain points, then a prioritised written gap list.',
             'h1' => 'A free HR audit in Pakistan, booked in four minutes.',
             'h1_accent' => 'booked in four minutes',
             'h2' => 'Your free HR audit in Pakistan: next steps.',
-            'intro' => 'Emplowise runs a free HR audit in Pakistan for startups and SMEs, delivered remotely. You get a structured review of payroll inputs, performance practice, and policy coverage, plus a prioritised gap list.',
+            'intro' => 'Emplowise offers a free HR audit in Pakistan for startups and SMEs. In about four minutes you share headcount, payroll, performance and policy pain points, and Emplowise returns a structured review and a prioritised written gap list, delivered remotely with no cost or obligation.',
         ],
 
         // === PAGE: CONTACT ===
         'contact' => [
             'primary_keyword' => 'contact Emplowise',
             'secondary_keywords' => ['Emplowise contact details', 'remote HR support contact'],
-            'title' => 'Contact Emplowise for Remote HR Support | Emplowise',
-            'description' => 'Contact Emplowise for remote HR support in Pakistan. Email the team, ask your favourite AI, or book a free HR audit for a prioritised gap list.',
+            'title' => 'Contact Emplowise About Remote HR in Pakistan | Emplowise',
+            'description' => 'Contact Emplowise for remote HR in Pakistan. Email the team, book the free HR audit, or ask ChatGPT, Claude, Gemini or Perplexity about us.',
             'h1' => 'Contact Emplowise without a maze of forms.',
             'h1_accent' => 'without a maze of forms',
             'h2' => 'Contact Emplowise through the channel you prefer.',
-            'intro' => 'Contact Emplowise for remote HR support in Pakistan. Ask an AI assistant, email the team, or jump straight to services, pricing, and the free HR audit.',
+            'intro' => 'Contact Emplowise for remote HR in Pakistan by email at hello@emplowise.com, by booking the free HR audit on the site, or by asking a connected AI assistant using the prefilled prompts for ChatGPT, Claude, Gemini or Perplexity. Direct phone and inbox details are confirmed in writing after your free HR audit.',
         ],
 
         // === PAGE: TEAM ===
@@ -146,84 +146,84 @@ return [
         'what-we-are-building' => [
             'primary_keyword' => 'AI automation for HR',
             'secondary_keywords' => ['HR payroll automation', 'HR policy co-pilot'],
-            'title' => 'Where AI Fits: AI Automation for HR in Pakistan | Emplowise',
-            'description' => 'Emplowise is building AI automation for HR: a payroll engine, a performance insight layer, and a policy co-pilot. The division is pre-launch.',
+            'title' => 'AI Automation for HR in Pakistan, Pre-Launch | Emplowise',
+            'description' => 'Emplowise is building AI automation for HR in Pakistan: a payroll engine, a performance insight layer and a policy co-pilot. All three are pre-launch.',
             'h1' => 'Where AI fits: AI automation for HR, in the open.',
             'h1_accent' => 'AI automation for HR',
             'h2' => 'Where AI automation for HR will plug in.',
-            'intro' => 'Emplowise is building AI automation for HR. A payroll engine, a performance insight layer, and a policy co-pilot are in pre-launch, and this page shows the shape of the division.',
+            'intro' => 'Emplowise is building AI automation for HR: a payroll engine, a performance insight layer and a policy co-pilot. All three are pre-launch and shown as static previews with no live data, so the confirmed remote HR services remain the offer available today.',
         ],
 
         // === PAGE: TERMS ===
         'terms' => [
             'primary_keyword' => 'Emplowise terms of service',
             'secondary_keywords' => ['remote HR service terms', 'HR retainer agreement Pakistan'],
-            'title' => 'Terms of Service for HR Retainers | Emplowise',
-            'description' => 'The terms that cover the Emplowise website, the free HR audit, and monthly remote HR retainers. Plain language, Pakistan law, scope confirmed in writing.',
-            'h1' => 'Terms of service, written to be read.',
+            'title' => 'Emplowise Terms of Service for HR Retainers | Emplowise',
+            'description' => 'The terms covering the Emplowise website, the free HR audit and monthly remote HR retainers. Plain language, Pakistan law, scope confirmed in writing.',
+            'h1' => 'Emplowise terms of service, written to be read.',
             'h1_accent' => 'written to be read',
-            'h2' => 'The terms behind the work.',
-            'intro' => 'These terms cover this website, the free HR audit, and any monthly retainer with Emplowise HR Services. Where a signed scope or proposal says something different, that document wins.',
+            'h2' => 'Emplowise terms of service',
+            'intro' => 'These Emplowise terms of service cover this website, the free HR audit and any monthly retainer with Emplowise HR Services. Where a signed scope or proposal says something different, that document wins.',
         ],
 
         // === PAGE: PRIVACY ===
         'privacy' => [
             'primary_keyword' => 'Emplowise privacy policy',
             'secondary_keywords' => ['HR audit data privacy', 'cookie policy Pakistan'],
-            'title' => 'Privacy Policy and Cookie Choices | Emplowise',
-            'description' => 'Privacy at Emplowise: what we collect, how cookies work, and how to access or delete your data. No data is sold and analytics stay off until you opt in.',
-            'h1' => 'Privacy, in plain language.',
+            'title' => 'Emplowise Privacy Policy and Cookie Choices | Emplowise',
+            'description' => 'How the Emplowise privacy policy works: what we collect, cookies and local storage, processors, retention, and how to access or delete your data.',
+            'h1' => 'The Emplowise privacy policy, in plain language.',
             'h1_accent' => 'in plain language',
-            'h2' => 'What we collect and why.',
-            'intro' => 'This policy explains what Emplowise collects when you use this site, book a free HR audit, or email the team, and the choices you have. It covers cookies and the tools we use to run the site.',
+            'h2' => 'Emplowise privacy policy',
+            'intro' => 'This Emplowise privacy policy explains what we collect when you use this site, book a free HR audit or email the team, and the choices you have. It covers cookies, local storage and the tools we use to run the site.',
         ],
 
         // === PAGE: COMPANY PROFILE (showcase) ===
         'company-profile' => [
             'primary_keyword' => 'remote HR company profile',
             'secondary_keywords' => ['Emplowise company document', 'HR service provider profile'],
-            'title' => 'Remote HR Company Profile: 2026 Edition | Emplowise',
-            'description' => 'The Emplowise company profile in one document: who we serve, how we run remote HR, what the retainers cost, and who owns each part of the work.',
+            'title' => 'Remote HR Company Profile: The 2026 Edition | Emplowise',
+            'description' => 'The Emplowise remote HR company profile in one document: who we serve, the four-stage method, fourteen services, published retainers and the named team.',
             'h1' => 'A remote HR company profile written for buyers, not archives.',
             'h1_accent' => 'written for buyers',
             'h2' => 'What this remote HR company profile includes.',
-            'intro' => 'This is the Emplowise remote HR company profile as a single document. It covers the buying situations we serve, the four-stage method, the published retainers, and the team behind the work.',
+            'intro' => 'The Emplowise remote HR company profile is one 2026 document covering who we serve (startups, SMEs and emerging talent), the four-stage method, published monthly retainers of PKR 40,000, PKR 75,000 and a custom Enterprise quote, and the named team owning each part of remote HR delivery.',
         ],
 
         // === PAGE: PORTFOLIO (showcase) ===
         'portfolio' => [
             'primary_keyword' => 'remote HR portfolio',
             'secondary_keywords' => ['shipped HR platform work', 'Emplowise work evidence'],
-            'title' => 'Remote HR Portfolio of Shipped Work | Emplowise',
-            'description' => 'A remote HR portfolio that lists only shipped work: the platform, the career toolkit, the audit wizard, and the 2026 brand system, each with repo proof.',
+            'title' => 'Remote HR Portfolio of Shipped Work, Repo Proof | Emplowise',
+            'description' => 'A remote HR portfolio listing only shipped work: the platform, the career toolkit, the audit wizard and the brand system, each with repo proof.',
             'h1' => 'A remote HR portfolio that lists shipped work only.',
             'h1_accent' => 'shipped work only',
             'h2' => 'What this remote HR portfolio documents.',
-            'intro' => 'This remote HR portfolio records what Emplowise has actually shipped. Every entry names the repository evidence behind it, and no client study is used until it is cleared in writing.',
+            'intro' => 'This remote HR portfolio lists work that exists in a repository, not work that exists in a slide. It documents four shipped artifacts, the supporting systems behind them, and the standard a future client case study will have to meet before it is published here. Emplowise has no published client case studies yet, and this page does not invent any.',
         ],
 
         // === PAGE: DOCS HUB ===
         'docs' => [
             'primary_keyword' => 'Emplowise documentation',
             'secondary_keywords' => ['brand kit downloads', 'company profile document'],
-            'title' => 'Emplowise Documentation and Downloads | Emplowise',
-            'description' => 'Every Emplowise document in one place: brand kit, company profile, portfolio, pitch deck, and engineering notes, with live editions and editable downloads.',
+            'title' => 'Emplowise Documentation, Downloads and Editions | Emplowise',
+            'description' => 'Every Emplowise document in one place: brand kit, company profile, portfolio, pitch deck and engineering notes, with live editions and editable downloads.',
             'h1' => 'Emplowise documentation, with live editions and editable downloads.',
             'h1_accent' => 'Emplowise documentation',
             'h2' => 'Emplowise documentation index',
-            'intro' => 'Emplowise documentation covers the brand system, the commercial profile, shipped work, the pitch deck, and the engineering notes behind the site. Read the live edition or download the editable file.',
+            'intro' => 'Emplowise documentation lives here in one place, every public document with its current edition marked, so a client, candidate or contractor works from the same file the team uses. Downloads are editable rather than flattened, and each carries a version stamp.',
         ],
 
         // === PAGE: PITCH DECK (showcase) ===
         'pitch-deck' => [
             'primary_keyword' => 'Emplowise pitch deck',
             'secondary_keywords' => ['remote HR slide deck', 'HR service pitch slides'],
-            'title' => 'Emplowise Pitch Deck: Eight Slides for Buyers | Emplowise',
-            'description' => 'The Emplowise pitch deck in eight slides: product, problem, method, pricing, market wedge, go-to-market, shipped proof, and the roadmap.',
+            'title' => 'Emplowise Pitch Deck: Eight Slides, One Question | Emplowise',
+            'description' => 'The Emplowise pitch deck in eight slides: product, problem, method, pricing, market wedge, go-to-market, shipped proof and roadmap. Shareable by link.',
             'h1' => 'The Emplowise pitch deck, eight slides, one question each.',
             'h1_accent' => 'eight slides',
             'h2' => 'What the Emplowise pitch deck answers.',
-            'intro' => 'This is the Emplowise pitch deck as a slide-by-slide page. Each slide answers one buyer question, in the order buyers ask it, with unresolved numbers kept in the speaker notes.',
+            'intro' => 'This is the Emplowise pitch deck as a slide-by-slide page. Each slide answers one buyer question, in the order buyers ask it, with unresolved numbers kept in the speaker notes. The deck is shareable by direct link and is not indexed by search engines.',
         ],
     ],
 
@@ -781,18 +781,9 @@ return [
             'copy_label' => 'Copy email',
             'copy_done' => 'Email copied.',
             'copy_fail' => 'Copy failed. Select the address and copy it manually.',
-            'social_heading' => 'Socials',
-            'social_body' => 'LinkedIn, Facebook, Instagram, X, YouTube and WhatsApp are being set up. Every link is marked pending until it goes live.',
-            'social_note' => 'Social inboxes open with the profiles. Email stays the fastest route.',
-            'social_pending' => 'The :label profile is being set up. Check back soon.',
-            'socials' => [
-                ['label' => 'LinkedIn', 'icon' => 'linkedin', 'href' => 'https://www.linkedin.com/company/emplowise', 'pending' => true],
-                ['label' => 'Facebook', 'icon' => 'facebook', 'href' => 'https://www.facebook.com/emplowise', 'pending' => true],
-                ['label' => 'Instagram', 'icon' => 'instagram', 'href' => 'https://www.instagram.com/emplowise', 'pending' => true],
-                ['label' => 'X', 'icon' => 'x', 'href' => 'https://x.com/emplowise', 'pending' => true],
-                ['label' => 'YouTube', 'icon' => 'youtube', 'href' => 'https://www.youtube.com/@emplowise', 'pending' => true],
-                ['label' => 'WhatsApp', 'icon' => 'whatsapp', 'href' => 'https://wa.me/923000000000', 'pending' => true],
-            ],
+            'social_heading' => 'Direct line',
+            'social_body' => 'Direct phone and inbox details are confirmed in writing after your free HR audit. Until then, email and the audit form are the two channels that work, and both reach the same three people.',
+            'social_note' => 'A LinkedIn page is in progress. Until the address is real, it is not on this page.',
             'resources_heading' => 'Resources',
             'resources_note' => 'Every page here is public. The audit is the only form.',
             'resources' => [
@@ -1069,10 +1060,10 @@ return [
         // === PAGE: HOME ===
         'home' => [
             'kicker' => 'Remote HR for teams of 5 to 100',
-            'hero_sub' => 'Payroll, performance and policy, handled remotely by one named lead. Published retainers from PKR 40,000 a month. The free audit ends with a written gap list.',
+            'hero_sub' => 'You do not need an HR department. You need someone who owns the work. Emplowise takes the payroll inputs, the appraisal cycle and the policy stack off your desk, and reports on them monthly like any other function. Same three people, every month, in writing.',
             'rotator_prefix' => 'Currently running',
             'cta_primary' => 'Book a free HR audit',
-            'cta_secondary' => 'Open the EmploStart',
+            'cta_secondary' => 'Open the free EmploStart tools',
             'proof' => [
                 ['label' => 'Delivery', 'value' => 'One remote HR team, backed by specialist consultants.'],
                 ['label' => 'Focus', 'value' => 'Payroll, performance, and policy on one monthly rhythm.'],
@@ -1103,15 +1094,15 @@ return [
                 'heading' => 'Four doors. Pick the one that fits.',
                 'lede' => 'This page is the map, not the manual. Each card opens the page that answers that question in full.',
                 'items' => [
-                    ['label' => 'What we do', 'desc' => 'The three pillars and every confirmed service.', 'route' => 'what-we-do', 'icon' => 'chart-bars'],
-                    ['label' => 'Pricing', 'desc' => 'Monthly retainers by headcount, from PKR 40,000.', 'route' => 'why-emplowise', 'icon' => 'card'],
-                    ['label' => 'EmploStart', 'desc' => 'Six free career modules. No account needed.', 'route' => 'emplostart', 'hash' => 'modules', 'icon' => 'chip'],
-                    ['label' => 'Contact', 'desc' => 'Talk to the team and book the free audit.', 'route' => 'contact', 'icon' => 'mail'],
+                    ['label' => 'Our story', 'desc' => 'Who we are, who signs the work, and what we will not pretend.', 'route' => 'what-we-are', 'icon' => 'shield-check'],
+                    ['label' => 'What we do', 'desc' => 'Fourteen confirmed services across payroll, performance and policy.', 'route' => 'what-we-do', 'icon' => 'chart-bars'],
+                    ['label' => 'Pricing', 'desc' => 'PKR figures on the page, not behind a call.', 'route' => 'why-emplowise', 'icon' => 'card'],
+                    ['label' => 'Free HR audit', 'desc' => 'Four minutes, then a written gap list.', 'route' => 'free-hr-audit', 'icon' => 'file-check'],
                 ],
             ],
             'pillars' => [
                 'kicker' => 'What we run',
-                'lede' => 'Every pillar opens the confirmed services, workflow checks, and templates behind it. Nothing is listed that the team does not deliver.',
+                'lede' => 'Three pillars carry the work: payroll inputs and cycles, performance management, and policy making. Fourteen services sit inside them. Anything outside that list gets written down as out of scope rather than quietly absorbed.',
                 'card_link' => 'See the confirmed services',
             ],
             'method' => [
@@ -1121,8 +1112,8 @@ return [
             ],
             'pricing' => [
                 'kicker' => 'Monthly retainers',
-                'heading' => 'Pricing by headcount, not by guesswork.',
-                'lede' => 'Three confirmed tiers. Starter is PKR 40,000 for up to 20 staff, Business is PKR 75,000 for up to 50, and Enterprise is quoted above 50.',
+                'heading' => 'Priced by headcount, published on the page.',
+                'lede' => 'Starter is PKR 40,000 a month for up to 20 staff. Business is PKR 75,000 for up to 50. Enterprise is quoted above 50. All monthly, all remote, all starting with the audit. Which services land in your retainer is confirmed in writing after that audit, so we publish the price, not a guess at your scope.',
                 'tag' => 'Core tier',
                 'inclusions_line' => 'Inclusions: confirmed in writing after your Free HR Audit.',
                 'link' => 'See HR outsourcing pricing in Pakistan',
@@ -1136,9 +1127,9 @@ return [
                 'cta_ats' => 'Score your resume',
             ],
             'cta_band' => [
-                'heading' => 'Start with a free HR audit. Leave with a gap list.',
+                'heading' => 'Start with a free HR audit. Leave with a written gap list.',
                 'primary' => 'Book the free audit',
-                'secondary' => 'See how the four-stage method works',
+                'secondary' => 'Why teams pick Emplowise',
             ],
         ],
 
@@ -1362,6 +1353,7 @@ return [
         'free-hr-audit' => [
             'breadcrumb' => 'Free HR Audit',
             'kicker' => 'Free diagnostic, about four minutes',
+            'trust_note' => 'No cost. No obligation. No payroll data at this stage.',
             'steps' => [
                 [
                     'heading' => 'Who are we speaking with?',
@@ -1592,7 +1584,7 @@ return [
     ],
 
     'nav' => [
-        ['label' => 'Meet Emplowise', 'route' => 'home'],
+        ['label' => 'Home', 'route' => 'home'],
         ['label' => 'Our Story', 'route' => 'what-we-are'],
         ['label' => 'Meet The Team', 'route' => 'what-we-are', 'hash' => 'team'],
         ['label' => 'Why Us', 'route' => 'why-emplowise'],
@@ -1603,7 +1595,7 @@ return [
 
     // The footer repeats the primary links plus the action pages.
     'footer_company' => [
-        ['label' => 'Meet Emplowise', 'route' => 'home'],
+        ['label' => 'Home', 'route' => 'home'],
         ['label' => 'Our Story', 'route' => 'what-we-are'],
         ['label' => 'What We Do', 'route' => 'what-we-do'],
         ['label' => 'Meet The Team', 'route' => 'what-we-are', 'hash' => 'team'],

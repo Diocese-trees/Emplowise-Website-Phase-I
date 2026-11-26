@@ -27,7 +27,7 @@ final class SiteAndApiTest extends TestCase
             '/contact' => 'Contact Emplowise',
             '/what-we-are-building' => 'AI automation for HR',
             '/free-hr-audit' => 'free HR audit in Pakistan',
-            '/terms' => 'Terms of service',
+            '/terms' => 'Terms of Service',
             '/privacy' => 'Privacy Policy',
         ];
 
@@ -343,9 +343,9 @@ final class SiteAndApiTest extends TestCase
             $this->assertStringContainsString(e($resource['label']), $html);
         }
 
-        foreach ($copy['socials'] as $social) {
-            $this->assertStringContainsString('aria-label="'.$social['label'].'"', $html);
-        }
+        // Placeholder social profiles are gone until a real address exists (I-25).
+        $this->assertStringNotContainsString('data-social-pending', $html);
+        $this->assertStringNotContainsString('wa.me/923000000000', $html);
     }
 
     public function test_what_we_are_page_includes_the_team_showcase(): void

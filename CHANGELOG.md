@@ -1,3 +1,27 @@
+## Phase 8 SEO rewrite applied (2026-11-26)
+
+- Applied the Phase 8 rewrite to every public page. Titles, descriptions,
+  primary and secondary keywords, H1s and the intro/answer blocks now carry the
+  audited wording, and each intro doubles as the extractable AEO answer.
+- The home hero gained a `.hero-lead` answer block under the H1, the four doors
+  now point at Our Story, What We Do, Pricing and the Free HR Audit, and the
+  hero support and closing band carry the rewritten copy.
+- Added `/terms/` and `/privacy/` to `EmplowiseSeoAudit` (issue I-33). Both
+  legal pages keep every clause in substance; the H1, H2 and intro now carry the
+  page's primary keyword so the gate covers them.
+- Structured data upgraded to the master graph: `Organization` with `@id`,
+  `legalName`, `contactPoint` and offer catalogue, a `WebSite` node, a
+  `WebPage` per page, and a `BreadcrumbList` on every indexable page except the
+  home root and the noindex pitch deck. Per-page `Person` x3, `Service` (audit),
+  `WebApplication` (EmploStart) and legal `datePublished`/`dateModified` added.
+  Nothing invented: no `sameAs`, no ratings, no phone number.
+- Placeholder social links removed from the footer and contact page (I-04,
+  I-25); the contact card now says a LinkedIn page is in progress. Nav label
+  `Meet Emplowise` became `Home`.
+- Verified: `php artisan emplowise:seo-audit` passes all 15 routes, the full
+  suite passes (57 tests), and the static export renders 15 pages with valid
+  JSON-LD and in-range titles and descriptions.
+
 ## Vercel Git integration, branch publisher (2026-11-24)
 
 - Added `.github/workflows/publish-vercel-branch.yml`, which renders the site and

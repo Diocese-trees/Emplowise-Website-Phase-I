@@ -22,6 +22,29 @@
             }
             $ogImage = $ogRoot.'/'.ltrim($ogImage, '/');
         }
+        $siteUrl = url('/');
+        $orgId = $siteUrl.'#org';
+        $websiteId = $siteUrl.'#website';
+        $currentRoute = request()->route()?->getName();
+        $plainTitle = (string) preg_replace('/\s*\|\s*Emplowise\s*$/u', '', $pageTitle);
+        $breadcrumbLabels = [
+            'home' => 'Home',
+            'what-we-are' => 'Our Story',
+            'what-we-do' => 'What We Do',
+            'why-emplowise' => 'Why Us',
+            'what-we-are-building' => "Where's AI",
+            'emplostart' => 'EmploStart',
+            'faq' => 'FAQ',
+            'contact' => 'Contact Us',
+            'free-hr-audit' => 'Free HR Audit',
+            'company-profile' => 'Company Profile',
+            'portfolio' => 'Portfolio',
+            'pitch-deck' => 'Pitch Deck',
+            'docs' => 'Documentation',
+            'terms' => 'Terms',
+            'privacy' => 'Privacy',
+        ];
+        $crumbLabel = $breadcrumbLabels[$currentRoute] ?? $plainTitle;
         $offers = collect(config('emplowise.packages'))->map(fn ($package) => [
             '@type' => 'Offer',
             'name' => $package['name'],
@@ -32,19 +55,61 @@
         ])->values()->all();
         $schema = [
             '@type' => ['Organization', 'ProfessionalService'],
+            '@id' => $orgId,
             'name' => config('emplowise.brand.legal_name'),
-            'url' => url('/'),
+            'legalName' => config('emplowise.brand.legal_name'),
+            'url' => $siteUrl,
             'description' => config('emplowise.brand.description'),
             'areaServed' => ['@type' => 'Country', 'name' => config('emplowise.brand.market')],
             'knowsAbout' => array_column(config('emplowise.services'), 'name'),
+            'contactPoint' => [[
+                '@type' => 'ContactPoint',
+                'contactType' => 'customer support',
+                'email' => config('emplowise.copy.contact.email'),
+                'availableLanguage' => 'English',
+            ]],
             'hasOfferCatalog' => [
                 '@type' => 'OfferCatalog',
                 'name' => 'Emplowise monthly retainers',
                 'itemListElement' => $offers,
             ],
         ];
-        $graph = [$schema];
-        if (request()->routeIs('faq')) {
+        $graph = [
+            $schema,
+            [
+                '@type' => 'WebSite',
+                '@id' => $websiteId,
+                'url' => $siteUrl,
+                'name' => 'Emplowise',
+                'inLanguage' => 'en-GB',
+                'publisher' => ['@id' => $orgId],
+            ],
+        ];
+        $webPage = [
+            '@type' => 'WebPage',
+            '@id' => $pageUrl.'#webpage',
+            'url' => $pageUrl,
+            'name' => $plainTitle,
+            'description' => $pageDescription,
+            'isPartOf' => ['@id' => $websiteId],
+            'about' => ['@id' => $orgId],
+            'inLanguage' => 'en-GB',
+        ];
+        if (in_array($currentRoute, ['terms', 'privacy'], true)) {
+            $webPage['datePublished'] = '2026-11-22';
+            $webPage['dateModified'] = '2026-11-22';
+        }
+        $graph[] = $webPage;
+        if ($currentRoute !== null && ! in_array($currentRoute, ['home', 'pitch-deck'], true)) {
+            $graph[] = [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $siteUrl],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => $crumbLabel, 'item' => $pageUrl],
+                ],
+            ];
+        }
+        if ($currentRoute === 'faq') {
             $graph[] = [
                 '@type' => 'FAQPage',
                 'mainEntity' => collect(config('emplowise.faqs'))->flatMap(fn ($group) => $group['items'])
@@ -55,19 +120,36 @@
                     ])->values()->all(),
             ];
         }
-        if (request()->routeIs('company-profile', 'portfolio', 'pitch-deck')) {
+        if ($currentRoute === 'what-we-are') {
+            foreach (config('emplowise.copy.team.profiles') as $profile) {
+                $graph[] = [
+                    '@type' => 'Person',
+                    'name' => $profile['name'],
+                    'jobTitle' => trim($profile['role'].', '.$profile['focus']),
+                    'description' => $profile['bio'],
+                    'worksFor' => ['@id' => $orgId],
+                ];
+            }
+        }
+        if ($currentRoute === 'free-hr-audit') {
             $graph[] = [
-                '@type' => 'WebPage',
-                'name' => $pageTitle,
-                'description' => $pageDescription,
-                'url' => $pageUrl,
-                'inLanguage' => 'en',
-                'isPartOf' => ['@type' => 'WebSite', 'name' => 'Emplowise', 'url' => url('/')],
-                'about' => [
-                    '@type' => 'ProfessionalService',
-                    'name' => config('emplowise.brand.legal_name'),
-                    'url' => url('/'),
-                ],
+                '@type' => 'Service',
+                'name' => 'Free HR audit',
+                'serviceType' => 'Free HR audit',
+                'provider' => ['@id' => $orgId],
+                'areaServed' => ['@type' => 'Country', 'name' => config('emplowise.brand.market')],
+                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'PKR'],
+            ];
+        }
+        if ($currentRoute === 'emplostart') {
+            $graph[] = [
+                '@type' => 'WebApplication',
+                'name' => 'EmploStart',
+                'applicationCategory' => 'BusinessApplication',
+                'operatingSystem' => 'Web',
+                'url' => config('emplowise.emplostart_url'),
+                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'PKR'],
+                'featureList' => array_column(config('emplowise.emplostart_modules'), 'title'),
             ];
         }
         $document = ['@context' => 'https://schema.org', '@graph' => $graph];

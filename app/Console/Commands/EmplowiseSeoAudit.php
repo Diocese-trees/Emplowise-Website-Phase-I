@@ -27,6 +27,8 @@ final class EmplowiseSeoAudit extends Command
         'portfolio',
         'pitch-deck',
         'docs',
+        'terms',
+        'privacy',
     ];
 
     private const BANNED_WORDS = ['leverage', 'ecosystem', 'landscape', 'holistic', 'seamless'];

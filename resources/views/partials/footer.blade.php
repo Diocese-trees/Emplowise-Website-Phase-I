@@ -8,8 +8,7 @@
                 </picture>
                 <p class="footer-note">{{ $ui['footer_note'] }}</p>
                 <a href="{{ route('free-hr-audit') }}" class="footer-cta">{{ $ui['nav_audit_label'] }}</a>
-                <p class="footer-title footer-title--social">{{ $ui['social_heading'] }}</p>
-                @include('partials.social-links', ['variant' => 'footer'])
+                <a class="footer-meta footer-mail" href="mailto:{{ config('emplowise.copy.contact.email') }}">{{ config('emplowise.copy.contact.email') }}</a>
             </div>
 
             <nav class="footer-col" aria-label="{{ $ui['footer_company_title'] }}">

@@ -98,7 +98,9 @@ final class ExportStaticTest extends TestCase
 
         // Directory links keep their fragment, so /page#anchor becomes /page/#anchor.
         $this->assertStringContainsString('href="https://example.github.io/demo/what-we-do/#payroll"', $home);
-        $this->assertStringContainsString('href="https://example.github.io/demo/emplostart/#modules"', $home);
+        // The four home doors point at the page each one answers.
+        $this->assertStringContainsString('href="https://example.github.io/demo/what-we-are/"', $home);
+        $this->assertStringContainsString('href="https://example.github.io/demo/free-hr-audit/"', $home);
 
         // Self-hosted fonts are rewritten inside the bundle, so woff2 files resolve under the subpath.
         $site = (string) File::get($this->target.'/css/site.css');

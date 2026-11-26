@@ -657,6 +657,14 @@ a.footer-meta { display: inline-flex; align-items: center; }
     color: transparent;
 }
 
+.hero-lead {
+    font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--text-on-dark);
+    max-width: 58ch;
+    margin-bottom: var(--s-4);
+}
+
 .hero-sub {
     font-size: clamp(1rem, 1.35vw, 1.16rem);
     color: var(--text-on-dark);

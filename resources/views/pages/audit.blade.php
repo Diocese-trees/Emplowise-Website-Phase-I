@@ -160,6 +160,7 @@
                     </div>
 
                     <p class="form-status s32" id="audit-status" role="status"></p>
+                    <p class="wizard-trust">{{ $copy['trust_note'] }}</p>
                 </form>
 
                 <div class="success-panel" id="audit-success" role="status">

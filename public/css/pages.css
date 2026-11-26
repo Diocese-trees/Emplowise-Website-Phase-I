@@ -1084,6 +1084,14 @@ mark {
     overflow: hidden;
 }
 
+.wizard-trust {
+    margin: var(--s-3) 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--slate-500);
+}
+
 .wizard::before {
     content: "";
     position: absolute;
