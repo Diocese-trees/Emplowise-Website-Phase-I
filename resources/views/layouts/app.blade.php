@@ -220,6 +220,20 @@
 @include('partials.chat')
 @include('partials.consent')
 
+@unless (request()->routeIs('free-hr-audit'))
+    {{-- Thumb-reach action bar. Appears after the hero has been scrolled
+         past, never on the audit page itself, and hides while the consent
+         card or the chat panel is open so nothing stacks on nothing. --}}
+    <div class="dock" id="dock" role="group" aria-label="{{ $ui['nav_audit_label'] }}">
+        <a class="dock-action" href="{{ route('free-hr-audit') }}" data-dock-primary>
+            {{ $ui['nav_audit_label'] }}
+        </a>
+        <a class="dock-action dock-action--ghost" href="{{ route('contact') }}">
+            {{ config('emplowise.nav')[6]['label'] }}
+        </a>
+    </div>
+@endunless
+
 <button class="to-top" id="to-top" type="button" aria-label="{{ $ui['back_to_top'] }}">
     <x-icon name="arrow-up" :size="18" />
 </button>

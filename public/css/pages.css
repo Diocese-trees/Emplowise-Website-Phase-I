@@ -2090,7 +2090,7 @@ mark {
     font-size: 0.56rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--slate-400);
+    color: var(--slate-600);
 }
 
 .team-bio {
@@ -2731,6 +2731,17 @@ body.page-ai { background: var(--surface-canvas); }
     color: var(--slate-500);
 }
 
+/* Inline links in legal prose carry an underline as well as a colour, so
+   they stay distinguishable for readers who cannot separate the two
+   (WCAG 1.4.1). Buttons and the TOC are untouched. */
+.legal-note a,
+.legal-block p a,
+.legal-block li a,
+.legal-block dd a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 @media (max-width: 900px) {
     .shortcut-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -2839,7 +2850,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-family: var(--font-mono);
     font-size: 0.66rem;
     letter-spacing: 0.16em;
-    color: var(--teal);
+    color: var(--teal-deep);
 }
 
 .launcher-module h3 {
@@ -2863,7 +2874,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--teal);
+    color: var(--teal-deep);
     text-decoration: none;
 }
 
@@ -2929,7 +2940,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-family: var(--font-mono);
     font-size: 0.66rem;
     letter-spacing: 0.16em;
-    color: var(--teal);
+    color: var(--teal-deep);
 }
 
 .launcher-track h3 {
@@ -2971,7 +2982,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.08em;
-    color: var(--teal);
+    color: var(--teal-deep);
 }
 
 .launcher-prompt-letter {
@@ -3008,7 +3019,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--teal);
+    color: var(--teal-deep);
     text-decoration: none;
 }
 
@@ -3039,7 +3050,7 @@ body.page-ai { background: var(--surface-canvas); }
     font-family: var(--font-mono);
     font-size: 0.66rem;
     letter-spacing: 0.16em;
-    color: var(--teal);
+    color: var(--teal-deep);
 }
 
 .launcher-lane h3 {
@@ -3073,8 +3084,8 @@ body.page-ai { background: var(--surface-canvas); }
 
 .pledge-band .kicker {
     color: var(--white);
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.34);
 }
 
 .pledge-band h2 {

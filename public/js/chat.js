@@ -218,6 +218,7 @@
         function setOpen(open) {
             panel.hidden = !open;
             launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
+            document.body.classList.toggle('chat-open', open);
             if (open) {
                 if (compact.matches && window.Emplowise && window.Emplowise.lockScroll) {
                     window.Emplowise.lockScroll('chat');

@@ -1,3 +1,39 @@
+## UX score-lift: navigation, conversion, mobile, trust (2026-11-27)
+
+- Flattened the mobile drawer (1040px and below) so every page is one tap away
+  instead of nested under a group, and added a focus-on-open plus a Tab focus
+  trap so the drawer works without a pointer. Desktop navigation is unchanged.
+- Added a thumb-reach dock on phones (640px and below): the two primary actions
+  (Free HR Audit, EmploStart) stay one thumb away once the hero scrolls off,
+  hidden while the consent bar or chat is open, suppressed over the footer, and
+  `inert`/`aria-hidden` when it is not shown. Ships only with JS; the header
+  keeps the actions without it.
+- Trimmed the mobile hero so the primary call to action lands in the first
+  screen, with a "Why teams switch" disclosure carrying the longer support copy.
+- Deferred the consent banner: it now waits for the first scroll or interaction
+  (or a 60% viewport scroll) instead of covering the hero on load.
+- Tucked the chat launcher on downward scroll so it stops crossing content.
+- Raised coarse-pointer tap targets to 44px (brand, theme toggle, nav toggle,
+  header buttons, footer links and the footer call to action); 24px+ elsewhere.
+- Accessibility: removed the reveal opacity so axe no longer reads hidden text
+  as low contrast (motion preserved via transform); underlined in-text links on
+  the legal and showcase pages; darkened the team-focus label, the EmploStart
+  launchers and the pitch-deck body text within the existing brand hues; fixed
+  the audit-aside landmark and the duplicate "Resources" landmark on contact.
+- Added a sticky first column to wide data tables below 900px and a scrollable
+  jump bar with a fade/chevron affordance to the docs/company-profile/
+  portfolio/pitch-deck pages.
+- New gate: `php artisan emplowise:ux-gate` runs a headless Playwright/axe pass
+  over 15 routes at 6 viewports (overflow, axe, tap targets, deferred consent,
+  first-screen CTA, drawer trap, dock appearance). Wired as a non-blocking
+  weekly GitHub Actions job; `tools/ux-gate/check.py` holds the checks.
+- New docs: `docs/UX-METRICS.md` (event taxonomy, metric definitions, baseline,
+  gate description) and `docs/UX-HYPOTHESES.md` (ICE-ranked shipped and blocked
+  hypotheses).
+- Verified: 57 tests (902 assertions), SEO 15/15, static export renders, ux-gate
+  185/185 across 15 routes x 6 viewports, deterministic CSS bundle. Brand kit,
+  colours, fonts and logos are unchanged.
+
 ## Phase 8 SEO rewrite applied (2026-11-26)
 
 - Applied the Phase 8 rewrite to every public page. Titles, descriptions,

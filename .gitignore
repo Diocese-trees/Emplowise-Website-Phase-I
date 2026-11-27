@@ -44,3 +44,7 @@ Thumbs.db
 
 # Staged repos for the 3-repo split (never committed to the main site)
 /_staging/
+
+# UX gate: cached axe-core download and screenshot output are local artifacts
+/tools/ux-gate/.axe.min.js
+/tools/ux-gate/_shots/

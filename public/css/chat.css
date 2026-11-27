@@ -363,3 +363,16 @@
 @media (max-width: 640px) {
     body.has-consent .chat-launcher { display: none; }
 }
+
+/* Scrolling down tucks the launcher off the thumb path; the moment the
+   reader scrolls up it returns. Opening the panel always restores it,
+   because a tucked launcher is never the one carrying aria-expanded. */
+.chat-launcher.is-tucked {
+    opacity: 0;
+    transform: translateY(130%) scale(0.9);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chat-launcher { transition: none; }
+}

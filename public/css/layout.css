@@ -139,6 +139,11 @@
 
 .nav-link--cta { display: none; }
 
+/* Drawer-only shortcuts. Rendered for every page so the phone panel can
+   list destinations without a disclosure, then hidden on the wider
+   layouts where the Company group is the better pattern. */
+.nav-link--drawer { display: none; }
+
 /* Company group: a native <details> so it works without JS and keeps
    keyboard behaviour. Desktop shows a panel; the drawer and rail expand it
    in place. */
@@ -1084,6 +1089,12 @@ a.footer-meta { display: inline-flex; align-items: center; }
 @media (max-width: 1040px) {
     .nav-toggle { display: inline-flex; }
 
+    /* The panel already lists the Company destinations as flat shortcuts,
+       so the desktop disclosure would only repeat them. */
+    .nav-group { display: none; }
+
+    .nav-link--drawer { display: block; }
+
     /* Solid header instead of a live backdrop blur: the blur repaints on
        every scroll frame on mobile GPUs and buys nothing at this opacity. */
     .site-header {
@@ -1327,4 +1338,166 @@ h1, h2, h3 { text-wrap: balance; }
     .legal-toc { top: 1.5rem; }
 
     html { scroll-padding-top: 1.25rem; }
+}
+
+/* ------------------------------------------------------------------
+   Hero support copy disclosure
+   The paragraph is ordinary body copy from 641px up. On phones it
+   folds behind a "Why teams switch" summary so both calls to action
+   stay inside the first screen. The markup ships open, so a browser
+   without JavaScript still reads the text.
+------------------------------------------------------------------- */
+.hero-more { margin: 0; }
+
+.hero-more > summary {
+    display: none;
+    list-style: none;
+    cursor: pointer;
+}
+
+.hero-more > summary::-webkit-details-marker { display: none; }
+
+.hero-more > summary::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 1.6px solid currentColor;
+    border-bottom: 1.6px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform var(--dur-fast) var(--ease);
+}
+
+.hero-more[open] > summary::after { transform: rotate(225deg); }
+
+@media (max-width: 640px) {
+    .hero-more > summary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-height: 44px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--aqua);
+    }
+
+    .hero-more > .hero-sub { margin-top: 0.5rem; }
+}
+
+/* ------------------------------------------------------------------
+   Thumb-reach dock (phones)
+   A two-action bar that appears once the hero is behind the reader so
+   the primary conversion stays one tap away. Tablets and desktops never
+   see it, and the audit page omits it in the markup.
+------------------------------------------------------------------- */
+.dock { display: none; }
+
+@media (max-width: 640px) {
+    html.has-js-dock .dock {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: var(--z-sticky);
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 0.5rem;
+        padding: 0.5rem var(--gutter) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid var(--line);
+        box-shadow: 0 -12px 30px -24px rgba(8, 27, 62, 0.5);
+        transform: translateY(115%);
+        transition: transform var(--dur) var(--ease-out);
+        pointer-events: none;
+    }
+
+    html.has-js-dock .dock.is-visible {
+        transform: none;
+        pointer-events: auto;
+    }
+
+    .dock-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.15;
+        text-align: center;
+    }
+
+    .dock-action[data-dock-primary] {
+        background: var(--grad-teal);
+        color: var(--white);
+        box-shadow: var(--shadow-teal);
+    }
+
+    .dock-action--ghost {
+        border: 1px solid var(--line);
+        background: var(--white);
+        color: var(--navy);
+    }
+
+    /* Floating controls step above the bar rather than fight it. */
+    body.dock-visible .chat-root {
+        bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.dock-visible .to-top {
+        bottom: calc(4.4rem + 62px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+html[data-theme="dark"] .dock {
+    background: rgba(8, 24, 47, 0.96);
+    border-top-color: var(--d-line);
+    box-shadow: 0 -12px 30px -20px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="dark"] .dock-action--ghost {
+    background: var(--d-surface-2);
+    border-color: var(--d-line-strong);
+    color: var(--d-ink);
+}
+
+/* ------------------------------------------------------------------
+   Touch target pass
+   44px minimum for the header controls and footer links on any coarse
+   pointer, so the footer stops being a fingertip lottery.
+------------------------------------------------------------------- */
+@media (pointer: coarse) {
+    .brand { min-height: 44px; }
+
+    .theme-toggle,
+    .nav-toggle { min-width: 44px; min-height: 44px; }
+
+    .header-actions .btn { min-height: 44px; }
+
+    .nav-theme { min-height: 44px; }
+
+    .footer-links { gap: 0; }
+    .footer-links a { min-height: 44px; }
+
+    .footer-meta,
+    .footer-mail { min-height: 44px; }
+
+    .footer-cta { min-height: 44px; }
+
+    .footer-legal-links { gap: 0.25rem 1rem; }
+    .footer-legal-links a,
+    .footer-legal-links button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+}
+
+/* While the consent sheet covers the bottom of a phone screen, reserve
+   room under the footer so its links stay reachable above the card. */
+@media (max-width: 560px) {
+    body.has-consent .site-footer { padding-bottom: 13rem; }
 }

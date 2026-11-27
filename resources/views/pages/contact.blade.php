@@ -98,7 +98,7 @@
                     <p class="contact-card-foot">{{ $copy['social_note'] }}</p>
                 </section>
 
-                <nav class="contact-card contact-card--resources" aria-labelledby="contact-resources-title">
+                <section class="contact-card contact-card--resources" aria-labelledby="contact-resources-title">
                     <h2 id="contact-resources-title">{{ $copy['resources_heading'] }}</h2>
                     <div class="chip-row contact-pills">
                         @foreach ($copy['resources'] as $resource)
@@ -106,7 +106,7 @@
                         @endforeach
                     </div>
                     <p class="contact-card-foot">{{ $copy['resources_note'] }}</p>
-                </nav>
+                </section>
 
                 <section class="contact-card contact-card--ai contact-card--wide" aria-labelledby="contact-ai-title">
                     <div class="contact-card--ai-copy">

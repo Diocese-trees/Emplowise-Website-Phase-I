@@ -186,7 +186,7 @@
                 </div>
             </div>
 
-            <aside class="audit-aside">
+            <div class="audit-aside">
                 <div class="aside-card">
                     <h3>{{ $copy['aside']['covers_heading'] }}</h3>
                     <ul class="aside-list">
@@ -223,7 +223,7 @@
                         {{ $copy['aside']['packages_note'] }}
                     </p>
                 </div>
-            </aside>
+            </div>
         </div>
     </section>
 

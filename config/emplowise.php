@@ -1061,6 +1061,7 @@ return [
         'home' => [
             'kicker' => 'Remote HR for teams of 5 to 100',
             'hero_sub' => 'You do not need an HR department. You need someone who owns the work. Emplowise takes the payroll inputs, the appraisal cycle and the policy stack off your desk, and reports on them monthly like any other function. Same three people, every month, in writing.',
+            'hero_more' => 'Why teams switch',
             'rotator_prefix' => 'Currently running',
             'cta_primary' => 'Book a free HR audit',
             'cta_secondary' => 'Open the free EmploStart tools',

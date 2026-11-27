@@ -423,6 +423,28 @@ table.data tbody tr:last-child td { border-bottom: 0; }
 
 table.data td:first-child { font-weight: 600; color: var(--navy); }
 
+/* On a narrow screen the services table scrolls sideways. Pinning the
+   first column means the reader never loses the row label, which is the
+   one cell they need to make sense of the rest. */
+@media (max-width: 900px) {
+    table.data th:first-child,
+    table.data td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: var(--z-base);
+        background: var(--white);
+    }
+
+    table.data thead th:first-child {
+        z-index: calc(var(--z-base) + 1);
+    }
+}
+
+html[data-theme="dark"] table.data th:first-child,
+html[data-theme="dark"] table.data td:first-child {
+    background: var(--d-surface);
+}
+
 table.data .is-pending {
     color: var(--amber-deep);
     font-size: 0.82rem;
@@ -677,16 +699,19 @@ textarea.input,
 ------------------------------------------------------------------- */
 
 .reveal {
-    transition: opacity 0.95s var(--ease-out), transform 0.95s var(--ease-out);
+    transition: transform 0.95s var(--ease-out);
 }
 
+/* Reveal on motion only, never on opacity. A faded-in paragraph sits at
+   reduced opacity until it is scrolled to, and contrast checkers read that
+   blended colour as low contrast even though a sighted reader sees it fine.
+   Sliding the element into place keeps the entrance without hiding the text
+   from assistive tech or automated audits. */
 html.js-anim .reveal {
-    opacity: 0;
     transform: translateY(22px);
 }
 
 html.js-anim .reveal.is-visible {
-    opacity: 1;
     transform: none;
 }
 

@@ -83,6 +83,47 @@ html[data-theme="dark"] .page-showcase {
 
 .show-jump a:hover { color: var(--show-accent); border-color: var(--show-accent); }
 
+/* The bar scrolls sideways on narrow screens. Proximity snapping keeps a
+   section label in view, a right-edge fade signals there is more, and a
+   small chevron over the fade reads as the tap hint. Sticky positioning
+   already gives the pseudos a containing block. */
+.show-jump-inner {
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--gutter);
+}
+
+.show-jump a { scroll-snap-align: start; }
+
+.show-jump::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 2.2rem;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--surface-card));
+    display: none;
+}
+
+.show-jump::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0.8rem;
+    z-index: 1;
+    width: 6px;
+    height: 6px;
+    border-right: 1.6px solid var(--ink-muted);
+    border-bottom: 1.6px solid var(--ink-muted);
+    transform: translateY(-50%) rotate(-45deg);
+    pointer-events: none;
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .show-jump::after,
+    .show-jump::before { display: block; }
+}
+
 /* --------------------------------------------------------- layout */
 
 .show-band {
@@ -96,6 +137,13 @@ html[data-theme="dark"] .page-showcase {
 
 .show-lede { max-width: 70ch; }
 .show-lede + .show-lede { margin-top: var(--s-3); }
+
+/* Inline links in running copy need a second cue besides colour (WCAG
+   1.4.1), which also clears the axe link-in-text-block check. */
+.show-lede a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
 
 .show-card {
     padding: clamp(1.1rem, 2.2vw, 1.5rem);
@@ -632,7 +680,7 @@ html[data-theme="dark"] .deck-btn[aria-pressed="true"] { background: var(--aqua)
 .deck-slide--deepteal {
     --slide-bg: #0f766e;
     --slide-ink: #ffffff;
-    --slide-body: #f0f9f9;
+    --slide-body: #ffffff;
     --slide-label: #ffffff;
     --slide-line: rgba(255, 255, 255, 0.22);
     --slide-panel: rgba(255, 255, 255, 0.08);

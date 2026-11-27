@@ -6,6 +6,19 @@
     $company = array_values(array_filter(config('emplowise.footer_company'), function ($item) {
         return in_array($item['route'], ['what-we-are', 'what-we-do', 'why-emplowise', 'what-we-are-building'], true);
     }));
+
+    // Drawer-only shortcuts. On phones the nav is a panel, so a destination
+    // buried behind one disclosure costs two taps. These five are rendered
+    // once and hidden from 1041px up, where the disclosure is the better
+    // pattern. Labels come from the existing config, never from new copy.
+    $footerLabels = collect(config('emplowise.footer_company'))->keyBy('route');
+    $drawer = [
+        ['label' => $footerLabels['what-we-do']['label'] ?? 'What We Do', 'route' => 'what-we-do', 'hash' => null],
+        ['label' => $nav[1]['label'], 'route' => $nav[1]['route'], 'hash' => null],
+        ['label' => $nav[2]['label'], 'route' => $nav[2]['route'], 'hash' => $nav[2]['hash'] ?? 'team'],
+        ['label' => $nav[3]['label'], 'route' => $nav[3]['route'], 'hash' => null],
+        ['label' => $nav[5]['label'], 'route' => $nav[5]['route'], 'hash' => null],
+    ];
 @endphp
 <header class="site-header" id="site-header">
     <div class="shell header-inner">
@@ -30,6 +43,15 @@
                @if (request()->routeIs($home['route'])) aria-current="page" @endif>
                 {{ $home['label'] }}
             </a>
+
+            @foreach ($drawer as $item)
+                @php($isHere = request()->routeIs($item['route']) && ! $item['hash'])
+                <a href="{{ route($item['route']) }}{{ $item['hash'] ? '#'.$item['hash'] : '' }}"
+                   class="nav-link nav-link--drawer {{ $isHere ? 'is-current' : '' }}"
+                   @if ($isHere) aria-current="page" @endif>
+                    {{ $item['label'] }}
+                </a>
+            @endforeach
 
             <details class="nav-group">
                 <summary class="nav-link nav-group-toggle">
@@ -58,6 +80,14 @@
                class="nav-link {{ request()->routeIs($contact['route']) ? 'is-current' : '' }}"
                @if (request()->routeIs($contact['route'])) aria-current="page" @endif>
                 {{ $contact['label'] }}
+            </a>
+
+            {{-- Thumb-reach primary action inside the drawer; the header keeps
+                 its own compact button beside the toggle. --}}
+            <a href="{{ route('free-hr-audit') }}"
+               class="nav-link nav-link--cta {{ request()->routeIs('free-hr-audit') ? 'is-current' : '' }}"
+               @if (request()->routeIs('free-hr-audit')) aria-current="page" @endif>
+                {{ $ui['nav_audit_label'] }}
             </a>
 
             {{-- The header toggle is desktop-only; in the drawer this row keeps

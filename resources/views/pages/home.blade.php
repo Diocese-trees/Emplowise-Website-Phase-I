@@ -26,9 +26,18 @@
                 <p class="hero-lead">
                     {{ $seo['intro'] }}
                 </p>
-                <p class="hero-sub">
-                    {{ $copy['hero_sub'] }}
-                </p>
+
+                {{-- The support paragraph collapses on phones so the two calls
+                     to action stay inside the first screen. It renders open,
+                     so a browser without JavaScript still shows the copy; the
+                     header script closes it below 641px and leaves the summary
+                     line as the way back in. --}}
+                <details class="hero-more" data-hero-more open>
+                    <summary>{{ $copy['hero_more'] }}</summary>
+                    <p class="hero-sub">
+                        {{ $copy['hero_sub'] }}
+                    </p>
+                </details>
 
                 <p class="hero-rotate">
                     <span>{{ $copy['rotator_prefix'] }}</span>

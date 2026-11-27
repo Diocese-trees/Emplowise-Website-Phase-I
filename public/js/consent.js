@@ -161,11 +161,43 @@
     var stored = readStorage() || readCookie();
     sync(stored);
 
+    // Do not open on a timer. A cookie card over the first screen costs
+    // conversion and interrupts reading, and this site sets no non-essential
+    // cookie before a choice, so waiting for a signal of intent is compliant.
+    // The card appears once the reader scrolls past the first screen or makes
+    // any pointer or key input; the footer "Cookie choices" link and the
+    // Escape key keep it reachable at every point in between.
     function afterIntro() {
         if (stored) return;
-        window.setTimeout(function () {
-            if (banner.hidden) open(false, false);
-        }, 700);
+
+        var shown = false;
+
+        function cleanup() {
+            window.removeEventListener('scroll', onScroll);
+            document.removeEventListener('pointerdown', onIntent, true);
+            document.removeEventListener('keydown', onIntent, true);
+        }
+
+        function reveal() {
+            if (!banner.hidden || shown) {
+                cleanup();
+                return;
+            }
+            shown = true;
+            cleanup();
+            open(false, false);
+        }
+
+        function onScroll() {
+            var y = window.scrollY || document.documentElement.scrollTop || 0;
+            if (y > window.innerHeight * 0.6) reveal();
+        }
+
+        function onIntent() { reveal(); }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        document.addEventListener('pointerdown', onIntent, true);
+        document.addEventListener('keydown', onIntent, true);
     }
 
     afterIntro();

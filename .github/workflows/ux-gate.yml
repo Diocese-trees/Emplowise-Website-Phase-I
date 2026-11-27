@@ -1,0 +1,73 @@
+name: UX gate
+
+# A headless browser pass over the whole site: horizontal overflow at six
+# widths, 44px header/footer touch targets, the phone drawer's keyboard trap,
+# the thumb-reach dock, the deferred consent card, and axe-core.
+#
+# Deliberately advisory. It runs on a schedule or on demand and never blocks a
+# push or a release, because a flaky headless run must not stop a deploy. Read
+# the job summary for the failing checks and fix them in a normal PR.
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Mondays, 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ux-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, curl, openssl, tokenizer, xml, ctype, json, sqlite3, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare the environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
+          chmod -R ug+rwx storage bootstrap/cache
+
+      - name: Build the static export
+        run: php artisan emplowise:export-static /tmp/ux-export --base=http://127.0.0.1:8124
+
+      - name: Serve the export
+        run: |
+          php -S 127.0.0.1:8124 -t /tmp/ux-export >/tmp/ux-serve.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:8124/; then break; fi
+            sleep 1
+          done
+          curl -sf -o /dev/null http://127.0.0.1:8124/ || (cat /tmp/ux-serve.log; exit 1)
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright and Chromium
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run the UX gate
+        run: python3 tools/ux-gate/check.py --base=http://127.0.0.1:8124
