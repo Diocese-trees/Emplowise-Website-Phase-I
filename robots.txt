@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://diocese-trees.github.io/Emplowise-Website-Phase-I/sitemap.xml
